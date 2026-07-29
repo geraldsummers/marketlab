@@ -1,0 +1,28 @@
+[Unit]
+Description=Marketlab BTC Hyperliquid raw stream collector
+After=network-online.target
+
+[Container]
+ContainerName=marketlab-collector
+Image=@COLLECTOR_IMAGE_DIGEST@
+Network=marketlab.network
+EnvironmentFile=%h/.config/marketlab/collector.env
+Environment=MARKETLAB_SOURCE_REVISION=@SOURCE_REVISION@
+UserNS=keep-id:uid=10001,gid=10001
+Volume=/mnt/media/marketlab/raw/hyperliquid-stream:/mnt/media/marketlab/raw/hyperliquid-stream:rw,z
+ReadOnly=true
+Tmpfs=/tmp:rw,noexec,nosuid,nodev,size=128m
+DropCapability=all
+NoNewPrivileges=true
+StopTimeout=60
+PodmanArgs=--cpus=1 --memory=768m --memory-swap=768m --pids-limit=128
+
+[Service]
+Environment=CONTAINERS_STORAGE_CONF=%h/.config/marketlab/storage.conf
+Restart=always
+RestartSec=5
+TimeoutStartSec=120
+TimeoutStopSec=75
+
+[Install]
+WantedBy=default.target

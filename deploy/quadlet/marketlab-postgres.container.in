@@ -1,0 +1,36 @@
+[Unit]
+Description=Marketlab PostgreSQL control plane
+After=network-online.target
+
+[Container]
+ContainerName=marketlab-postgres
+Image=@POSTGRES_IMAGE_DIGEST@
+Network=marketlab.network
+EnvironmentFile=%h/.config/marketlab/postgres.env
+Volume=/mnt/stack/marketlab/postgres:/var/lib/postgresql/data:Z
+UserNS=keep-id:uid=999,gid=999
+User=999:999
+ReadOnly=true
+Tmpfs=/tmp:rw,noexec,nosuid,nodev,size=256m
+Tmpfs=/var/run/postgresql:rw,nosuid,nodev,size=64m,mode=1777
+DropCapability=all
+NoNewPrivileges=true
+ShmSize=256m
+HealthCmd=pg_isready --username=marketlab_owner --dbname=marketlab
+HealthInterval=10s
+HealthTimeout=5s
+HealthRetries=12
+HealthStartPeriod=30s
+HealthOnFailure=kill
+Notify=healthy
+PodmanArgs=--cpus=1 --memory=4g --memory-swap=4g --pids-limit=512
+
+[Service]
+Environment=CONTAINERS_STORAGE_CONF=%h/.config/marketlab/storage.conf
+Restart=always
+RestartSec=5
+TimeoutStartSec=180
+TimeoutStopSec=90
+
+[Install]
+WantedBy=default.target

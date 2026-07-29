@@ -1,0 +1,29 @@
+[Unit]
+Description=Marketlab allowlisted rootless Podman runner
+After=network-online.target marketlab-postgres.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=%h/.config/marketlab/runner.env
+Environment=MARKETLAB_IMAGE_KOTLIN=@WORKER_IMAGE_DIGEST@
+ExecStart=@RUNNER_INSTALL_DIR@/bin/runner
+Restart=always
+RestartSec=5
+UMask=0077
+# Rootless Podman must invoke newuidmap/newgidmap for the bounded user namespace.
+# The launched worker container itself always receives no-new-privileges.
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/mnt/stack/marketlab/jobs
+ReadWritePaths=/mnt/stack/marketlab/podman-storage
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+LimitNOFILE=8192
+MemoryMax=1G
+TasksMax=256
+TimeoutStartSec=60
+TimeoutStopSec=45
+
+[Install]
+WantedBy=default.target

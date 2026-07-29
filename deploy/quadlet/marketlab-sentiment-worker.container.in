@@ -1,0 +1,35 @@
+[Unit]
+Description=Marketlab fixed-model sentiment and social feature worker
+After=marketlab-social-collector.service marketlab-social-market.service
+Requires=marketlab-social-collector.service marketlab-social-market.service
+
+[Container]
+ContainerName=marketlab-sentiment-worker
+Image=@SENTIMENT_WORKER_IMAGE_DIGEST@
+Network=marketlab.network
+EnvironmentFile=%h/.config/marketlab/sentiment-worker.env
+Environment=MARKETLAB_SOURCE_REVISION=@SOURCE_REVISION@
+UserNS=keep-id:uid=10001,gid=10001
+Volume=/mnt/media/marketlab/raw/public-information:/mnt/media/marketlab/raw/public-information:ro,z
+Volume=/mnt/stack/marketlab/social-features:/mnt/stack/marketlab/social-features:rw,z
+Volume=/mnt/stack/marketlab/social-universe:/mnt/stack/marketlab/social-universe:ro,z
+Volume=/mnt/stack/marketlab/models:/mnt/stack/marketlab/models:ro,z
+ReadOnly=true
+# ONNX Runtime extracts its signed native library from the verified JAR and
+# loads it from java.io.tmpdir, so this one otherwise-isolated tmpfs must allow
+# executable mappings.
+Tmpfs=/tmp:rw,exec,nosuid,nodev,size=1g
+DropCapability=all
+NoNewPrivileges=true
+StopTimeout=90
+PodmanArgs=--cpus=4 --memory=5g --memory-swap=5g --pids-limit=512
+
+[Service]
+Environment=CONTAINERS_STORAGE_CONF=%h/.config/marketlab/storage.conf
+Restart=always
+RestartSec=10
+TimeoutStartSec=300
+TimeoutStopSec=105
+
+[Install]
+WantedBy=default.target

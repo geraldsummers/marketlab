@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "marketlab.social-program-lock.v1",
+  "programId": "hyperliquid-social-information-270d",
+  "durationDays": 270,
+  "scheduleDays": {
+    "stabilizationEnd": 4,
+    "warmupEnd": 34,
+    "trainingEnd": 154,
+    "developmentEnd": 210,
+    "sealedHoldoutEnd": 270
+  },
+  "developmentFolds": {
+    "count": 4,
+    "testDays": 14,
+    "trainingDays": 120
+  },
+  "universe": {
+    "selection": "weekly-monday-00utc",
+    "ranking": "trailing-30d-daily-candle-notional",
+    "count": 10,
+    "minimumListingAgeDays": 90
+  },
+  "requiredSources": [
+    "bluesky-jetstream",
+    "farcaster-snapchain",
+    "gdelt-gkg-2.1",
+    "hyperliquid-mainnet",
+    "nostr-public-relays",
+    "official-crypto-rss"
+  ],
+  "robustnessSources": [
+    "mastodon-public-sample"
+  ],
+  "excludedSources": [
+    "cryptopanic",
+    "reddit",
+    "stocktwits",
+    "x"
+  ],
+  "theoryIds": [
+    "hyperliquid-top-ten-cross-sectional-social-attention-return",
+    "hyperliquid-top-ten-news-negativity-daily-variance",
+    "hyperliquid-top-ten-social-attention-hourly-variance",
+    "hyperliquid-top-ten-social-disagreement-hourly-variance",
+    "hyperliquid-top-ten-social-polarity-fifteen-minute-return"
+  ],
+  "familywiseCorrection": "HOLM",
+  "socialModelKey": "social-twitter-roberta",
+  "newsModelKey": "news-finbert",
+  "returnExecutionLatencyMillis": 500,
+  "paperTradingDaysAfterConfirmation": 90,
+  "liveTradingAuthorized": false
+}

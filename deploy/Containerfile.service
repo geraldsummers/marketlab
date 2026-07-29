@@ -1,0 +1,22 @@
+ARG BUILDER_IMAGE
+ARG RUNTIME_IMAGE
+
+FROM ${BUILDER_IMAGE} AS build
+WORKDIR /workspace
+COPY . .
+RUN ./gradlew --no-daemon --stacktrace :service:installDist
+
+FROM ${RUNTIME_IMAGE}
+ARG BUILD_REVISION=unknown
+LABEL org.opencontainers.image.title="marketlab-service" \
+      org.opencontainers.image.revision="${BUILD_REVISION}"
+RUN groupadd --system --gid 10001 marketlab \
+    && useradd --system --uid 10001 --gid marketlab --home-dir /nonexistent --shell /usr/sbin/nologin marketlab
+WORKDIR /opt/marketlab
+COPY --from=build --chown=marketlab:marketlab /workspace/service/build/install/service/ ./
+COPY --chown=marketlab:marketlab deploy/service-health.sh /opt/marketlab/bin/service-health
+RUN chmod 0555 /opt/marketlab/bin/service-health
+USER 10001:10001
+ENV TZ=UTC
+EXPOSE 8080
+ENTRYPOINT ["/opt/marketlab/bin/service"]

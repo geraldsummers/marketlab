@@ -1,0 +1,28 @@
+[Unit]
+Description=Marketlab credential-free social and news collector
+After=network-online.target
+
+[Container]
+ContainerName=marketlab-social-collector
+Image=@SOCIAL_COLLECTOR_IMAGE_DIGEST@
+Network=marketlab.network
+EnvironmentFile=%h/.config/marketlab/social-collector.env
+Environment=MARKETLAB_SOURCE_REVISION=@SOURCE_REVISION@
+UserNS=keep-id:uid=10001,gid=10001
+Volume=/mnt/media/marketlab/raw/public-information:/mnt/media/marketlab/raw/public-information:rw,z
+ReadOnly=true
+Tmpfs=/tmp:rw,noexec,nosuid,nodev,size=512m
+DropCapability=all
+NoNewPrivileges=true
+StopTimeout=60
+PodmanArgs=--cpus=2 --memory=2g --memory-swap=2g --pids-limit=256
+
+[Service]
+Environment=CONTAINERS_STORAGE_CONF=%h/.config/marketlab/storage.conf
+Restart=always
+RestartSec=5
+TimeoutStartSec=120
+TimeoutStopSec=75
+
+[Install]
+WantedBy=default.target

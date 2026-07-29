@@ -1,0 +1,20 @@
+ARG BUILDER_IMAGE
+ARG RUNTIME_IMAGE
+
+FROM ${BUILDER_IMAGE} AS build
+WORKDIR /workspace
+COPY . .
+RUN ./gradlew --no-daemon --stacktrace :sentiment-worker:installDist
+
+FROM ${RUNTIME_IMAGE}
+ARG BUILD_REVISION=unknown
+LABEL org.opencontainers.image.title="marketlab-sentiment-worker" \
+      org.opencontainers.image.revision="${BUILD_REVISION}"
+RUN groupadd --system --gid 10001 marketlab \
+    && useradd --system --uid 10001 --gid marketlab --home-dir /nonexistent --shell /usr/sbin/nologin marketlab
+WORKDIR /opt/marketlab
+COPY --from=build --chown=marketlab:marketlab /workspace/sentiment-worker/build/install/sentiment-worker/ ./
+COPY --chown=marketlab:marketlab research/sentiment-models.lock.json research/social-program.lock.json /opt/marketlab/research/
+USER 10001:10001
+ENV TZ=UTC
+ENTRYPOINT ["/opt/marketlab/bin/sentiment-worker"]

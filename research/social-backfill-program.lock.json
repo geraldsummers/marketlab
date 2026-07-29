@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "marketlab.social-backfill-program-lock.v1",
+  "programId": "social-information-retrospective-discovery-2025q4-2026q2",
+  "classification": "RETROSPECTIVE_DISCOVERY_ONLY",
+  "period": {
+    "startInclusive": "2025-10-04T00:00:00Z",
+    "endExclusive": "2026-07-01T00:00:00Z"
+  },
+  "sources": {
+    "social": {
+      "provider": "bluesky-public-appview-search",
+      "endpoint": "https://api.bsky.app/xrpc/app.bsky.feed.searchPosts",
+      "historicalAvailabilityProxy": "indexedAt",
+      "localRetrievalTimeRetainedSeparately": true,
+      "queries": {
+        "BTC": "bitcoin",
+        "ETH": "ethereum",
+        "HYPE": "hyperliquid",
+        "LIT": "lighter crypto",
+        "NEAR": "near protocol",
+        "PUMP": "pump.fun",
+        "SOL": "solana",
+        "WLD": "worldcoin",
+        "XRP": "xrp ripple",
+        "ZEC": "zcash"
+      }
+    },
+    "market": {
+      "provider": "binance-public-futures-archive",
+      "market": "USDT-M perpetual",
+      "interval": "1m",
+      "months": [
+        "2025-10",
+        "2025-11",
+        "2025-12",
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06"
+      ]
+    }
+  },
+  "universe": {
+    "symbols": ["BTC", "ETH", "HYPE", "LIT", "NEAR", "PUMP", "SOL", "WLD", "XRP", "ZEC"],
+    "knownBias": "fixed 2026-W31 Hyperliquid top-ten universe; historical membership is not reconstructed"
+  },
+  "schedule": {
+    "featureWarmupDays": 30,
+    "trainingDays": 120,
+    "developmentDays": 56,
+    "holdoutDays": 60,
+    "unusedTailDays": 4
+  },
+  "theoryIds": [
+    "retrospective-single-source-social-attention-hourly-variance",
+    "retrospective-single-source-social-disagreement-hourly-variance",
+    "retrospective-single-source-social-polarity-fifteen-minute-return",
+    "retrospective-cross-sectional-social-attention-daily-return"
+  ],
+  "excludedTheoryIds": [
+    "hyperliquid-top-ten-news-negativity-daily-variance"
+  ],
+  "excludedTheoryReason": "GDELT historical GKG acquisition is a separately gated high-volume phase",
+  "socialModelKey": "social-twitter-roberta",
+  "executionCostsEvaluated": false,
+  "hyperliquidConfirmationClaimAllowed": false,
+  "paperTradingPromotionAllowed": false,
+  "liveTradingAuthorized": false
+}

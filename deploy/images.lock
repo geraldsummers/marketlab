@@ -1,0 +1,5 @@
+# Resolved from the Docker Hub registry API on 2026-07-28.
+# These are linux/amd64 child manifests, not mutable tags or manifest indexes.
+BUILDER_IMAGE=docker.io/library/eclipse-temurin@sha256:593aa2eca07b85292bc78773a91e2cb76b5efd7ee5d76560402a7e34acb50935
+RUNTIME_IMAGE=docker.io/library/eclipse-temurin@sha256:b60266963794b5187cfe4bb634b816f98ffb597691d6a5b0b1818dcf7e65c265
+POSTGRES_IMAGE=docker.io/library/postgres@sha256:cb875afe6d2e8593c28c22d37d0fd7aaf035c43a42e2f7792cd4c09ceb6beac5

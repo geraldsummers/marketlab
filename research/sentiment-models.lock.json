@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "marketlab.sentiment-model-lock.v1",
+  "preprocessingSha256": "b33201f76835b24083e657080932deb7cb2eaa4b23629efae8d55d302df3ea18",
+  "languageDetector": {
+    "artifact": "com.github.pemistahl:lingua:1.2.2",
+    "languages": ["ARABIC", "CHINESE", "ENGLISH", "FRENCH", "GERMAN", "HINDI", "INDONESIAN", "JAPANESE", "KOREAN", "PORTUGUESE", "RUSSIAN", "SPANISH", "TURKISH"],
+    "minimumRelativeDistance": 0.10
+  },
+  "models": [
+    {
+      "key": "news-finbert",
+      "upstream": "ProsusAI/finbert",
+      "upstreamRevision": "4556d13015211d73dccd3fdd39d39232506f3e43",
+      "license": "apache-2.0",
+      "modelFile": "news/model.onnx",
+      "modelSha256": "cbd023a2e34b346ce918ba5878c622790cb8d80e9fc9e38f76ba771505231d42",
+      "tokenizerFile": "news/tokenizer.json",
+      "tokenizerSha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66",
+      "negativeIndex": 1,
+      "neutralIndex": 2,
+      "positiveIndex": 0,
+      "maximumTokens": 256
+    },
+    {
+      "key": "social-twitter-roberta",
+      "upstream": "cardiffnlp/twitter-roberta-base-sentiment-latest",
+      "upstreamRevision": "3216a57f2a0d9c45a2e6c20157c20c49fb4bf9c7",
+      "license": "cc-by-4.0",
+      "modelFile": "social/model.onnx",
+      "modelSha256": "60e7e29f7847000857754162439c351e27ebd1bd5ac66e9dc5433ccc390eece4",
+      "tokenizerFile": "social/tokenizer.json",
+      "tokenizerSha256": "727009a8214ddfa5af1deedf1006d4d06e8e51e54aa5f03566263d4e19bfcdce",
+      "negativeIndex": 0,
+      "neutralIndex": 1,
+      "positiveIndex": 2,
+      "maximumTokens": 256
+    }
+  ]
+}

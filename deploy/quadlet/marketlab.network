@@ -1,0 +1,8 @@
+[Unit]
+Description=Marketlab internal network
+
+[Network]
+NetworkName=marketlab
+
+[Service]
+Environment=CONTAINERS_STORAGE_CONF=%h/.config/marketlab/storage.conf

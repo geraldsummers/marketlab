@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "marketlab.social-backfill-analysis-lock.v1",
+  "analysisId": "social-information-retrospective-screen-v1",
+  "acquisitionProgramId": "social-information-retrospective-discovery-2025q4-2026q2",
+  "classification": "RETROSPECTIVE_DISCOVERY_ONLY",
+  "availabilityClock": "Bluesky indexedAt historical proxy",
+  "socialSampleLimitation": "Bounded historical AppView search capture; cursor pagination is unavailable and archive completeness cannot be proven.",
+  "boundaries": {
+    "warmupStartInclusive": "2025-10-04T00:00:00Z",
+    "trainingStartInclusive": "2025-11-03T00:00:00Z",
+    "developmentStartInclusive": "2026-03-03T00:00:00Z",
+    "holdoutStartInclusive": "2026-04-28T00:00:00Z",
+    "holdoutEndExclusive": "2026-06-27T00:00:00Z",
+    "unusedEndExclusive": "2026-07-01T00:00:00Z"
+  },
+  "common": {
+    "socialDeduplication": "Within each asset, retain the earliest availability for a text SHA-256 and suppress repeats for 24 hours.",
+    "authorCap": "At most three retained messages per author, asset, and UTC hour.",
+    "marketBars": "Complete Binance USDT-M 15-minute bars only; never interpolate gaps.",
+    "assetEffects": "Pooled OLS includes fixed symbol indicators with BTC omitted.",
+    "development": "Four chronological 14-day expanding folds; no tuning.",
+    "holdout": "Fit once on training plus development, then forecast the common sealed 60-day interval.",
+    "inference": "First average loss differentials cross-sectionally by decision time, then use a two-sided normal approximation from Newey-West HAC standard errors; lag 96 for 15-minute buckets, 24 for hourly buckets, and 7 for daily buckets.",
+    "multiplicity": "Holm adjustment across the four candidate-versus-primary-control holdout p-values."
+  },
+  "theories": {
+    "retrospective-single-source-social-attention-hourly-variance": {
+      "feature": "Prior completed UTC-hour message count standardized by the preceding 720 completed hourly counts.",
+      "controls": ["log trailing 1-hour realized variance", "log trailing 24-hour realized variance"],
+      "target": "Log next-hour realized variance from four complete 15-minute bars.",
+      "primaryMetric": "QLIKE after exponentiating the log-variance forecast",
+      "expectedSign": "positive"
+    },
+    "retrospective-single-source-social-disagreement-hourly-variance": {
+      "feature": "Sample standard deviation of polarity among retained messages in the prior completed UTC hour; requires at least two messages.",
+      "controls": ["log trailing 1-hour realized variance", "log trailing 24-hour realized variance"],
+      "target": "Log next-hour realized variance from four complete 15-minute bars.",
+      "primaryMetric": "QLIKE after exponentiating the log-variance forecast",
+      "expectedSign": "positive"
+    },
+    "retrospective-single-source-social-polarity-fifteen-minute-return": {
+      "feature": "Mean polarity among retained messages in the prior completed 15-minute bucket; requires at least one message.",
+      "controls": ["latest asset 15-minute return", "contemporaneously completed BTC 15-minute return"],
+      "target": "Next 15-minute close-to-close log return.",
+      "primaryMetric": "Squared forecast error",
+      "additionalBaselines": ["training asset mean", "zero return", "latest return", "BTC return"],
+      "expectedSign": "positive"
+    },
+    "retrospective-cross-sectional-social-attention-daily-return": {
+      "feature": "Prior completed UTC-day message count standardized by the preceding 30 completed daily counts, then cross-sectionally ranked from zero to one.",
+      "controls": ["prior completed daily close-to-close return"],
+      "target": "Next UTC-day close-to-close log return.",
+      "primaryMetric": "Squared forecast error",
+      "portfolioDiagnostic": "Equal-weight top three minus bottom three gross next-day return; execution costs unavailable.",
+      "minimumEligibleAssetsPerDate": 8,
+      "expectedSign": "positive"
+    }
+  },
+  "executionCostsEvaluated": false,
+  "hyperliquidConfirmationClaimAllowed": false,
+  "paperTradingPromotionAllowed": false,
+  "liveTradingAuthorized": false
+}

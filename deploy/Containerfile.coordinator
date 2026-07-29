@@ -1,0 +1,27 @@
+ARG BUILDER_IMAGE
+ARG RUNTIME_IMAGE
+
+FROM ${BUILDER_IMAGE} AS build
+WORKDIR /workspace
+COPY . .
+RUN ./gradlew --no-daemon --stacktrace :coordinator:installDist
+RUN classpath="$(find /workspace/coordinator/build/install/coordinator/lib -type f -name '*.jar' -printf '%p:')" \
+    && mkdir -p /workspace/migrator-classes \
+    && javac -encoding UTF-8 -cp "${classpath}" \
+        -d /workspace/migrator-classes \
+        /workspace/deploy/MarketlabMigrator.java
+
+FROM ${RUNTIME_IMAGE}
+ARG BUILD_REVISION=unknown
+LABEL org.opencontainers.image.title="marketlab-coordinator" \
+      org.opencontainers.image.revision="${BUILD_REVISION}"
+RUN groupadd --system --gid 10001 marketlab \
+    && useradd --system --uid 10001 --gid marketlab --home-dir /nonexistent --shell /usr/sbin/nologin marketlab
+WORKDIR /opt/marketlab
+COPY --from=build --chown=marketlab:marketlab /workspace/coordinator/build/install/coordinator/ ./
+COPY --from=build --chown=marketlab:marketlab /workspace/migrator-classes/ /opt/marketlab/migrator/
+COPY --chown=marketlab:marketlab deploy/coordinator-migrate.sh /opt/marketlab/bin/marketlab-migrate
+RUN chmod 0555 /opt/marketlab/bin/marketlab-migrate
+USER 10001:10001
+ENV TZ=UTC
+ENTRYPOINT ["/opt/marketlab/bin/coordinator"]

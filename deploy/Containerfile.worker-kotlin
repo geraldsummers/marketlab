@@ -1,0 +1,19 @@
+ARG BUILDER_IMAGE
+ARG RUNTIME_IMAGE
+
+FROM ${BUILDER_IMAGE} AS build
+WORKDIR /workspace
+COPY . .
+RUN ./gradlew --no-daemon --stacktrace :worker-kotlin:installDist
+
+FROM ${RUNTIME_IMAGE}
+ARG BUILD_REVISION=unknown
+LABEL org.opencontainers.image.title="marketlab-worker-kotlin" \
+      org.opencontainers.image.revision="${BUILD_REVISION}"
+RUN groupadd --system --gid 10001 marketlab \
+    && useradd --system --uid 10001 --gid marketlab --home-dir /nonexistent --shell /usr/sbin/nologin marketlab
+WORKDIR /opt/marketlab
+COPY --from=build --chown=marketlab:marketlab /workspace/worker-kotlin/build/install/worker-kotlin/ ./
+USER 10001:10001
+ENV TZ=UTC
+ENTRYPOINT ["/opt/marketlab/bin/worker-kotlin"]

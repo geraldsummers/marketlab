@@ -1,0 +1,15 @@
+.gradle/
+.idea/
+.kotlin/
+build/
+**/build/
+.testdata/
+.env
+*.log
+*.duckdb
+*.duckdb.wal
+/runtime-data/
+artifacts/
+dist/
+.venv/
+.tmp/

@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export CONTAINERS_STORAGE_CONF="${XDG_CONFIG_HOME:-$HOME/.config}/marketlab/storage.conf"
+
+for argument in "$@"; do
+    case "$argument" in
+        --source-revision|--source-revision=*|--allow-unversioned|--allow-unversioned=*)
+            printf 'marketlab-research: release provenance options are fixed by deployment\n' >&2
+            exit 64
+            ;;
+    esac
+done
+
+exec /usr/bin/podman run \
+    --rm \
+    --network=slirp4netns:allow_host_loopback=false \
+    --read-only \
+    --cap-drop=all \
+    --security-opt=no-new-privileges \
+    --userns=keep-id:uid=10001,gid=10001 \
+    --pids-limit=256 \
+    --cpus=20 \
+    --memory=49152m \
+    --memory-swap=49152m \
+    --tmpfs=/tmp:rw,noexec,nosuid,nodev,size=8g \
+    --mount=type=bind,src=/mnt/media/marketlab/raw,dst=/mnt/media/marketlab/raw,rw=true,relabel=shared \
+    --mount=type=bind,src=/mnt/stack/marketlab/active-artifacts,dst=/mnt/stack/marketlab/active-artifacts,rw=true,relabel=shared \
+    --env=MARKETLAB_DATA_ROOT=/mnt/media/marketlab/raw \
+    --env=MARKETLAB_ARTIFACT_ROOT=/mnt/stack/marketlab/active-artifacts \
+    --env=MARKETLAB_SOURCE_REVISION=@SOURCE_REVISION@ \
+    @RESEARCH_IMAGE_DIGEST@ "$@"

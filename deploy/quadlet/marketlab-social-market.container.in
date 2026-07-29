@@ -1,0 +1,29 @@
+[Unit]
+Description=Marketlab dynamic Hyperliquid top-ten market collector
+After=network-online.target
+
+[Container]
+ContainerName=marketlab-social-market
+Image=@COLLECTOR_IMAGE_DIGEST@
+Network=marketlab.network
+EnvironmentFile=%h/.config/marketlab/social-market.env
+Environment=MARKETLAB_SOURCE_REVISION=@SOURCE_REVISION@
+UserNS=keep-id:uid=10001,gid=10001
+Volume=/mnt/media/marketlab/raw/social-market:/mnt/media/marketlab/raw/social-market:rw,z
+Volume=/mnt/stack/marketlab/social-universe:/mnt/stack/marketlab/social-universe:rw,z
+ReadOnly=true
+Tmpfs=/tmp:rw,noexec,nosuid,nodev,size=256m
+DropCapability=all
+NoNewPrivileges=true
+StopTimeout=60
+PodmanArgs=--cpus=3 --memory=3g --memory-swap=3g --pids-limit=512
+
+[Service]
+Environment=CONTAINERS_STORAGE_CONF=%h/.config/marketlab/storage.conf
+Restart=always
+RestartSec=10
+TimeoutStartSec=600
+TimeoutStopSec=75
+
+[Install]
+WantedBy=default.target

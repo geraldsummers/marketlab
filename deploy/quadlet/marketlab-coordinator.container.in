@@ -1,0 +1,29 @@
+[Unit]
+Description=Marketlab ingestion coordinator
+After=marketlab-postgres.service network-online.target
+Requires=marketlab-postgres.service
+
+[Container]
+ContainerName=marketlab-coordinator
+Image=@COORDINATOR_IMAGE_DIGEST@
+Network=marketlab.network
+EnvironmentFile=%h/.config/marketlab/coordinator.env
+Environment=MARKETLAB_SOURCE_REVISION=@SOURCE_REVISION@
+UserNS=keep-id:uid=10001,gid=10001
+Volume=/mnt/media/marketlab/raw:/mnt/media/marketlab/raw:rw,z
+Volume=/mnt/stack/marketlab/active-artifacts:/mnt/stack/marketlab/active-artifacts:rw,z
+ReadOnly=true
+Tmpfs=/tmp:rw,noexec,nosuid,nodev,size=512m
+DropCapability=all
+NoNewPrivileges=true
+PodmanArgs=--cpus=1 --memory=2g --memory-swap=2g --pids-limit=256
+
+[Service]
+Environment=CONTAINERS_STORAGE_CONF=%h/.config/marketlab/storage.conf
+Restart=always
+RestartSec=5
+TimeoutStartSec=120
+TimeoutStopSec=45
+
+[Install]
+WantedBy=default.target
