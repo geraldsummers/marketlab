@@ -1,9 +1,10 @@
 [Unit]
-Description=Marketlab persistent frozen retrospective social analysis
+Description=Marketlab offline registered retrospective analysis
+After=marketlab-backfill-market.service marketlab-backfill-social-a.service marketlab-backfill-social-b.service
 StartLimitIntervalSec=0
 
 [Service]
-Environment=CONTAINERS_STORAGE_CONF=/home/gerald/.config/marketlab/storage.conf
+Environment=CONTAINERS_STORAGE_CONF=%h/.config/marketlab/storage.conf
 ExecStart=/usr/bin/podman run --rm --replace \
   --name marketlab-backfill-analysis \
   --network=none \
@@ -11,9 +12,9 @@ ExecStart=/usr/bin/podman run --rm --replace \
   --userns=keep-id:uid=10001,gid=10001 \
   --cpus=20 --memory=32768m --memory-swap=32768m \
   --tmpfs=/tmp:rw,exec,nosuid,nodev,size=2g \
-  --mount=type=bind,src=/mnt/media/marketlab/raw/social-backfill,dst=/mnt/media/marketlab/raw/social-backfill,rw=true,relabel=shared \
-  localhost/marketlab-social-backfill@sha256:cffe44702c28d61be07292102b0f2ab38fe97d04a09b90ab533b161e6cdc238f \
-  --output-root /mnt/media/marketlab/raw/social-backfill \
+  --mount=type=bind,src=/mnt/media/marketlab/raw/social-backfill-v2,dst=/mnt/media/marketlab/raw/social-backfill-v2,rw=true,relabel=shared \
+  @SOCIAL_BACKFILL_IMAGE_DIGEST@ \
+  --output-root /mnt/media/marketlab/raw/social-backfill-v2 \
   --models-root /mnt/stack/marketlab/models \
   --model-lock /opt/marketlab/research/sentiment-models.lock.json \
   --program-lock /opt/marketlab/research/social-backfill-program.lock.json \
@@ -25,6 +26,7 @@ ExecStop=-/usr/bin/podman stop --time 30 marketlab-backfill-analysis
 Restart=on-failure
 RestartSec=30min
 TimeoutStopSec=45
+RemainAfterExit=yes
 
 [Install]
 WantedBy=default.target

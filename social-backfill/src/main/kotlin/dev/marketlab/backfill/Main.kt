@@ -20,9 +20,6 @@ fun main(arguments: Array<String>) {
         RetrospectiveAnalysis(config, store).run()
     }
     if (config.sources.none { it == "market" || it == "social" }) return
-    val modelLock = SentimentModelLock.read(config.modelLock)
-    val verified = modelLock.verify(config.modelsRoot)
-    val socialIdentity = verified.single { it.lock.key == "social-twitter-roberta" }
     val client =
         HttpClient(CIO) {
             install(HttpTimeout) {
@@ -41,6 +38,10 @@ fun main(arguments: Array<String>) {
                 BinanceMarketBackfill(config, client, store).run()
             }
             if ("social" in config.sources) {
+                val modelLock = SentimentModelLock.read(config.modelLock)
+                val verified = modelLock.verify(config.modelsRoot)
+                val socialIdentity =
+                    verified.single { it.lock.key == "social-twitter-roberta" }
                 OnnxSentimentModel(socialIdentity).use { model ->
                     BlueskyBackfill(
                         config = config,

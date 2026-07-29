@@ -25,6 +25,9 @@ MARKETLAB_MAINNET_TESTS=1 ./gradlew :data:test \
 ## Components
 
 - `contracts`: immutable domain and wire contracts
+- `evidence-core`: atomic, content-addressed immutable evidence storage
+- `historical-data`: typed study locks, universes, slices, and time boundaries
+- `sentiment-core`: frozen preprocessing, language detection, and ONNX inference
 - `theory-dsl`: compiled, canonical theory configuration DSL
 - `data`: real-data collectors and snapshot construction
 - `engine`: causal features, validation, forecasting, and paper execution
@@ -36,6 +39,7 @@ MARKETLAB_MAINNET_TESTS=1 ./gradlew :data:test \
 - `collector`: continuous BTC trades/BBO/L2 mainnet capture into bounded raw segments
 - `social-collector`: exact-byte public social and news capture
 - `sentiment-worker`: hash-locked ONNX inference and causal feature materialization
+- `social-backfill`: registered historical acquisition and offline analysis
 - `worker-kotlin`: isolated batch worker entry point
 - `runner`: allowlisted rootless Podman launcher
 - `research-cli`: the first production real-data funding screen
@@ -112,3 +116,9 @@ owner/API/coordinator PostgreSQL roles, loopback-only HTTP, no container-engine
 socket in application containers, and hot/cold storage split across
 `/mnt/stack/marketlab` and `/mnt/media/marketlab`. Build, verification, rollback,
 and SSH-tunnel instructions are in [`deploy/README.md`](deploy/README.md).
+
+Historical backfill is release-managed as four persistent user services:
+Binance market acquisition, two deterministic Bluesky shards, and a
+network-isolated analyzer. Their single source of study configuration is
+[`research/social-backfill-program.lock.json`](research/social-backfill-program.lock.json);
+the v2 program explicitly contains no Farcaster source.

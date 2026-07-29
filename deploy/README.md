@@ -31,6 +31,7 @@ Cold or append-heavy state is kept on `/mnt/media`:
 - `/mnt/media/marketlab/raw/hyperliquid-stream`
 - `/mnt/media/marketlab/raw/public-information`
 - `/mnt/media/marketlab/raw/social-market`
+- `/mnt/media/marketlab/raw/social-backfill-v2`
 - `/mnt/media/marketlab/cold-artifacts`
 - `/mnt/media/marketlab/backups`
 
@@ -45,6 +46,7 @@ Secrets and activation state stay under the deployment user's home:
 - `~/.local/state/marketlab`
 - `~/.config/containers/systemd`
 - `~/.config/systemd/user/marketlab-runner.service`
+- `~/.config/systemd/user/marketlab-backfill-*.service`
 
 ## Images and trust boundary
 
@@ -159,6 +161,14 @@ acknowledgements from all three mainnet streams, and runs the security
 verification. It restores the prior unit files automatically if startup or
 verification fails.
 
+Activation also installs and enables four release-pinned historical-study
+units. Market acquisition and two deterministic Bluesky shards have outbound
+network access and write only the v2 evidence root. Analysis has no network
+and retries until every registered manifest is present. Completed units remain
+active-exited and all four are enabled under the user manager, so unfinished
+work resumes after a service or host restart. Releases predating the v2 schema
+disable these units during rollback without deleting evidence.
+
 Collector shutdown has three ordered bounds: the JVM waits at most 50 seconds
 for queue draining and segment finalization, Quadlet gives the container 60
 seconds before forced termination, and systemd gives the complete stop command
@@ -178,6 +188,8 @@ manifest review is the intentional approval boundary.
 ```sh
 ssh gerald@192.168.0.11 \
   "cd /mnt/stack/marketlab/source-releases/$release && deploy/verify.sh $release"
+ssh gerald@192.168.0.11 \
+  "cd /mnt/stack/marketlab/source-releases/$release && deploy/verify-backfill.sh $release"
 ssh -N -L 8080:127.0.0.1:8080 gerald@192.168.0.11
 ```
 
@@ -207,58 +219,24 @@ ssh gerald@192.168.0.11 \
 The wrapper injects the release's 64-character source SHA-256. Do not pass
 `--allow-unversioned` for production evidence.
 
-## Run the retrospective social backfill
+## Operate the retrospective social backfill
 
-The separately registered backfill is discovery-only. Run its digest-pinned
-image with no credentials, a read-only model mount, and a single writable
-backfill root. The command is resumable at completed source-day and market-asset
-boundaries. `--assets` can safely shard disjoint symbols across containers.
-Bluesky capture uses bounded UTC search windows because the public endpoint
-rejects cursor pagination; it is historical search capture, not a claim of
-complete archive coverage.
+The registered discovery-only backfill is installed during activation. It is
+resumable at completed source-day and market-asset boundaries. Bluesky capture
+uses bounded UTC search windows because the public endpoint rejects cursor
+pagination; it is historical search capture, not a claim of complete archive
+coverage.
 
 ```sh
-backfill_image=$(sed -n 's/^SOCIAL_BACKFILL_IMAGE=//p' \
-  /mnt/stack/marketlab/releases/$release/images.env)
-podman run --rm \
-  --network=slirp4netns:allow_host_loopback=false \
-  --read-only --cap-drop=all --security-opt=no-new-privileges \
-  --userns=keep-id:uid=10001,gid=10001 \
-  --cpus=20 --memory=49152m --memory-swap=49152m \
-  --tmpfs=/tmp:rw,exec,nosuid,nodev,size=8g \
-  --mount=type=bind,src=/mnt/media/marketlab/raw/social-backfill,dst=/mnt/media/marketlab/raw/social-backfill,rw=true,relabel=shared \
-  --mount=type=bind,src=/mnt/stack/marketlab/models,dst=/mnt/stack/marketlab/models,ro=true,relabel=shared \
-  "$backfill_image" \
-  --output-root /mnt/media/marketlab/raw/social-backfill \
-  --models-root /mnt/stack/marketlab/models \
-  --model-lock /opt/marketlab/research/sentiment-models.lock.json \
-  --program-lock /opt/marketlab/research/social-backfill-program.lock.json \
-  --start 2025-10-04T00:00:00Z \
-  --end 2026-07-01T00:00:00Z \
-  --sources market,social
+systemctl --user status 'marketlab-backfill-*'
+journalctl --user -u marketlab-backfill-social-a -f
+find /mnt/media/marketlab/raw/social-backfill-v2/social/manifests \
+  -type f -name '*.json' | wc -l
 ```
 
-After all ten market manifests and all 2,700 social source-day manifests exist,
-run the frozen retrospective analysis without network access:
-
-```sh
-podman run --rm \
-  --network=none \
-  --read-only --cap-drop=all --security-opt=no-new-privileges \
-  --userns=keep-id:uid=10001,gid=10001 \
-  --tmpfs=/tmp:rw,exec,nosuid,nodev,size=2g \
-  --mount=type=bind,src=/mnt/media/marketlab/raw/social-backfill,dst=/mnt/media/marketlab/raw/social-backfill,rw=true,relabel=shared \
-  --mount=type=bind,src=/mnt/stack/marketlab/models,dst=/mnt/stack/marketlab/models,ro=true,relabel=shared \
-  "$backfill_image" \
-  --output-root /mnt/media/marketlab/raw/social-backfill \
-  --models-root /mnt/stack/marketlab/models \
-  --model-lock /opt/marketlab/research/sentiment-models.lock.json \
-  --program-lock /opt/marketlab/research/social-backfill-program.lock.json \
-  --analysis-lock /opt/marketlab/research/social-backfill-analysis.lock.json \
-  --start 2025-10-04T00:00:00Z \
-  --end 2026-07-01T00:00:00Z \
-  --sources analysis
-```
+`deploy/verify-backfill.sh` proves that every unit is enabled, uses the release
+image digest and v2 root, that analysis is network-isolated, and that the
+frozen program lock exactly matches the release image.
 
 ## Roll back
 

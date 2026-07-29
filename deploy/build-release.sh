@@ -208,6 +208,7 @@ COLLECTOR_IMAGE=$collector_image
 SOCIAL_COLLECTOR_IMAGE=$social_collector_image
 SENTIMENT_WORKER_IMAGE=$sentiment_worker_image
 SOCIAL_BACKFILL_IMAGE=$social_backfill_image
+BACKFILL_PROGRAM_SCHEMA=marketlab.social-backfill-program-lock.v2
 RESEARCH_IMAGE=$research_image
 RUNNER_IMAGE=$runner_image
 EOF
