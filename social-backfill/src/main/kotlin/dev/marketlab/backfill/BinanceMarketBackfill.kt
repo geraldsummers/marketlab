@@ -1,6 +1,7 @@
 package dev.marketlab.backfill
 
 import dev.marketlab.evidence.ImmutableEvidenceStore
+import dev.marketlab.historical.HistoricalAsset
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -23,10 +24,10 @@ internal class BinanceMarketBackfill(
     private val clock: Clock = Clock.systemUTC(),
 ) {
     suspend fun run() {
-        for (asset in ASSETS.filter { it.symbol in config.assets }) captureAsset(asset)
+        for (asset in config.study.assets.filter { it.symbol in config.assets }) captureAsset(asset)
     }
 
-    private suspend fun captureAsset(asset: AssetSpec) {
+    private suspend fun captureAsset(asset: HistoricalAsset) {
         val manifestPath = store.root.resolve("market/manifests/${asset.symbol}.json")
         if (Files.isRegularFile(manifestPath)) return
         val bars = mutableListOf<MarketBar15m>()
@@ -36,7 +37,7 @@ internal class BinanceMarketBackfill(
         var accumulator: BarAccumulator? = null
         var gapCount = 0
         var missingMinuteCount = 0L
-        for (month in MONTHS) {
+        for (month in config.study.marketMonths) {
             val uri = archiveUri(asset, month)
             val retrievedAt = clock.instant()
             val checksumBytes = getWithRetry("$uri.CHECKSUM")
@@ -131,7 +132,7 @@ internal class BinanceMarketBackfill(
         )
     }
 
-    private fun archiveUri(asset: AssetSpec, month: YearMonth): String {
+    private fun archiveUri(asset: HistoricalAsset, month: YearMonth): String {
         val name = "${asset.binanceSymbol}-1m-$month.zip"
         return "$ROOT/${asset.binanceSymbol}/1m/$name"
     }

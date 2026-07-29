@@ -3,6 +3,7 @@ rootProject.name = "marketlab"
 include(
     "contracts",
     "evidence-core",
+    "historical-data",
     "sentiment-core",
     "theory-dsl",
     "data",

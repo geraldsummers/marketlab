@@ -1,9 +1,10 @@
 package dev.marketlab.backfill
 
+import dev.marketlab.historical.HistoricalAsset
+import dev.marketlab.historical.HistoricalStudyLock
 import java.nio.file.Path
 import java.time.Instant
 import java.time.LocalDate
-import java.time.YearMonth
 import kotlinx.serialization.Serializable
 
 internal data class BackfillConfig(
@@ -16,6 +17,7 @@ internal data class BackfillConfig(
     val endExclusive: Instant,
     val sources: Set<String>,
     val assets: Set<String>,
+    val study: HistoricalStudyLock,
 ) {
     init {
         listOfNotNull(outputRoot, modelsRoot, modelLock, programLock, analysisLock).forEach {
@@ -24,7 +26,10 @@ internal data class BackfillConfig(
         require(outputRoot.normalize().nameCount >= 2) { "backfill output root is too broad" }
         require(start < endExclusive) { "backfill start must precede end" }
         require(sources.isNotEmpty() && sources.all { it in setOf("social", "market", "analysis") })
-        require(assets.isNotEmpty() && assets.all { requested -> ASSETS.any { it.symbol == requested } }) {
+        require(start == study.startInclusive && endExclusive == study.endExclusive) {
+            "command period differs from the registered study"
+        }
+        require(assets.isNotEmpty() && assets.all { it in study.assetSymbols }) {
             "unknown or empty asset subset"
         }
         require("analysis" !in sources || analysisLock != null) {
@@ -65,11 +70,13 @@ internal data class BackfillConfig(
                 requireNotNull(values[key]?.trim()?.takeIf(String::isNotEmpty)) {
                     "--$key is required"
                 }
+            val programLock = Path.of(required("program-lock")).toAbsolutePath().normalize()
+            val study = HistoricalStudyLock.read(programLock)
             return BackfillConfig(
                 outputRoot = Path.of(required("output-root")).toAbsolutePath().normalize(),
                 modelsRoot = Path.of(required("models-root")).toAbsolutePath().normalize(),
                 modelLock = Path.of(required("model-lock")).toAbsolutePath().normalize(),
-                programLock = Path.of(required("program-lock")).toAbsolutePath().normalize(),
+                programLock = programLock,
                 analysisLock =
                     values["analysis-lock"]
                         ?.trim()
@@ -89,46 +96,26 @@ internal data class BackfillConfig(
                         ?.map(String::trim)
                         ?.filter(String::isNotEmpty)
                         ?.toSet()
-                        ?: ASSETS.map(AssetSpec::symbol).toSet(),
+                        ?: study.assetSymbols,
+                study = study,
             )
         }
     }
 }
 
-internal data class AssetSpec(
-    val symbol: String,
-    val query: String,
-    val match: Regex,
-) {
-    val binanceSymbol: String = "${symbol}USDT"
-}
+internal val HistoricalAsset.binanceSymbol: String
+    get() = "${symbol}USDT"
 
-internal val ASSETS =
-    listOf(
-        AssetSpec("BTC", "bitcoin", Regex("""(?i)(\${'$'}BTC\b|\bbitcoin\b)""")),
-        AssetSpec("ETH", "ethereum", Regex("""(?i)(\${'$'}ETH\b|\bethereum\b|\bether\b)""")),
-        AssetSpec("HYPE", "hyperliquid", Regex("""(?i)(\${'$'}HYPE\b|\bhyperliquid\b)""")),
-        AssetSpec("LIT", "lighter crypto", Regex("""(?i)(\${'$'}LIT\b|\blighter\b)""")),
-        AssetSpec("NEAR", "near protocol", Regex("""(?i)(\${'$'}NEAR\b|\bnear protocol\b)""")),
-        AssetSpec("PUMP", "pump.fun", Regex("""(?i)(\${'$'}PUMP\b|\bpump\.fun\b)""")),
-        AssetSpec("SOL", "solana", Regex("""(?i)(\${'$'}SOL\b|\bsolana\b)""")),
-        AssetSpec("WLD", "worldcoin", Regex("""(?i)(\${'$'}WLD\b|\bworldcoin\b|\bworld network\b)""")),
-        AssetSpec("XRP", "xrp ripple", Regex("""(?i)(\${'$'}XRP\b|\bXRP\b|\bripple\b)""")),
-        AssetSpec("ZEC", "zcash", Regex("""(?i)(\${'$'}ZEC\b|\bzcash\b)""")),
-    )
-
-internal val MONTHS =
-    listOf(
-        "2025-10",
-        "2025-11",
-        "2025-12",
-        "2026-01",
-        "2026-02",
-        "2026-03",
-        "2026-04",
-        "2026-05",
-        "2026-06",
-    ).map(YearMonth::parse)
+internal val HistoricalAsset.match: Regex
+    get() {
+        val alternatives =
+            buildList {
+                add("""\${'$'}${Regex.escape(symbol)}\b""")
+                if (matchPlainSymbol) add("""\b${Regex.escape(symbol)}\b""")
+                matchTerms.forEach { add("""\b${Regex.escape(it)}\b""") }
+            }
+        return Regex("(?i)(${alternatives.joinToString("|")})")
+    }
 
 @Serializable
 internal data class RawResponseManifest(
