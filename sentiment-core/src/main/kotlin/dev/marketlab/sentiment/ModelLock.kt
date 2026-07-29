@@ -9,6 +9,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 @Serializable
+/** Immutable identities and checksums for locally executed sentiment models. */
 data class SentimentModelLock(
     val schemaVersion: String,
     val preprocessingSha256: String,

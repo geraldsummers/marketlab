@@ -1,6 +1,7 @@
 package dev.marketlab.backfill
 
 import dev.marketlab.contracts.MarketTimestamp
+import dev.marketlab.evidence.ImmutableEvidenceStore
 import dev.marketlab.engine.FeatureVector
 import dev.marketlab.engine.ForecastMetrics
 import dev.marketlab.engine.LabeledObservation
@@ -24,7 +25,7 @@ import org.hipparchus.special.Erf
 
 internal class RetrospectiveAnalysis(
     private val config: BackfillConfig,
-    private val store: ArtifactStore,
+    private val store: ImmutableEvidenceStore,
     private val clock: Clock = Clock.systemUTC(),
 ) {
     fun run() {

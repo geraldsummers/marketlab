@@ -1,5 +1,6 @@
 package dev.marketlab.backfill
 
+import dev.marketlab.evidence.ImmutableEvidenceStore
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -18,7 +19,7 @@ import kotlinx.serialization.json.Json
 internal class BinanceMarketBackfill(
     private val config: BackfillConfig,
     private val client: HttpClient,
-    private val store: ArtifactStore,
+    private val store: ImmutableEvidenceStore,
     private val clock: Clock = Clock.systemUTC(),
 ) {
     suspend fun run() {

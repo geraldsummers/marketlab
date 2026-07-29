@@ -1,5 +1,6 @@
 package dev.marketlab.backfill
 
+import dev.marketlab.evidence.ImmutableEvidenceStore
 import dev.marketlab.sentiment.FrozenLanguageDetector
 import dev.marketlab.sentiment.OnnxSentimentModel
 import io.ktor.client.HttpClient
@@ -26,7 +27,7 @@ import kotlinx.serialization.json.jsonPrimitive
 internal class BlueskyBackfill(
     private val config: BackfillConfig,
     private val client: HttpClient,
-    private val store: ArtifactStore,
+    private val store: ImmutableEvidenceStore,
     private val model: OnnxSentimentModel,
     private val languageDetector: FrozenLanguageDetector,
     private val clock: Clock = Clock.systemUTC(),

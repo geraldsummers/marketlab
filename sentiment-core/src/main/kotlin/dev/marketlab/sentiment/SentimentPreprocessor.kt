@@ -1,6 +1,6 @@
 package dev.marketlab.sentiment
 
-internal object SentimentPreprocessor {
+object SentimentPreprocessor {
     const val SPEC =
         "marketlab.sentiment.preprocessing.v1|unicode=NFKC|null=space|whitespace=collapse|" +
             "social.handle=@user|social.url=http|news=normalized|trim=true"

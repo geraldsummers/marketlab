@@ -3,6 +3,7 @@ package dev.marketlab.backfill
 import dev.marketlab.sentiment.FrozenLanguageDetector
 import dev.marketlab.sentiment.OnnxSentimentModel
 import dev.marketlab.sentiment.SentimentModelLock
+import dev.marketlab.evidence.ImmutableEvidenceStore
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.HttpTimeout
@@ -18,7 +19,7 @@ import kotlinx.serialization.json.jsonPrimitive
 fun main(arguments: Array<String>) {
     val config = BackfillConfig.parse(arguments)
     Files.createDirectories(config.outputRoot)
-    val store = ArtifactStore(config.outputRoot)
+    val store = ImmutableEvidenceStore(config.outputRoot)
     verifyRegistration(config, store)
     if ("analysis" in config.sources) {
         RetrospectiveAnalysis(config, store).run()
@@ -61,7 +62,7 @@ fun main(arguments: Array<String>) {
     }
 }
 
-private fun verifyRegistration(config: BackfillConfig, store: ArtifactStore) {
+private fun verifyRegistration(config: BackfillConfig, store: ImmutableEvidenceStore) {
     val bytes = Files.readAllBytes(config.programLock)
     val lock = JSON.parseToJsonElement(bytes.decodeToString()).jsonObject
     require(
