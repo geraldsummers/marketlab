@@ -39,11 +39,23 @@ source_digest() {
         --numeric-owner \
         --mode='a=rX,u+w,a-s' \
         --exclude='./.git' \
+        --exclude='./.gitconfig' \
+        --exclude='./.cache' \
+        --exclude='./.codex' \
+        --exclude='./.config' \
+        --exclude='./.djl.ai' \
+        --exclude='./.java' \
+        --exclude='./.local' \
+        --exclude='./.ssh' \
+        --exclude='./.worklane' \
+        --exclude='./.zshenv' \
+        --exclude='./.zshrc' \
         --exclude='./.gradle' \
         --exclude='./.kotlin' \
         --exclude='./.idea' \
         --exclude='./.testdata' \
         --exclude='./.venv' \
+        --exclude='./.venv-*' \
         --exclude='./.tmp' \
         --exclude='./runtime-data' \
         --exclude='./artifacts' \
@@ -208,6 +220,8 @@ COLLECTOR_IMAGE=$collector_image
 SOCIAL_COLLECTOR_IMAGE=$social_collector_image
 SENTIMENT_WORKER_IMAGE=$sentiment_worker_image
 SOCIAL_BACKFILL_IMAGE=$social_backfill_image
+SOCIAL_MODEL_TRAINER_REQUIREMENTS_SHA256=$(sha256sum "$REPOSITORY_ROOT/social-model/requirements.lock" | awk '{print $1}')
+SOCIAL_MODEL_TRAINER_SHA256=$(sha256sum "$REPOSITORY_ROOT/social-model/trainer.py" | awk '{print $1}')
 BACKFILL_PROGRAM_SCHEMA=marketlab.social-backfill-program-lock.v2
 RESEARCH_IMAGE=$research_image
 RUNNER_IMAGE=$runner_image

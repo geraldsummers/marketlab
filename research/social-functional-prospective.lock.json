@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "marketlab.social-functional-prospective-lock.v1",
+  "programId": "social-functional-shadow-v1",
+  "classification": "PROSPECTIVE_SHADOW_FORECAST",
+  "candidates": [
+    {
+      "candidateId": "attention-bluesky-compatible-v1",
+      "requiredSources": ["bluesky"],
+      "featurePolicy": "Use the frozen attention-complete-panel-v1 schema with Bluesky as the sole source."
+    },
+    {
+      "candidateId": "attention-multi-source-v1",
+      "requiredSources": ["bluesky", "nostr", "gdelt", "rss"],
+      "robustnessSources": ["mastodon"],
+      "featurePolicy": "Add source-specific counts, sources-with-posts, aggregate counts, and cross-source ranks; retain zero-source and zero-message states."
+    }
+  ],
+  "targets": ["return_15m", "variance_1h", "return_1d", "variance_1d"],
+  "minimumConfirmationDays": 90,
+  "acceptance": "Each frozen artifact must improve primary forecast loss over every registered market-only baseline with Holm correction across four targets.",
+  "paperTradingAuthorized": false,
+  "liveTradingAuthorized": false
+}

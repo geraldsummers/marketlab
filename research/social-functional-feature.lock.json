@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "marketlab.social-functional-feature-lock.v1",
+  "featureSetId": "attention-complete-panel-v1",
+  "availabilityClock": "Bluesky indexedAt historical proxy",
+  "panelPolicy": "Emit every complete asset-time row; zero social activity is an observed feature, never a missing row.",
+  "socialFeatures": [
+    "post counts over 15 minutes, 1 hour, 6 hours, and 24 hours",
+    "presence, source coverage, unique-author counts, time since last post, count change, and 30-day hourly burst z-score",
+    "contemporaneous cross-sectional attention rank",
+    "sixteen causal 15-minute count lags"
+  ],
+  "marketControls": [
+    "latest asset and BTC 15-minute returns",
+    "trailing 1-hour and 24-hour realized variance",
+    "UTC hour and weekday cyclic encodings"
+  ],
+  "targets": [
+    "next 15-minute return",
+    "next 1-hour realized variance",
+    "next UTC-day return at daily decisions",
+    "next UTC-day realized variance at daily decisions"
+  ],
+  "sentimentIncluded": false
+}

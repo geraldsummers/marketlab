@@ -14,7 +14,7 @@ RUN groupadd --system --gid 10001 marketlab \
     && useradd --system --uid 10001 --gid marketlab --home-dir /nonexistent --shell /usr/sbin/nologin marketlab
 WORKDIR /opt/marketlab
 COPY --from=build --chown=marketlab:marketlab /workspace/social-backfill/build/install/social-backfill/ ./
-COPY --chown=marketlab:marketlab research/sentiment-models.lock.json research/social-backfill-program.lock.json research/social-backfill-analysis.lock.json /opt/marketlab/research/
+COPY --chown=marketlab:marketlab research/sentiment-models.lock.json research/social-backfill-program.lock.json research/social-backfill-analysis.lock.json research/social-functional-feature.lock.json research/social-functional-search.lock.json research/social-functional-blind-extension.lock.json research/social-functional-prospective.lock.json /opt/marketlab/research/
 USER 10001:10001
 ENV TZ=UTC
 ENTRYPOINT ["/opt/marketlab/bin/social-backfill"]

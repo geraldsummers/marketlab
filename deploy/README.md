@@ -238,6 +238,20 @@ find /mnt/media/marketlab/raw/social-backfill-v2/social/manifests \
 image digest and v2 root, that analysis is network-isolated, and that the
 frozen program lock exactly matches the release image.
 
+## Train the functional social forecast models
+
+The functional search is a separate retrospective-exploration workflow. First
+materialize the original acquisition through the release-pinned backfill image,
+then run `social-model/trainer.py train` in a user-space Python environment on
+the GPU host. The release manifest records hashes for both the trainer and its
+requirements file; verify them before training. The trainer publishes an
+immutable trial ledger, four model artifacts, and `frozen-models.json`.
+
+Do not start the separately registered June–July blind acquisition until that
+frozen manifest has been copied into durable evidence storage. June supplies
+feature warm-up only. Run `trainer.py evaluate` once on July feature rows, and
+use `trainer.py score` for label-independent prospective shadow forecasts.
+
 ## Roll back
 
 Roll back to the immediate predecessor:
