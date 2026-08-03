@@ -105,6 +105,8 @@ def loss(target: str, actual: np.ndarray, prediction: np.ndarray) -> np.ndarray:
 
 
 class TorchRegressor:
+    BATCH_SIZE = 4_096
+
     def __init__(self, family: str, width: int, learning_rate: float, epochs: int, seed: int):
         self.family, self.width, self.learning_rate, self.epochs, self.seed = family, width, learning_rate, epochs, seed
         self.mean = self.scale = self.model = None
@@ -114,8 +116,6 @@ class TorchRegressor:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.mean = x.mean(axis=0)
         self.scale = np.where(x.std(axis=0) == 0.0, 1.0, x.std(axis=0))
-        values = torch.tensor((x - self.mean) / self.scale, dtype=torch.float32, device=device)
-        labels = torch.tensor(y[:, None], dtype=torch.float32, device=device)
         if self.family == "temporal_convolution":
             model = torch.nn.Sequential(
                 torch.nn.Unflatten(1, (1, x.shape[1])),
@@ -130,16 +130,32 @@ class TorchRegressor:
         model.train()
         for _ in range(self.epochs):
             optimizer.zero_grad()
-            error = torch.nn.functional.mse_loss(model(values), labels)
-            error.backward()
+            for start in range(0, len(x), self.BATCH_SIZE):
+                stop = min(start + self.BATCH_SIZE, len(x))
+                values = torch.as_tensor(
+                    (x[start:stop] - self.mean) / self.scale,
+                    dtype=torch.float32,
+                    device=device,
+                )
+                labels = torch.as_tensor(y[start:stop, None], dtype=torch.float32, device=device)
+                error = torch.nn.functional.mse_loss(model(values), labels)
+                (error * ((stop - start) / len(x))).backward()
             optimizer.step()
         self.model = model.cpu().eval()
+        if device.type == "cuda":
+            torch.cuda.empty_cache()
         return self
 
     def predict(self, x: np.ndarray) -> np.ndarray:
-        values = torch.tensor((x - self.mean) / self.scale, dtype=torch.float32)
+        predictions = []
         with torch.no_grad():
-            return self.model(values).numpy().reshape(-1).astype(np.float64)
+            for start in range(0, len(x), self.BATCH_SIZE):
+                values = torch.as_tensor(
+                    (x[start:start + self.BATCH_SIZE] - self.mean) / self.scale,
+                    dtype=torch.float32,
+                )
+                predictions.append(self.model(values).numpy().reshape(-1))
+        return np.concatenate(predictions).astype(np.float64)
 
 
 class GruHead(torch.nn.Module):

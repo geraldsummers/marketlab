@@ -25,6 +25,20 @@ class TrainerTest(unittest.TestCase):
             self.assertEqual((3,), prediction.shape)
             self.assertTrue(np.isfinite(prediction).all())
 
+    def test_torch_regressor_accumulates_across_micro_batches(self):
+        x = np.asarray([[float(row), float(row % 5)] for row in range(23)])
+        y = x[:, 0] * 0.01
+        original_batch_size = trainer.TorchRegressor.BATCH_SIZE
+        trainer.TorchRegressor.BATCH_SIZE = 7
+        try:
+            for family in ("temporal_convolution", "gated_recurrent_unit"):
+                model = trainer.TorchRegressor(family, width=8, learning_rate=1e-3, epochs=2, seed=17)
+                prediction = model.fit(x, y).predict(x)
+                self.assertEqual((23,), prediction.shape)
+                self.assertTrue(np.isfinite(prediction).all())
+        finally:
+            trainer.TorchRegressor.BATCH_SIZE = original_batch_size
+
     def test_train_freeze_score_and_blind_evaluate(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
