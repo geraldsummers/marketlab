@@ -15,6 +15,7 @@ when it fails, is abandoned, or cannot acquire sufficiently complete real data.
 - [Functional attention feature lock](social-functional-feature.lock.json)
 - [Functional model-search lock](social-functional-search.lock.json)
 - [Blind July acquisition lock](social-functional-blind-extension.lock.json)
+- [Blind July continuation runbook](social-functional-blind-extension-runbook.md)
 - [Prospective dual-source-policy lock](social-functional-prospective.lock.json)
 
 The functional-model search is retrospective exploration. Its winner must be
