@@ -291,3 +291,56 @@ blocked. The immutable report and prediction hashes are respectively
 `ce2fd80019dd2a3a37e6aa726dadc10759c91376d5805440c0b7202c3e8bea43`
 and
 `9a87809cffb9fa0e2c33d384aa4249721c3633c689e86dd58f57d9f33cf608e6`.
+
+## 2026-08-05 — Social-attention functional model blind July validation
+
+**Frozen boundary before acquisition:** the corrected 40-trial chronological
+search completed under release `marketlab-social-functional-5f9b1b0`, source
+digest
+`44bc753d773915630e5cda8e5ee7049c0d74aa4af7c8e0edcf4f49567d7e51f2`.
+Its externally pinned model-set manifest hash was
+`70d73e2f3c12d05b0d31cc5460b6b97fd113e692f85e61f698a8835b009fb983`.
+That hash was verified while the blind evidence root was absent. No model,
+feature, baseline, search, or acceptance rule changed after the boundary.
+
+**Blind acquisition and materialization:** the registered root was opened at
+`2026-08-04T06:47:16Z`. The digest-pinned backfill image acquired all ten
+Binance market manifests with 5,856 fifteen-minute bars per asset, zero gaps,
+and zero missing minutes. Two disjoint Bluesky shards acquired all 610 daily
+social manifests, 61 for each of ten assets, with zero service restarts. The
+last acquisition manifest completed at `2026-08-04T14:25:42Z`. The frozen
+program-lock hash is
+`ec30222c94a2bf84081ff3783518293dfd7f6a8599c9e382a29c642d82bc2fe6`.
+
+June was used only for the registered 30-day feature warm-up. Materialization
+completed at `2026-08-04T14:26:23Z` and emitted exactly 29,760 July rows,
+2,976 for every asset. The feature object hash is
+`a376614dc095e6c0a053f59e07e88fe67cd670e9774fe9729408266a598564e7`;
+the feature-manifest hash is
+`b5fd387d6fbb6f765afe82eb5db77017f88d9121a4e56bb381428343a7520ffd`.
+
+**One-time result:** evaluation completed at `2026-08-04T14:26:27Z`. The
+one-hour realized-variance model passed every frozen target-level gate. Its
+mean QLIKE-loss improvement over the strongest market-only elastic-net
+baseline was `0.027668041870337765`; all ten assets improved; its HAC
+two-sided p-value was `0.0000029576948074969817`, and its Holm-adjusted value
+across all four target comparisons was `0.000011830779229987927`.
+
+The other targets did not pass. Fifteen-minute return improved by only
+`3.901545267283385e-9` with eight positive assets and Holm-adjusted `p = 1.0`.
+One-day return was worse by `-0.000010108674048288167`, with three positive
+assets and adjusted `p = 1.0`. One-day variance improved by
+`0.021780056266059188` across nine assets, but was not statistically
+confirmed (`p = 0.08113559893110485`, Holm-adjusted `p =
+0.24340679679331456`). Failure does not authorize refitting or relabeling any
+target.
+
+**Decision and limits:** the durable blind report hash is
+`07537da00a1088b5a445be8adc931e274539b82cecf8a3ca1f0adc28fd15c4c0`.
+The exact frozen one-hour variance artifact is admitted only to the registered
+90-day prospective shadow-forecast stage. This is evidence of incremental
+one-hour variance forecasting function, not price-direction predictability or
+a trading strategy. Paper and live trading remain unauthorized. The
+prospective shadow program was not opened at the time of this entry because
+durable live feature materialization, pre-outcome forecast publication, and
+outcome-sealing orchestration are not yet implemented.
