@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "marketlab.data-source-inventory.v1",
+  "id": "hyperliquid-mainnet",
+  "title": "Hyperliquid mainnet",
+  "category": "market-and-execution",
+  "status": "ACTIVE",
+  "pointInTimeUse": "Official REST snapshots plus continuously received trades, BBO, and L2 frames with exchange and local clocks.",
+  "implementations": ["data", "collector", "coordinator"],
+  "alphaSpaces": ["directional-returns", "volatility", "microstructure", "derivatives-carry", "cross-venue", "relative-value", "execution-portfolio"],
+  "limitations": ["REST candle retention is rolling", "Event archive duration and continuity gates remain incomplete", "Historical basis and open-interest state are incomplete"],
+  "nextAction": "Maintain capture and complete the microstructure continuity audit."
+}

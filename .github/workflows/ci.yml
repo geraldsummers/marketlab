@@ -24,11 +24,20 @@ jobs:
           python-version: "3.13"
       - name: Validate deployment scripts
         run: bash -n deploy/*.sh
+      - name: Validate alpha workspace
+        run: |
+          python3 research/alpha/tools/workspace.py validate
+          python3 -m unittest research/alpha/tools/test_workspace.py
       - name: Validate social model trainer
         run: |
           python3 -m py_compile social-model/trainer.py social-model/test_trainer.py
           pip install numpy==2.3.2 scikit-learn==1.7.1
           pip install torch==2.7.1 --index-url https://download.pytorch.org/whl/cpu
           python3 -m unittest social-model/test_trainer.py
+      - name: Validate archive alpha campaign
+        run: |
+          pip install duckdb==1.5.5
+          python3 -m py_compile alpha-model/campaign.py alpha-model/marketlab_alpha/*.py alpha-model/test_*.py
+          python3 -m unittest discover -s alpha-model -p 'test_*.py'
       - name: Test
         run: ./gradlew check --no-daemon

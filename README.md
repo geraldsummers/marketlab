@@ -9,6 +9,14 @@ The project never generates synthetic market prices. Empirical tests use
 production data with provenance, point-in-time availability, and explicit gap
 reports.
 
+## Start here
+
+- [`AGENTS.md`](AGENTS.md): mandatory policy for agents pursuing market alpha
+- [`docs/repository-map.md`](docs/repository-map.md): architecture and ownership
+- [`research/alpha/`](research/alpha/README.md): parallel alpha spaces and candidates
+- [`research/inventory/`](research/inventory/README.md): theories, evidence, data sources, components, and operations
+- [`deploy/README.md`](deploy/README.md): deployment and recovery
+
 ## Build
 
 ```sh
@@ -43,6 +51,7 @@ MARKETLAB_MAINNET_TESTS=1 ./gradlew :data:test \
 - `worker-kotlin`: isolated batch worker entry point
 - `runner`: allowlisted rootless Podman launcher
 - `research-cli`: the first production real-data funding screen
+- `alpha-model`: archive-backed point-in-time basket research across classical and GPU model families
 
 ## Research guarantees
 
@@ -71,6 +80,23 @@ forecast-only adaptation), cross-venue lead/lag, and five prospective
 social/news hypotheses.
 Literature selection, contradictory evidence, and the source policy are
 documented in [`research/`](research/README.md).
+
+## Parallel alpha workspace
+
+[`research/alpha/`](research/alpha/README.md) organizes the research program by
+information and market-mechanism space. Each space exposes independent
+candidate directories and ready or blocked work so multiple agents can explore
+without sharing a mutable backlog or rewriting frozen evidence.
+
+```sh
+python3 research/alpha/tools/workspace.py list
+python3 research/alpha/tools/workspace.py ready
+python3 research/alpha/tools/workspace.py validate
+```
+
+The workspace is a navigation and coordination layer. Compiled theory plans,
+experiment locks, immutable artifacts, promotion gates, and the append-only
+decision log remain authoritative.
 
 ## Prospective social/news program
 

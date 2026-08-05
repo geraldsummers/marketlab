@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "trade-flow-direction-v1",
+  "spaceId": "microstructure",
+  "title": "Trade flow and observed impact direction",
+  "stage": "DATA_FEASIBILITY",
+  "claim": "Causal aggressive-flow and observed-impact fields may improve return forecasts beyond aggregated market state.",
+  "mechanism": "Aggressive flow can be informed or liquidity-demanding; continuation, reversal, and null are all eligible outcomes.",
+  "target": "Outright or factor-residual basket-member log return.",
+  "horizon": "Locked campaign horizon grid, limited by archive timestamp quality.",
+  "informationSet": ["Aggregate trades, taker imbalance, observed price impact, and market controls"],
+  "primaryBaseline": "Strongest frozen model without flow-specific fields",
+  "evidence": [],
+  "frozenLocks": [],
+  "touchPoints": ["alpha-model", "research/alpha/campaigns/archive-directional-gpu-v1.lock.json"],
+  "nextAction": "Acquire checksum-verified trade archives and reject the lane if event ordering or gaps fail."
+}

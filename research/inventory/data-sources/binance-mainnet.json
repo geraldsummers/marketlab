@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "marketlab.data-source-inventory.v1",
+  "id": "binance-mainnet",
+  "title": "Binance public archives and market feeds",
+  "category": "market-and-cross-venue",
+  "status": "PARTIAL",
+  "pointInTimeUse": "Official historical USDT-M minute archives are used for retrospective social labels.",
+  "implementations": ["social-backfill"],
+  "alphaSpaces": ["directional-returns", "volatility", "cross-venue", "relative-value"],
+  "limitations": ["Cross-venue event capture with measured clock skew is not implemented", "Historical labels are cross-venue for Hyperliquid claims"],
+  "nextAction": "Implement synchronized event capture before registering lead-lag confirmation."
+}

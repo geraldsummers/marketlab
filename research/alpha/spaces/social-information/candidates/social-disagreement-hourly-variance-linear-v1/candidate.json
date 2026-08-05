@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "social-disagreement-hourly-variance-linear-v1",
+  "spaceId": "social-information",
+  "title": "Single-source social disagreement to hourly variance",
+  "stage": "REJECTED",
+  "claim": "A linear social-disagreement increment improves next-hour variance forecasts over registered market controls.",
+  "mechanism": "Greater disagreement creates heterogeneous trading and higher subsequent variance.",
+  "target": "Next-hour Binance perpetual realized variance",
+  "horizon": "1 hour",
+  "informationSet": ["Historically indexed Bluesky polarity dispersion", "Registered market controls"],
+  "primaryBaseline": "Registered market-only hourly-variance model",
+  "evidence": [
+    {
+      "classification": "RETROSPECTIVE_DISCOVERY_ONLY",
+      "decision": "DISCOVERY_SCREEN_NOT_PASSED",
+      "summary": "The candidate was worse than its control with Holm-adjusted p=1.0.",
+      "sourcePath": "research/social-backfill-results.md"
+    }
+  ],
+  "frozenLocks": ["research/social-backfill-analysis.lock.json"],
+  "touchPoints": ["social-backfill/src/main/kotlin/dev/marketlab/backfill/RetrospectiveAnalysis.kt"],
+  "nextAction": "Keep this linear single-source version rejected; a new disagreement mechanism requires fresh data and a separately bounded search."
+}

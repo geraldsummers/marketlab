@@ -1,0 +1,1 @@
+{"schemaVersion":"marketlab.theory-inventory.v1","id":"time-series-momentum","kind":"PARENT","disposition":"DATA_BLOCKED","alphaSpace":"directional-returns","candidateId":"time-series-momentum","implementationPath":"theories/src/main/kotlin/dev/marketlab/theories/AcademicTheoryRegistry.kt"}

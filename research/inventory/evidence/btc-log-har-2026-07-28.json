@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v1",
+  "id": "btc-log-har-2026-07-28",
+  "candidateIds": ["btc-log-har-variance-v1"],
+  "classification": "SEALED_HOLDOUT",
+  "decision": "SEALED_HOLDOUT_QLIKE_SCREEN_NOT_SUPPORTED",
+  "runId": "fbda33cb-bc46-49a4-90a2-34ad642321e4",
+  "summarySource": "research/theory-exhaustion.md",
+  "artifacts": [
+    {"role":"report","sha256":"19414bbc1c898fe79262d49b4cfe55f586785131ccd4942f530fa47431ade8db","location":"coordinator content-addressed artifact store"},
+    {"role":"predictions","sha256":"78b97e462f39a4c4c316817bd0550642b1ae2cdf7d6738bbce12cbbed4cf9d2b","location":"coordinator content-addressed artifact store"}
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "marketlab.alpha-campaign-lock.v1",
+  "campaignId": "archive-directional-gpu-v1",
+  "stage": "EXPLORATORY",
+  "createdAt": "2026-08-05T00:00:00Z",
+  "userConstraints": [
+    "BTC and ETH are mandatory members of every eligible basket",
+    "Use public or free historical data before requesting paid acquisition",
+    "Directional price prediction is the primary research objective",
+    "This phase must not wait for future wall-clock observations"
+  ],
+  "designConventions": [
+    "Prior thirty-day notional ranks assets only to bound liquidity and data quality",
+    "Basket sizes and horizons are bounded search dimensions rather than presumed optima",
+    "Forecast evidence is evaluated before execution or portfolio claims",
+    "Every attempted configuration remains in the immutable trial ledger"
+  ],
+  "empiricalClaims": [
+    "BTC may or may not improve forecasts beyond alternative market factors",
+    "Divergence may continue, reverse, or contain no stable information",
+    "No estimator family or forecast horizon is presumed superior",
+    "A richer information set may fail to improve the strongest market-only baseline"
+  ],
+  "mechanisms": [
+    "market-state",
+    "market-transmission",
+    "cross-asset-divergence",
+    "trade-flow",
+    "derivatives-positioning",
+    "cross-market",
+    "social-information",
+    "options-implied",
+    "onchain-macro"
+  ],
+  "searchDimensions": {
+    "horizons": ["5m", "15m", "1h", "4h", "12h", "1d", "3d", "7d"],
+    "basketSizes": [4, 6, 10],
+    "factorRepresentations": ["none", "btc", "eth", "equal-weight-basket", "first-principal-component"],
+    "modelFamilies": [
+      "ridge",
+      "elastic_net",
+      "shallow_tree",
+      "random_forest",
+      "extra_trees",
+      "hist_gradient_boosting",
+      "gpu_xgboost",
+      "mlp",
+      "ft_transformer",
+      "tcn",
+      "gru",
+      "lstm",
+      "causal_transformer"
+    ],
+    "targets": ["outright-return", "factor-residual-return"]
+  },
+  "searchBudget": {
+    "stageATrialsPerFamily": 16,
+    "stageBAdditionalTrialsPerSurvivor": 32,
+    "stageBMaxFamiliesPerMechanism": 2,
+    "maxFrozenPerMechanism": 1,
+    "maxFrozenOverall": 4,
+    "stageASeeds": [19870403],
+    "stageBSeeds": [19870403, 230511, 910237],
+    "budgetUnit": "one exact model configuration and seed; every fold-level fit is counted inside the trial ledger entry"
+  },
+  "validation": {
+    "method": "purged chronological expanding-window development scoring followed by one untouched single-use family confirmation",
+    "primaryLoss": "mean squared future log-return loss",
+    "baselines": ["zero-return", "historical-mean", "persistence", "reversal", "strongest-market-only"],
+    "purgeByHorizon": true,
+    "multiplicity": "Holm over the complete frozen confirmation family"
+  },
+  "developmentPeriod": {
+    "startInclusive": "2020-01-01T00:00:00Z",
+    "endExclusive": "2025-06-01T00:00:00Z",
+    "purpose": "archive-backed purged development scoring and bounded selection"
+  },
+  "confirmation": {
+    "singleUse": true,
+    "minimumCalendarDays": 60,
+    "minimumNonOverlappingTargets": 60,
+    "startInclusive": "2025-06-01T00:00:00Z",
+    "endExclusive": "2026-08-01T00:00:00Z",
+    "purpose": "sealed archive confirmation with sufficient coverage for the seven-day horizon"
+  },
+  "artifacts": []
+}

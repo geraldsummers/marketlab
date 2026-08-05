@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "btc-hourly-reversal-v1",
+  "spaceId": "directional-returns",
+  "title": "Unconditional BTC hourly return reversal",
+  "stage": "REJECTED",
+  "claim": "The latest BTC hourly return has a stable negative coefficient and improves the next-hour return forecast over registered controls.",
+  "mechanism": "Temporary price concessions reverse as liquidity providers absorb one-sided demand.",
+  "target": "Next one-hour BTC perpetual log return",
+  "horizon": "1 hour",
+  "informationSet": ["Latest completed BTC hourly return"],
+  "primaryBaseline": "Stronger of expanding historical mean, zero return, and positive-return persistence",
+  "evidence": [
+    {
+      "classification": "SEALED_HOLDOUT",
+      "decision": "SEALED_HOLDOUT_HOURLY_REVERSAL_NOT_SUPPORTED",
+      "summary": "All development slopes were positive, the final slope was negative, and holdout RMSE was worse than mean and zero-return controls.",
+      "sourcePath": "research/decision-log.md"
+    }
+  ],
+  "frozenLocks": [],
+  "touchPoints": ["coordinator/src/main/kotlin/dev/marketlab/coordinator/HourlyReversalExperimentJobHandler.kt"],
+  "nextAction": "Keep this unconditional version rejected; a liquidity-conditioned version requires independently accumulated BBO/L2 data and a fresh plan."
+}

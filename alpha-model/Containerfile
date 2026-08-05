@@ -1,0 +1,11 @@
+ARG PYTHON_GPU_IMAGE
+FROM ${PYTHON_GPU_IMAGE}
+ARG BUILD_REVISION=unknown
+LABEL org.opencontainers.image.title="marketlab-alpha-model" \
+      org.opencontainers.image.revision="${BUILD_REVISION}"
+WORKDIR /opt/marketlab
+COPY alpha-model/requirements.lock /tmp/requirements.lock
+RUN pip install --no-cache-dir -r /tmp/requirements.lock
+COPY alpha-model/marketlab_alpha /opt/marketlab/marketlab_alpha
+COPY alpha-model/campaign.py /opt/marketlab/campaign.py
+ENTRYPOINT ["python", "/opt/marketlab/campaign.py"]

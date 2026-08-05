@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "market-state-direction-v1",
+  "spaceId": "directional-returns",
+  "title": "Market-state directional benchmark",
+  "stage": "EXPLORATORY",
+  "claim": "Causal own-market and basket state may improve future return loss at one frozen horizon over zero, mean, persistence, and reversal controls.",
+  "mechanism": "Price, volume, and volatility state may summarize conditional return dynamics; the sign and horizon are not presumed.",
+  "target": "Outright or training-only factor-residual log return selected from the locked target family.",
+  "horizon": "One of 5m, 15m, 1h, 4h, 12h, 1d, 3d, or 7d, selected in development and frozen.",
+  "informationSet": ["Point-in-time candles, volume, trade count, realized variance, and basket controls"],
+  "primaryBaseline": "Strongest frozen zero, mean, persistence, reversal, or market-only control",
+  "evidence": [],
+  "frozenLocks": [],
+  "touchPoints": ["alpha-model", "research/alpha/campaigns/archive-directional-gpu-v1.lock.json"],
+  "nextAction": "Materialize the archive panel and run the bounded nested development search without opening confirmation outcomes."
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "social-polarity-return-15m-v1",
+  "spaceId": "social-information",
+  "title": "Bluesky polarity to fifteen-minute return",
+  "stage": "REJECTED",
+  "claim": "Average asset-specific Bluesky polarity improves the next fifteen-minute return forecast over market controls.",
+  "mechanism": "Signed social opinion diffuses into price with a short delay.",
+  "target": "Next fifteen-minute Binance perpetual return",
+  "horizon": "15 minutes",
+  "informationSet": ["Historically indexed asset-specific Bluesky polarity", "Registered market controls"],
+  "primaryBaseline": "Registered market-only return model",
+  "evidence": [
+    {
+      "classification": "RETROSPECTIVE_DISCOVERY_ONLY",
+      "decision": "DISCOVERY_SCREEN_NOT_PASSED",
+      "summary": "The linear polarity candidate was slightly worse than its primary control; primary p=0.7342 and Holm-adjusted p=1.0.",
+      "sourcePath": "research/social-backfill-results.md"
+    }
+  ],
+  "frozenLocks": ["research/social-backfill-analysis.lock.json"],
+  "touchPoints": ["social-backfill/src/main/kotlin/dev/marketlab/backfill/RetrospectiveAnalysis.kt"],
+  "nextAction": "Keep this marginal linear claim rejected; any conditional polarity-generation candidate needs a new mechanism, bounded search, and fresh outcomes."
+}

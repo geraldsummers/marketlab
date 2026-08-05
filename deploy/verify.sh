@@ -96,6 +96,7 @@ release_manifest="$RELEASE_ROOT/$release_id/images.env"
 postgres_image=$(release_value POSTGRES_IMAGE)
 service_image=$(release_value SERVICE_IMAGE)
 worker_image=$(release_value WORKER_IMAGE)
+alpha_model_image=$(release_value ALPHA_MODEL_IMAGE)
 coordinator_image=$(release_value COORDINATOR_IMAGE)
 collector_image=$(release_value COLLECTOR_IMAGE 2>/dev/null || true)
 social_collector_image=$(release_value SOCIAL_COLLECTOR_IMAGE 2>/dev/null || true)
@@ -435,6 +436,8 @@ grep -Fq "$RELEASE_ROOT/$release_id/runner/bin/runner" <<<"$runner_properties" |
     die "runner executable is not from the requested release"
 grep -Fq "MARKETLAB_IMAGE_KOTLIN=$worker_image" <<<"$runner_properties" ||
     die "runner worker image is not pinned to the requested release"
+grep -Fq "MARKETLAB_IMAGE_PYTHON_GPU=$alpha_model_image" <<<"$runner_properties" ||
+    die "runner GPU alpha-model image is not pinned to the requested release"
 
 grep -Fq "$research_image" "$USER_BIN_ROOT/marketlab-research" ||
     die "research CLI wrapper is not pinned to the requested release"
@@ -472,6 +475,7 @@ configured_images=(
     "$postgres_image"
     "$service_image"
     "$worker_image"
+    "$alpha_model_image"
     "$coordinator_image"
     "$research_image"
     "$runner_image"

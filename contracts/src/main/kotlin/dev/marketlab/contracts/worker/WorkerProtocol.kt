@@ -102,6 +102,25 @@ data class PredictionArtifactRef(
 }
 
 @Serializable
+enum class ModelArtifactFormat {
+    PYTHON_PICKLE,
+}
+
+@Serializable
+data class ModelArtifactRef(
+    val artifactId: ArtifactId,
+    val uri: String,
+    val contentHash: Sha256Digest,
+    val format: ModelArtifactFormat,
+    val estimator: String,
+) {
+    init {
+        require(uri.isNotBlank()) { "model URI cannot be blank" }
+        require(estimator.isNotBlank()) { "model estimator cannot be blank" }
+    }
+}
+
+@Serializable
 sealed interface FitPredictResponse {
     val protocolVersion: Int
     val requestId: WorkerRequestId
@@ -111,7 +130,7 @@ sealed interface FitPredictResponse {
         override val protocolVersion: Int = WORKER_PROTOCOL_VERSION,
         override val requestId: WorkerRequestId,
         val predictions: PredictionArtifactRef,
-        val model: PredictionArtifactRef? = null,
+        val model: ModelArtifactRef? = null,
         val diagnostics: Map<String, String> = emptyMap(),
     ) : FitPredictResponse {
         init {

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v1",
+  "id": "funding-next-hour-diagnostic-2026-07-28",
+  "candidateIds": ["funding-next-hour-return-diagnostic-v1"],
+  "classification": "RETROSPECTIVE_DIAGNOSTIC",
+  "decision": "INCONCLUSIVE",
+  "runId": null,
+  "summarySource": "research/theory-exhaustion.md",
+  "artifacts": [
+    {"role":"report","sha256":"c9f3fb2bdb73612892ce0932cc2e859e8fc68e57520ae03611914d2dad221947","location":"research-cli content-addressed report store"}
+  ]
+}

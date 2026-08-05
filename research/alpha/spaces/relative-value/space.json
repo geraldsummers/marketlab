@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "marketlab.alpha-space.v1",
+  "id": "relative-value",
+  "title": "Relative value and cross-sectional factors",
+  "purpose": "Study point-in-time cross-sectional ranking, related-instrument convergence, and factor-neutral relative returns.",
+  "state": "DATA_BLOCKED",
+  "dependencies": ["execution-portfolio"],
+  "readyWork": [
+    {
+      "id": "point-in-time-universe-feasibility",
+      "status": "READY",
+      "kind": "data",
+      "summary": "Identify a provenance-preserving archive with delistings, historical eligibility, supply, and synchronized prices.",
+      "blockedBy": []
+    },
+    {
+      "id": "cross-sectional-factor-confirmation",
+      "status": "BLOCKED",
+      "kind": "evaluation",
+      "summary": "Evaluate size, momentum, liquidity, or related-value returns without survivorship bias.",
+      "blockedBy": ["point-in-time multi-asset universe is unavailable"]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "marketlab.alpha-space.v1",
+  "id": "microstructure",
+  "title": "Market microstructure",
+  "purpose": "Study trade flow, books, liquidity, resilience, and short-horizon price formation with event-time causal data.",
+  "state": "DATA_ACCUMULATING",
+  "dependencies": ["execution-portfolio"],
+  "readyWork": [
+    {
+      "id": "microstructure-continuity-audit",
+      "status": "READY",
+      "kind": "data",
+      "summary": "Build a durable field, sequence, reconnect, receive-clock, and gap audit for the accumulating Hyperliquid event archive.",
+      "blockedBy": []
+    },
+    {
+      "id": "order-flow-confirmation",
+      "status": "BLOCKED",
+      "kind": "evaluation",
+      "summary": "Run order-flow or queue-imbalance confirmation with fee-aware replay.",
+      "blockedBy": ["90 continuous quality-valid days have not accumulated"]
+    },
+    {
+      "id": "liquidity-reversal-confirmation",
+      "status": "BLOCKED",
+      "kind": "evaluation",
+      "summary": "Test liquidity-conditioned reversal with depth and observed execution.",
+      "blockedBy": ["180 continuous quality-valid days have not accumulated"]
+    }
+  ]
+}

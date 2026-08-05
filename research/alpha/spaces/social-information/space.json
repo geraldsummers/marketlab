@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "marketlab.alpha-space.v1",
+  "id": "social-information",
+  "title": "Social and news information",
+  "purpose": "Study attention, sentiment, disagreement, novelty, and information diffusion under historical availability constraints.",
+  "state": "ACTIVE",
+  "dependencies": ["directional-returns", "volatility"],
+  "readyWork": [
+    {
+      "id": "prospective-social-materialization",
+      "status": "READY",
+      "kind": "infrastructure",
+      "summary": "Implement durable live dual-source feature materialization suitable for pre-outcome shadow forecasts.",
+      "blockedBy": []
+    },
+    {
+      "id": "conditional-sentiment-direction-thesis",
+      "status": "READY",
+      "kind": "research",
+      "summary": "Define whether polarity change or disagreement has directional value conditional on the frozen volatility regime, with a fresh search budget and confirmation period.",
+      "blockedBy": []
+    }
+  ]
+}

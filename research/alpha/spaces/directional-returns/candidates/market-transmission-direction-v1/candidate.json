@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "market-transmission-direction-v1",
+  "spaceId": "directional-returns",
+  "title": "BTC, ETH, and basket transmission",
+  "stage": "EXPLORATORY",
+  "claim": "Lagged BTC, ETH, or basket innovations may improve asset return forecasts beyond own-market state at a development-selected frozen horizon.",
+  "mechanism": "Common-market information can be incorporated at different rates, but leadership and sign are empirical questions.",
+  "target": "Outright or factor-residual basket-member log return.",
+  "horizon": "Locked campaign horizon grid; one horizon frozen before confirmation.",
+  "informationSet": ["Causal BTC, ETH, equal-weight basket, and own-asset market state"],
+  "primaryBaseline": "Strongest market-state model without transmission features",
+  "evidence": [],
+  "frozenLocks": [],
+  "touchPoints": ["alpha-model", "research/alpha/campaigns/archive-directional-gpu-v1.lock.json"],
+  "nextAction": "Compare factor representations inside nested development folds and preserve null leadership results."
+}

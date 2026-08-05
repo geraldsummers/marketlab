@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "marketlab.alpha-space.v1",
+  "id": "execution-portfolio",
+  "title": "Execution, portfolio, and risk",
+  "purpose": "Translate validated forecasts into costed decisions, capacity limits, portfolio exposure, and operational risk controls.",
+  "state": "OPEN",
+  "dependencies": [],
+  "readyWork": [
+    {
+      "id": "cost-model-audit",
+      "status": "READY",
+      "kind": "evaluation",
+      "summary": "Inventory fee, spread, slippage, latency, funding, borrow, and capacity assumptions across existing evaluators.",
+      "blockedBy": []
+    },
+    {
+      "id": "volatility-shadow-decision-contract",
+      "status": "READY",
+      "kind": "research",
+      "summary": "Specify a non-trading shadow decision contract that maps the validated variance forecast to observable option or exposure-management outcomes.",
+      "blockedBy": []
+    }
+  ]
+}

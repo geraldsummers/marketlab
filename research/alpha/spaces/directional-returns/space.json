@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "marketlab.alpha-space.v1",
+  "id": "directional-returns",
+  "title": "Directional returns",
+  "purpose": "Forecast signed returns or price distributions at declared horizons using point-in-time information.",
+  "state": "OPEN",
+  "dependencies": ["volatility", "microstructure", "derivatives-carry", "cross-venue", "social-information", "execution-portfolio"],
+  "readyWork": [
+    {
+      "id": "directional-generation-2-contract",
+      "status": "READY",
+      "kind": "research",
+      "summary": "Preregister a one-to-four-hour conditional return-distribution candidate using genuinely signed features and an abstention rule.",
+      "blockedBy": []
+    },
+    {
+      "id": "directional-generation-2-confirmation",
+      "status": "BLOCKED",
+      "kind": "evaluation",
+      "summary": "Evaluate the frozen generation-two candidate on untouched prospective outcomes.",
+      "blockedBy": ["frozen candidate does not exist", "fresh prospective outcomes have not accumulated"]
+    }
+  ]
+}

@@ -153,6 +153,11 @@ ssh gerald@192.168.0.11 \
   "sed -n '1,40p' /mnt/stack/marketlab/releases/$release/images.env"
 ```
 
+The manifest includes `ALPHA_MODEL_IMAGE`, built from the digest-pinned
+`PYTHON_GPU_IMAGE`. Activation binds that digest to the runner's
+`python-torch-gpu-v1` profile; the worker remains networkless and now publishes
+both prediction Parquet and a hash-addressed frozen model artifact.
+
 Activation takes a PostgreSQL custom-format backup when an existing healthy
 database is present, validates Quadlets, runs Flyway in a one-shot owner
 container, reapplies least-privilege grants, installs the long-running units,

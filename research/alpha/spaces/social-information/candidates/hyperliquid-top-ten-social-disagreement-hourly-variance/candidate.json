@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "hyperliquid-top-ten-social-disagreement-hourly-variance",
+  "spaceId": "social-information",
+  "title": "Prospective multi-source disagreement and hourly variance",
+  "stage": "FROZEN_CANDIDATE",
+  "claim": "Multi-source social disagreement improves next-hour Hyperliquid top-ten variance forecasts.",
+  "mechanism": "Divergent beliefs induce trading and price discovery.",
+  "target": "Next-hour Hyperliquid realized variance",
+  "horizon": "1 hour",
+  "informationSet": ["Causal multi-source polarity dispersion", "Point-in-time top-ten universe", "Market variance controls"],
+  "primaryBaseline": "Identical dynamic variance model without disagreement",
+  "evidence": [],
+  "frozenLocks": ["research/social-program.lock.json", "research/sentiment-models.lock.json"],
+  "touchPoints": ["social-collector", "sentiment-worker", "theories/src/main/kotlin/dev/marketlab/theories/SocialInformationTheories.kt"],
+  "nextAction": "Complete source and model readiness before starting D0; preserve the earlier failed single-source linear screen separately."
+}

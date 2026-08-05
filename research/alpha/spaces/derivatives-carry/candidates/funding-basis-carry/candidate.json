@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "funding-basis-carry",
+  "spaceId": "derivatives-carry",
+  "title": "Funding, basis convergence, and hedged carry",
+  "stage": "DATA_BLOCKED",
+  "claim": "Point-in-time funding and basis jointly identify executable delta-neutral carry after every leg and cost.",
+  "mechanism": "Constrained arbitrage allows funding and basis dislocations to persist until capital and positioning rebalance them.",
+  "target": "Net hedged carry and basis convergence",
+  "horizon": "Funding interval to months",
+  "informationSet": ["Historical funding rule", "Mark/oracle and spot basis", "Borrow and funding legs", "Observed execution books"],
+  "primaryBaseline": "Flat allocation and passive hedged carry controls",
+  "evidence": [
+    {
+      "classification": "DATA_FEASIBILITY",
+      "decision": "DATA_BLOCKED",
+      "summary": "Synchronized basis history and 180 days of execution state are unavailable; funding alone cannot identify carry.",
+      "sourcePath": "research/theory-exhaustion.md"
+    }
+  ],
+  "frozenLocks": [],
+  "touchPoints": ["theories/src/main/kotlin/dev/marketlab/theories/AcademicTheoryRegistry.kt", "research-cli/src/main/kotlin/dev/marketlab/research/FundingResearchSuite.kt"],
+  "nextAction": "Accumulate synchronized funding, basis, open-interest, borrow, and execution state before confirmation."
+}

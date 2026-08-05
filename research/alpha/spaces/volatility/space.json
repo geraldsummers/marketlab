@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "marketlab.alpha-space.v1",
+  "id": "volatility",
+  "title": "Volatility and tail risk",
+  "purpose": "Forecast realized variance, ranges, jumps, and tail intensity without relabeling risk forecasts as return-direction alpha.",
+  "state": "ACTIVE",
+  "dependencies": ["social-information", "microstructure", "execution-portfolio"],
+  "readyWork": [
+    {
+      "id": "social-variance-prospective-shadow",
+      "status": "READY",
+      "kind": "infrastructure",
+      "summary": "Implement durable pre-outcome publication and outcome sealing for the frozen one-hour social-attention variance model.",
+      "blockedBy": []
+    },
+    {
+      "id": "volatility-options-economic-mapping",
+      "status": "BLOCKED",
+      "kind": "evaluation",
+      "summary": "Evaluate whether the variance forecast contains value relative to contemporaneous implied variance and executable option costs.",
+      "blockedBy": ["point-in-time option surface and execution data are unavailable"]
+    }
+  ]
+}

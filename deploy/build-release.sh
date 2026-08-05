@@ -92,9 +92,11 @@ export CONTAINERS_STORAGE_CONF="$STORAGE_CONFIG"
 builder_image=$(locked_value BUILDER_IMAGE)
 runtime_image=$(locked_value RUNTIME_IMAGE)
 postgres_image=$(locked_value POSTGRES_IMAGE)
+python_gpu_image=$(locked_value PYTHON_GPU_IMAGE)
 assert_digest_reference BUILDER_IMAGE "$builder_image"
 assert_digest_reference RUNTIME_IMAGE "$runtime_image"
 assert_digest_reference POSTGRES_IMAGE "$postgres_image"
+assert_digest_reference PYTHON_GPU_IMAGE "$python_gpu_image"
 
 initial_source_digest=$(source_digest)
 release_id=${1:-"src-${initial_source_digest:0:16}"}
@@ -137,7 +139,7 @@ cleanup_resources() {
 }
 trap cleanup_resources EXIT
 
-for immutable_base in "$builder_image" "$runtime_image" "$postgres_image"; do
+for immutable_base in "$builder_image" "$runtime_image" "$postgres_image" "$python_gpu_image"; do
     podman pull \
         --quiet \
         --platform=linux/amd64 \
@@ -165,6 +167,7 @@ build_image() {
         --authfile "$anonymous_authfile" \
         --build-arg "BUILDER_IMAGE=$builder_image" \
         --build-arg "RUNTIME_IMAGE=$runtime_image" \
+        --build-arg "PYTHON_GPU_IMAGE=$python_gpu_image" \
         --build-arg "BUILD_REVISION=$initial_source_digest" \
         --label "dev.marketlab.release=$release_id" \
         --label "dev.marketlab.source-sha256=$initial_source_digest" \
@@ -189,6 +192,7 @@ social_collector_image=$(build_image social-collector Containerfile.social-colle
 sentiment_worker_image=$(build_image sentiment-worker Containerfile.sentiment-worker)
 social_backfill_image=$(build_image social-backfill Containerfile.social-backfill)
 research_image=$(build_image research Containerfile.research-cli)
+alpha_model_image=$(build_image alpha-model ../alpha-model/Containerfile)
 runner_image=$(build_image runner Containerfile.runner)
 
 runner_container="marketlab-runner-extract-${release_id}"
@@ -213,6 +217,7 @@ SOURCE_SHA256=$initial_source_digest
 BUILDER_IMAGE=$builder_image
 RUNTIME_IMAGE=$runtime_image
 POSTGRES_IMAGE=$postgres_image
+PYTHON_GPU_IMAGE=$python_gpu_image
 SERVICE_IMAGE=$service_image
 WORKER_IMAGE=$worker_image
 COORDINATOR_IMAGE=$coordinator_image
@@ -224,6 +229,7 @@ SOCIAL_MODEL_TRAINER_REQUIREMENTS_SHA256=$(sha256sum "$REPOSITORY_ROOT/social-mo
 SOCIAL_MODEL_TRAINER_SHA256=$(sha256sum "$REPOSITORY_ROOT/social-model/trainer.py" | awk '{print $1}')
 BACKFILL_PROGRAM_SCHEMA=marketlab.social-backfill-program-lock.v2
 RESEARCH_IMAGE=$research_image
+ALPHA_MODEL_IMAGE=$alpha_model_image
 RUNNER_IMAGE=$runner_image
 EOF
 chmod 0440 "$build_directory/images.env" "$build_directory/runner.sha256"

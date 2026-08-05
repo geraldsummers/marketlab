@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "marketlab.data-source-inventory.v1",
+  "id": "deribit-options",
+  "title": "Deribit option surfaces and books",
+  "category": "options",
+  "status": "MISSING",
+  "pointInTimeUse": "Required to compare realized-variance forecasts against contemporaneous implied variance, skew, term structure, and executable option costs.",
+  "implementations": [],
+  "alphaSpaces": ["volatility", "directional-returns", "execution-portfolio"],
+  "limitations": ["No historical point-in-time surface, quote, or execution capture exists"],
+  "nextAction": "Design source and contract semantics before any volatility-options economic test."
+}

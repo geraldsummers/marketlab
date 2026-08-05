@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v1",
+  "id": "social-backfill-discovery-2026-07-30",
+  "candidateIds": ["social-attention-hourly-variance-linear-v1", "social-disagreement-hourly-variance-linear-v1", "social-polarity-return-15m-v1", "cross-sectional-attention-daily-return-linear-v1"],
+  "classification": "RETROSPECTIVE_DISCOVERY_ONLY",
+  "decision": "ALL_FOUR_DISCOVERY_SCREENS_FAILED",
+  "runId": null,
+  "summarySource": "research/social-backfill-results.md",
+  "artifacts": [
+    {"role":"report","sha256":"e30aef8ec930fb86604ef2170ae7fca49b69dca024b674317298664fce43845c","location":"/mnt/media/marketlab/raw/social-backfill-v2/objects/e3/e30aef8ec930fb86604ef2170ae7fca49b69dca024b674317298664fce43845c.json"}
+  ]
+}

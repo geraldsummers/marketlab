@@ -1,0 +1,1 @@
+{"schemaVersion":"marketlab.theory-inventory.v1","id":"funding-basis-carry","kind":"PARENT","disposition":"DATA_BLOCKED","alphaSpace":"derivatives-carry","candidateId":"funding-basis-carry","implementationPath":"theories/src/main/kotlin/dev/marketlab/theories/AcademicTheoryRegistry.kt"}

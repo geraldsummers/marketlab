@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "hyperliquid-top-ten-cross-sectional-social-attention-return",
+  "spaceId": "social-information",
+  "title": "Prospective cross-sectional attention and next-day return",
+  "stage": "FROZEN_CANDIDATE",
+  "claim": "Abnormal attention rank predicts next-day relative returns within the weekly point-in-time Hyperliquid top ten after costs.",
+  "mechanism": "Gradual diffusion of retail attention creates temporary cross-sectional demand pressure.",
+  "target": "Next-day relative Hyperliquid return and top-minus-bottom costed portfolio",
+  "horizon": "1 day",
+  "informationSet": ["Multi-source attention rank", "Weekly point-in-time top-ten universe", "Momentum and liquidity controls", "Observed execution"],
+  "primaryBaseline": "Registered market controls and flat relative-value portfolio",
+  "evidence": [],
+  "frozenLocks": ["research/social-program.lock.json"],
+  "touchPoints": ["social-collector", "sentiment-worker", "engine", "theories/src/main/kotlin/dev/marketlab/theories/SocialInformationTheories.kt"],
+  "nextAction": "Complete universe and execution readiness before starting D0; do not treat the fixed-panel retrospective diagnostic as confirmation."
+}

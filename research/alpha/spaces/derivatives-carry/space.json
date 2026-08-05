@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "marketlab.alpha-space.v1",
+  "id": "derivatives-carry",
+  "title": "Derivatives state and carry",
+  "purpose": "Study funding, basis, open interest, liquidations, term structure, and delta-neutral carry as distinct claims.",
+  "state": "DATA_BLOCKED",
+  "dependencies": ["microstructure", "execution-portfolio"],
+  "readyWork": [
+    {
+      "id": "derivatives-point-in-time-source-design",
+      "status": "READY",
+      "kind": "data",
+      "summary": "Specify and implement point-in-time funding, mark/oracle basis, open-interest, and liquidation capture with historical rule identity.",
+      "blockedBy": []
+    },
+    {
+      "id": "funding-basis-carry-confirmation",
+      "status": "BLOCKED",
+      "kind": "evaluation",
+      "summary": "Evaluate synchronized basis convergence and executable hedged carry.",
+      "blockedBy": ["complete basis history is unavailable", "historical execution state is insufficient"]
+    }
+  ]
+}

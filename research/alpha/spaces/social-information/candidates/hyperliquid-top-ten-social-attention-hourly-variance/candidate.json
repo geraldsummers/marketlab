@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "hyperliquid-top-ten-social-attention-hourly-variance",
+  "spaceId": "social-information",
+  "title": "Prospective multi-source social attention and hourly variance",
+  "stage": "FROZEN_CANDIDATE",
+  "claim": "Abnormal multi-source social attention improves next-hour Hyperliquid top-ten variance forecasts.",
+  "mechanism": "Public attention proxies information arrival and heterogeneous reaction.",
+  "target": "Next-hour Hyperliquid realized variance",
+  "horizon": "1 hour",
+  "informationSet": ["Bluesky", "Nostr", "Point-in-time top-ten universe", "Market variance controls"],
+  "primaryBaseline": "Clock-free dynamic variance control",
+  "evidence": [],
+  "frozenLocks": ["research/social-program.lock.json"],
+  "touchPoints": ["social-collector", "sentiment-worker", "theories/src/main/kotlin/dev/marketlab/theories/SocialInformationTheories.kt"],
+  "nextAction": "Complete source and live-materialization readiness checks before starting D0; retrospective functional evidence does not confirm this plan."
+}

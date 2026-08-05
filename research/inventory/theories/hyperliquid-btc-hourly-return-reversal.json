@@ -1,0 +1,1 @@
+{"schemaVersion":"marketlab.theory-inventory.v1","id":"hyperliquid-btc-hourly-return-reversal","kind":"ADAPTATION","disposition":"REJECTED","alphaSpace":"directional-returns","candidateId":"btc-hourly-reversal-v1","implementationPath":"theories/src/main/kotlin/dev/marketlab/theories/AcademicTheoryRegistry.kt"}

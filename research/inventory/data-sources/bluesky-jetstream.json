@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "marketlab.data-source-inventory.v1",
+  "id": "bluesky-jetstream",
+  "title": "Bluesky Jetstream and public search",
+  "category": "social",
+  "status": "ACTIVE",
+  "pointInTimeUse": "Jetstream receive clocks support prospective collection; historical indexedAt is explicitly classified as a retrospective availability proxy.",
+  "implementations": ["social-collector", "social-backfill"],
+  "alphaSpaces": ["social-information", "directional-returns", "volatility"],
+  "limitations": ["Historical search completeness cannot be proven", "indexedAt is not a historically observed local receipt clock"],
+  "nextAction": "Implement durable prospective feature materialization and shadow publication."
+}

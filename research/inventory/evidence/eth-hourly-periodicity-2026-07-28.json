@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v1",
+  "id": "eth-hourly-periodicity-2026-07-28",
+  "candidateIds": ["eth-hourly-periodicity-v1"],
+  "classification": "SEALED_HOLDOUT",
+  "decision": "SEALED_HOLDOUT_HOURLY_VOLATILITY_PERIODICITY_NOT_SUPPORTED",
+  "runId": "9f3c33a6-4b5f-419a-9fba-b2af984b3b38",
+  "summarySource": "research/decision-log.md",
+  "artifacts": [
+    {"role":"report","sha256":"ce2fd80019dd2a3a37e6aa726dadc10759c91376d5805440c0b7202c3e8bea43","location":"coordinator content-addressed artifact store"},
+    {"role":"predictions","sha256":"9a87809cffb9fa0e2c33d384aa4249721c3633c689e86dd58f57d9f33cf608e6","location":"coordinator content-addressed artifact store"}
+  ]
+}

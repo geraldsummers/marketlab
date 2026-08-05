@@ -77,6 +77,7 @@ render_template() {
     sed \
         -e "s|@SERVICE_IMAGE_DIGEST@|$service_image|g" \
         -e "s|@WORKER_IMAGE_DIGEST@|$worker_image|g" \
+        -e "s|@ALPHA_MODEL_IMAGE_DIGEST@|$alpha_model_image|g" \
         -e "s|@COORDINATOR_IMAGE_DIGEST@|$coordinator_image|g" \
         -e "s|@COLLECTOR_IMAGE_DIGEST@|$collector_image|g" \
         -e "s|@SOCIAL_COLLECTOR_IMAGE_DIGEST@|$social_collector_image|g" \
@@ -226,6 +227,7 @@ source_sha256=$(release_value SOURCE_SHA256)
 postgres_image=$(release_value POSTGRES_IMAGE)
 service_image=$(release_value SERVICE_IMAGE)
 worker_image=$(release_value WORKER_IMAGE)
+alpha_model_image=$(release_value ALPHA_MODEL_IMAGE)
 coordinator_image=$(release_value COORDINATOR_IMAGE)
 collector_image=$(release_value COLLECTOR_IMAGE 2>/dev/null || true)
 social_collector_image=$(release_value SOCIAL_COLLECTOR_IMAGE 2>/dev/null || true)
@@ -239,6 +241,7 @@ runner_image=$(release_value RUNNER_IMAGE)
 assert_digest_reference POSTGRES_IMAGE "$postgres_image"
 assert_digest_reference SERVICE_IMAGE "$service_image"
 assert_digest_reference WORKER_IMAGE "$worker_image"
+assert_digest_reference ALPHA_MODEL_IMAGE "$alpha_model_image"
 assert_digest_reference COORDINATOR_IMAGE "$coordinator_image"
 assert_digest_reference RESEARCH_IMAGE "$research_image"
 assert_digest_reference RUNNER_IMAGE "$runner_image"
@@ -353,6 +356,7 @@ fi
 local_images=(
     "$service_image"
     "$worker_image"
+    "$alpha_model_image"
     "$coordinator_image"
     "$research_image"
     "$runner_image"

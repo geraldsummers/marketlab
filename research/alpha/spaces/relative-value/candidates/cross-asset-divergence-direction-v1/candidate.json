@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "cross-asset-divergence-direction-v1",
+  "spaceId": "relative-value",
+  "title": "Cross-asset divergence without a presumed sign",
+  "stage": "DATA_FEASIBILITY",
+  "claim": "Point-in-time basket divergence may predict continuation, reversal, or neither in a fresh frozen evaluation.",
+  "mechanism": "Temporary or informational common-factor departures are observationally distinct only after conditional testing.",
+  "target": "Outright and training-only factor-residual log returns within a dynamic basket.",
+  "horizon": "Locked campaign horizon grid; sign and one horizon selected only in development.",
+  "informationSet": ["Point-in-time basket membership, prior returns, and training-only factor estimates"],
+  "primaryBaseline": "Strongest own-market and factor-only model",
+  "evidence": [],
+  "frozenLocks": [],
+  "touchPoints": ["alpha-model", "research/alpha/campaigns/archive-directional-gpu-v1.lock.json"],
+  "nextAction": "Pass the historical delisting and membership audit before allowing confirmation."
+}

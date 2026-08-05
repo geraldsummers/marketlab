@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v1",
+  "id": "btc-time-series-momentum-2026-07-28",
+  "candidateIds": ["btc-time-series-momentum-v1"],
+  "classification": "SEALED_HOLDOUT",
+  "decision": "FORECAST_LOSS_SCREEN_NOT_SUPPORTED",
+  "runId": "5126acad-29e8-4653-b632-ebbe1f4bc228",
+  "summarySource": "research/theory-exhaustion.md",
+  "artifacts": [
+    {"role":"report","sha256":"f9a2566b638e960b23030043e3e4a470152173055fe5d7c2393cc1d5845f4c26","location":"coordinator content-addressed artifact store"},
+    {"role":"predictions","sha256":"6661f014ddc82cb6586d7a83c998d2833381bc1db2bc8ef04efdad16bc0d6629","location":"coordinator content-addressed artifact store"}
+  ]
+}

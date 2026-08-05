@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v1",
+  "id": "btc-hourly-reversal-2026-07-28",
+  "candidateIds": ["btc-hourly-reversal-v1"],
+  "classification": "SEALED_HOLDOUT",
+  "decision": "SEALED_HOLDOUT_HOURLY_REVERSAL_NOT_SUPPORTED",
+  "runId": "2ae45bdf-aec1-4ef2-b6d9-f9fe2d8c3370",
+  "summarySource": "research/decision-log.md",
+  "artifacts": [
+    {"role":"report","sha256":"b5b7943b40c5f73cac2b8f1ede8e9927cafea6cb470d4bd8f62fd61794e5755b","location":"coordinator content-addressed artifact store"},
+    {"role":"predictions","sha256":"39218d666010504a2721410fb769f2b4c9605b4253e3b8462694296de07f945c","location":"coordinator content-addressed artifact store"}
+  ]
+}
