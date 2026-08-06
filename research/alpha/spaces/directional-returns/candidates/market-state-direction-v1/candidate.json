@@ -11,7 +11,7 @@
   "informationSet": ["Point-in-time candles, volume, trade count, realized variance, and basket controls"],
   "primaryBaseline": "Strongest frozen zero, mean, persistence, reversal, or market-only control",
   "evidence": [],
-  "frozenLocks": [],
-  "touchPoints": ["alpha-model", "research/alpha/campaigns/archive-directional-gpu-v1.lock.json"],
+  "frozenLocks": ["research/alpha/campaigns/archive-directional-gpu-v2.lock.json"],
+  "touchPoints": ["alpha-model", "research/alpha/campaigns/archive-directional-gpu-v2.lock.json"],
   "nextAction": "Materialize the archive panel and run the bounded nested development search without opening confirmation outcomes."
 }

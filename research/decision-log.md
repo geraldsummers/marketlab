@@ -4,6 +4,22 @@ Adaptive research choices are recorded here before their candidate result is
 observed. Immutable run manifests and content-addressed reports hold the
 corresponding empirical results.
 
+## 2026-08-06 — Archive directional campaign v2 supersedes v1 before data
+
+No archive acquisition, development score, candidate selection, confirmation
+panel inspection, or confirmation opening occurred under
+`archive-directional-gpu-v1`. Before dispatch, v1 was found not to freeze a
+historical symbol-discovery source, scalable preparation, restart-safe trial
+checkpoints, or the requested automatic compute-expansion and lightweight
+supervision boundary.
+
+`archive-directional-gpu-v2` therefore supersedes v1 with disposition
+`SUPERSEDED_BEFORE_DATA`. V2 fixes USD-M USDT archive-prefix discovery, daily
+point-in-time universe construction, native five-minute research bars,
+time-stratified compute rungs, exact per-trial checkpoints, and a mandatory
+stop at `AWAITING_CONFIRMATION_REVIEW`. This change uses no observed predictive
+outcome. V1 remains in the repository and must not later be described as run.
+
 ## 2026-07-28 — Hyperliquid BTC four-hour log-HAR variance adaptation
 
 **Status before execution:** preregistered; the candidate forecasts, losses,

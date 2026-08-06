@@ -427,7 +427,6 @@ class TorchRegressor:
         if self.training_batch_size_ < 1:
             raise ValueError("batch_size must be positive")
 
-        normalized = (values - self.mean_) / self.scale_
         optimizer = torch.optim.AdamW(
             self.model_.parameters(), lr=self.learning_rate, weight_decay=self.weight_decay
         )
@@ -443,7 +442,8 @@ class TorchRegressor:
             starts = list(range(0, len(values), self.training_batch_size_))
             for batch_index, start in enumerate(starts):
                 indices = permutation[start : start + self.training_batch_size_]
-                batch_x = torch.as_tensor(normalized[indices], device=device)
+                normalized_batch = (values[indices] - self.mean_) / self.scale_
+                batch_x = torch.as_tensor(normalized_batch, device=device)
                 batch_y = torch.as_tensor(target_matrix[indices], device=device)
                 with torch.autocast(
                     device_type=device.type,
@@ -473,12 +473,12 @@ class TorchRegressor:
             raise ValueError("model is not fitted")
         values = numpy.asarray(x, dtype=numpy.float32)
         validate_input_shape(self.model_id, values.shape)
-        normalized = (values - self.mean_) / self.scale_
         results = []
         batch_size = self.training_batch_size_ or len(values) or 1
         with torch.no_grad():
             for start in range(0, len(values), batch_size):
-                result = self.model_(torch.as_tensor(normalized[start : start + batch_size]))
+                normalized_batch = (values[start : start + batch_size] - self.mean_) / self.scale_
+                result = self.model_(torch.as_tensor(normalized_batch))
                 results.append(result.numpy())
         matrix = numpy.concatenate(results, axis=0).astype(numpy.float64)
         return matrix[:, 0] if self.single_target_ else matrix

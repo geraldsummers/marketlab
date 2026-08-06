@@ -11,7 +11,7 @@
   "informationSet": ["Aggregate trades, taker imbalance, observed price impact, and market controls"],
   "primaryBaseline": "Strongest frozen model without flow-specific fields",
   "evidence": [],
-  "frozenLocks": [],
-  "touchPoints": ["alpha-model", "research/alpha/campaigns/archive-directional-gpu-v1.lock.json"],
+  "frozenLocks": ["research/alpha/campaigns/archive-directional-gpu-v2.lock.json"],
+  "touchPoints": ["alpha-model", "research/alpha/campaigns/archive-directional-gpu-v2.lock.json"],
   "nextAction": "Acquire checksum-verified trade archives and reject the lane if event ordering or gaps fail."
 }

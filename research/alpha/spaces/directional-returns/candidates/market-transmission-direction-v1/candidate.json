@@ -11,7 +11,7 @@
   "informationSet": ["Causal BTC, ETH, equal-weight basket, and own-asset market state"],
   "primaryBaseline": "Strongest market-state model without transmission features",
   "evidence": [],
-  "frozenLocks": [],
-  "touchPoints": ["alpha-model", "research/alpha/campaigns/archive-directional-gpu-v1.lock.json"],
+  "frozenLocks": ["research/alpha/campaigns/archive-directional-gpu-v2.lock.json"],
+  "touchPoints": ["alpha-model", "research/alpha/campaigns/archive-directional-gpu-v2.lock.json"],
   "nextAction": "Compare factor representations inside nested development folds and preserve null leadership results."
 }

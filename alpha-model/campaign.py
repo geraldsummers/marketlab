@@ -4,16 +4,20 @@
 from __future__ import annotations
 
 import argparse
+import heapq
+import itertools
 import json
+import shutil
 import sys
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
 from marketlab_alpha.artifact_commands import freeze_candidate, register_archives
-from marketlab_alpha.artifacts import iter_jsonl, read_json, sha256_file, write_once_json, write_once_jsonl
-from marketlab_alpha.panel import HORIZON_MILLIS, materialize_panel
+from marketlab_alpha.artifacts import canonical_json_bytes, iter_jsonl, read_json, sha256_file, write_once_bytes, write_once_json, write_once_records
+from marketlab_alpha.panel import HORIZON_MILLIS, enrich_cross_asset_features, materialize_panel
 from marketlab_alpha.universe import HistoricalObservation, build_weekly_universes
 
 
@@ -29,6 +33,33 @@ def acquire(args: argparse.Namespace) -> None:
     print(json.dumps(manifest, sort_keys=True))
 
 
+def discover_binance(args: argparse.Namespace) -> None:
+    from marketlab_alpha.archive_discovery import discover_archive_symbols
+
+    root = Path(args.output_root)
+    manifest = discover_archive_symbols(
+        root,
+        market=args.market,
+        data_type=args.data_type,
+        symbol_pattern=args.symbol_pattern,
+        bucket_url=args.bucket_url,
+    )
+    symbols_path = root / "symbols.txt"
+    payload = ("\n".join(manifest["symbols"]) + "\n").encode()
+    if symbols_path.exists():
+        if symbols_path.read_bytes() != payload:
+            raise ValueError("discovery symbols differ from the immutable symbols file")
+        symbols_hash = sha256_file(symbols_path)
+    else:
+        symbols_hash = write_once_bytes(symbols_path, payload)
+    print(json.dumps({
+        "symbols": len(manifest["symbols"]),
+        "symbolsPath": str(symbols_path.absolute()),
+        "symbolsSha256": symbols_hash,
+        "artifactSha256": manifest["artifactSha256"],
+    }))
+
+
 def download_binance(args: argparse.Namespace) -> None:
     from marketlab_alpha.binance_archive import ArchiveRequest, acquire_binance_archives, month_range
 
@@ -40,7 +71,7 @@ def download_binance(args: argparse.Namespace) -> None:
         for symbol in symbols
         for month in month_range(args.start_month, args.end_month)
     ]
-    manifest = acquire_binance_archives(requests, Path(args.output_root))
+    manifest = acquire_binance_archives(requests, Path(args.output_root), max_workers=args.workers)
     acquired = sum(entry["status"] == "ACQUIRED" for entry in manifest["entries"])
     print(json.dumps({"acquired": acquired, "requests": len(requests), "artifactSha256": manifest["artifactSha256"]}))
 
@@ -93,6 +124,35 @@ def universe(args: argparse.Namespace) -> None:
     print(json.dumps({"snapshots": len(snapshots), "artifactSha256": result["artifactSha256"]}))
 
 
+def universe_symbols(args: argparse.Namespace) -> None:
+    source = Path(args.universe)
+    series = read_json(source)
+    if series.get("schemaVersion") != "marketlab.historical-universe-series.v1":
+        raise ValueError("unsupported historical universe series")
+    base_symbols = sorted({
+        str(member["symbol"])
+        for snapshot in series.get("snapshots", [])
+        for member in snapshot.get("members", [])
+    })
+    if not {"BTC", "ETH"}.issubset(base_symbols):
+        raise ValueError("universe symbol union is missing mandatory BTC or ETH")
+    venue_symbols = [f"{symbol}{args.quote_suffix}" for symbol in base_symbols]
+    output = Path(args.output)
+    digest = write_once_bytes(output, ("\n".join(venue_symbols) + "\n").encode())
+    manifest = {
+        "schemaVersion": "marketlab.universe-symbol-union.v1",
+        "universePath": str(source.absolute()),
+        "universeSha256": sha256_file(source),
+        "quoteSuffix": args.quote_suffix,
+        "baseSymbols": base_symbols,
+        "venueSymbols": venue_symbols,
+        "outputPath": str(output.absolute()),
+        "outputSha256": digest,
+    }
+    manifest["artifactSha256"] = write_once_json(output.with_suffix(output.suffix + ".manifest.json"), manifest)
+    print(json.dumps({"symbols": len(venue_symbols), "outputSha256": digest}))
+
+
 def materialize(args: argparse.Namespace) -> None:
     universe_series = read_json(Path(args.universe))
     memberships: dict[int, tuple[str, ...]] = {}
@@ -104,35 +164,83 @@ def materialize(args: argparse.Namespace) -> None:
     if not memberships:
         raise ValueError(f"universe contains no basket-size {args.basket_size} snapshots")
     bars_path, output = Path(args.bars), Path(args.output)
+    output.absolute().parent.mkdir(parents=True, exist_ok=True)
     period_start = int(args.period_start.timestamp() * 1000)
     period_end = int(args.period_end.timestamp() * 1000)
     if period_start >= period_end:
         raise ValueError("panel period start must precede its end")
-    source_bars = [
-        row for row in iter_jsonl(bars_path)
-        if int(row["eventTimeEpochMillis"]) < period_end
-        and int(row["availableTimeEpochMillis"]) <= period_end
-    ]
-    rows = materialize_panel(
-        source_bars,
-        memberships,
-        tuple(args.horizon),
-        args.base_interval_ms,
-        args.lag_count,
-        ("BTC", "ETH"),
-    )
-    rows = [
-        {
-            **row,
-            "targets": {
-                horizon: value if int(row["decisionTimeEpochMillis"]) + HORIZON_MILLIS[horizon] <= period_end else None
-                for horizon, value in row["targets"].items()
-            },
-        }
-        for row in rows
-        if period_start <= int(row["decisionTimeEpochMillis"]) < period_end
-    ]
-    panel_hash = write_once_jsonl(output, rows)
+    temporary_root = Path(tempfile.mkdtemp(prefix=".panel.", dir=output.absolute().parent))
+    symbol_paths: list[Path] = []
+    row_count = 0
+    try:
+        seen_symbols: set[str] = set()
+        source = (
+            row for row in iter_jsonl(bars_path)
+            if int(row["eventTimeEpochMillis"]) < period_end
+            and int(row["availableTimeEpochMillis"]) <= period_end
+        )
+        for symbol, grouped in itertools.groupby(source, key=lambda row: str(row["symbol"])):
+            if symbol in seen_symbols:
+                raise ValueError("normalized bars must be grouped by symbol for bounded materialization")
+            seen_symbols.add(symbol)
+            symbol_rows = materialize_panel(
+                grouped,
+                memberships,
+                tuple(args.horizon),
+                args.base_interval_ms,
+                args.lag_count,
+                (),
+                enrich_cross_assets=False,
+            )
+            path = temporary_root / f"{symbol}.jsonl"
+            with path.open("wb") as handle:
+                for row in symbol_rows:
+                    decision = int(row["decisionTimeEpochMillis"])
+                    if not period_start <= decision < period_end:
+                        continue
+                    row = {
+                        **row,
+                        "targets": {
+                            horizon: value if decision + HORIZON_MILLIS[horizon] <= period_end else None
+                            for horizon, value in row["targets"].items()
+                        },
+                    }
+                    handle.write(canonical_json_bytes(row))
+            symbol_paths.append(path)
+
+        def merged_rows():
+            nonlocal row_count
+            iterators = [iter(iter_jsonl(path)) for path in symbol_paths]
+            heap: list[tuple[int, str, int, dict]] = []
+            for index, iterator in enumerate(iterators):
+                try:
+                    row = next(iterator)
+                except StopIteration:
+                    continue
+                heapq.heappush(heap, (int(row["decisionTimeEpochMillis"]), str(row["symbol"]), index, row))
+            while heap:
+                decision = heap[0][0]
+                contemporaneous = []
+                while heap and heap[0][0] == decision:
+                    _, _, index, row = heapq.heappop(heap)
+                    contemporaneous.append(row)
+                    try:
+                        following = next(iterators[index])
+                    except StopIteration:
+                        continue
+                    heapq.heappush(heap, (
+                        int(following["decisionTimeEpochMillis"]),
+                        str(following["symbol"]),
+                        index,
+                        following,
+                    ))
+                for row in enrich_cross_asset_features(contemporaneous, ("BTC", "ETH")):
+                    row_count += 1
+                    yield row
+
+        panel_hash = write_once_records(output, merged_rows())
+    finally:
+        shutil.rmtree(temporary_root, ignore_errors=True)
     manifest = {
         "schemaVersion": "marketlab.directional-panel-manifest.v1",
         "panelPath": str(output.absolute()),
@@ -148,7 +256,7 @@ def materialize(args: argparse.Namespace) -> None:
             "startInclusive": args.period_start.isoformat().replace("+00:00", "Z"),
             "endExclusive": args.period_end.isoformat().replace("+00:00", "Z"),
         },
-        "rows": len(rows),
+        "rows": row_count,
     }
     manifest_path = output.with_suffix(output.suffix + ".manifest.json")
     manifest["artifactSha256"] = write_once_json(manifest_path, manifest)
@@ -275,6 +383,14 @@ def parser() -> argparse.ArgumentParser:
     command.add_argument("--output", required=True)
     command.set_defaults(handler=acquire)
 
+    command = commands.add_parser("discover-binance", help="discover symbols from historical Binance archive prefixes")
+    command.add_argument("--market", choices=("um", "cm"), default="um")
+    command.add_argument("--data-type", default="klines")
+    command.add_argument("--symbol-pattern", default=r"^[A-Z0-9]+USDT$")
+    command.add_argument("--bucket-url", default="https://s3-ap-northeast-1.amazonaws.com/data.binance.vision")
+    command.add_argument("--output-root", required=True)
+    command.set_defaults(handler=discover_binance)
+
     command = commands.add_parser("download-binance", help="acquire checksum-verified official monthly futures archives")
     command.add_argument("--market", choices=("um", "cm"), default="um")
     command.add_argument("--data-type", required=True)
@@ -283,6 +399,7 @@ def parser() -> argparse.ArgumentParser:
     command.add_argument("--end-month", required=True)
     command.add_argument("--interval")
     command.add_argument("--output-root", required=True)
+    command.add_argument("--workers", type=int, default=8)
     command.set_defaults(handler=download_binance)
 
     command = commands.add_parser("normalize-binance", help="normalize verified Binance kline objects into causal bars")
@@ -307,6 +424,12 @@ def parser() -> argparse.ArgumentParser:
     command.add_argument("--basket-size", action="append", type=int, default=[])
     command.add_argument("--output", required=True)
     command.set_defaults(handler=universe)
+
+    command = commands.add_parser("universe-symbols", help="freeze the venue-symbol union selected by point-in-time baskets")
+    command.add_argument("--universe", required=True)
+    command.add_argument("--quote-suffix", default="USDT")
+    command.add_argument("--output", required=True)
+    command.set_defaults(handler=universe_symbols)
 
     command = commands.add_parser("materialize", help="create causal multi-horizon panel")
     command.add_argument("--bars", required=True)

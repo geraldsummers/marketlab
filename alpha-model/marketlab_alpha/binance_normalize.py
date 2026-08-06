@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import csv
-from collections import defaultdict
 from datetime import datetime, timezone
 import io
 import math
@@ -11,7 +10,7 @@ import zipfile
 from pathlib import Path
 from typing import Any
 
-from .artifacts import read_json, sha256_file, write_once_json, write_once_jsonl
+from .artifacts import iter_jsonl, read_json, sha256_file, write_once_json, write_once_records
 
 
 DAY_MILLIS = 86_400_000
@@ -38,43 +37,10 @@ def build_daily_universe_observations(normalized_path: Path, output: Path) -> di
     if sha256_file(normalized_path) != source_manifest.get("outputSha256"):
         raise ValueError("normalized klines differ from their manifest")
 
-    aggregates: dict[tuple[str, str], dict[str, Any]] = defaultdict(
-        lambda: {
-            "quoteNotional": 0.0,
-            "observedAtEpochMillis": 0,
-            "sourceRows": 0,
-            "eventTimes": [],
-            "intervals": set(),
-        }
-    )
-    with normalized_path.open("r", encoding="utf-8") as handle:
-        import json
-
-        for line_number, line in enumerate(handle, start=1):
-            if not line.strip():
-                continue
-            row = json.loads(line)
-            symbol = str(row.get("symbol", "")).strip().upper()
-            if not symbol:
-                raise ValueError(f"normalized row {line_number} has no symbol")
-            event_time = int(row["eventTimeEpochMillis"])
-            available_time = int(row["availableTimeEpochMillis"])
-            if available_time <= event_time:
-                raise ValueError(f"normalized row {line_number} is available before its bar completes")
-            notional = float(row["quoteVolume"])
-            if not math.isfinite(notional) or notional < 0.0:
-                raise ValueError(f"normalized row {line_number} has invalid quote volume")
-            day = datetime.fromtimestamp(event_time / 1000.0, tz=timezone.utc).date().isoformat()
-            aggregate = aggregates[(symbol, day)]
-            aggregate["quoteNotional"] += notional
-            aggregate["observedAtEpochMillis"] = max(aggregate["observedAtEpochMillis"], available_time)
-            aggregate["sourceRows"] += 1
-            aggregate["eventTimes"].append(event_time)
-            aggregate["intervals"].add(available_time - event_time)
-
-    rows = []
     quarantined_days = []
-    for (symbol, day), value in sorted(aggregates.items(), key=lambda item: (item[0][1], item[0][0])):
+    row_count = 0
+
+    def finalize(symbol: str, day: str, value: dict[str, Any]) -> dict[str, Any] | None:
         times = sorted(value["eventTimes"])
         intervals = value["intervals"]
         day_start = int(datetime.fromisoformat(day).replace(tzinfo=timezone.utc).timestamp() * 1000)
@@ -94,16 +60,65 @@ def build_daily_universe_observations(normalized_path: Path, output: Path) -> di
                 "sourceRows": value["sourceRows"],
                 "reason": "incomplete or non-contiguous UTC day",
             })
-            continue
-        rows.append({
+            return None
+        return {
             "symbol": symbol,
             "observationDay": day,
             "observedAtEpochMillis": value["observedAtEpochMillis"],
             "quoteNotional": value["quoteNotional"],
             "eligible": True,
             "sourceRows": value["sourceRows"],
-        })
-    output_hash = write_once_jsonl(output, rows)
+        }
+
+    def rows() -> Any:
+        nonlocal row_count
+        current_key: tuple[str, str] | None = None
+        aggregate: dict[str, Any] | None = None
+        prior_order: tuple[str, int] | None = None
+        for line_number, row in enumerate(iter_jsonl(normalized_path), start=1):
+            symbol = str(row.get("symbol", "")).strip().upper()
+            if not symbol:
+                raise ValueError(f"normalized row {line_number} has no symbol")
+            event_time = int(row["eventTimeEpochMillis"])
+            order = (symbol, event_time)
+            if prior_order is not None and order <= prior_order:
+                raise ValueError("normalized bars must be sorted by symbol and event time")
+            prior_order = order
+            available_time = int(row["availableTimeEpochMillis"])
+            if available_time <= event_time:
+                raise ValueError(f"normalized row {line_number} is available before its bar completes")
+            notional = float(row["quoteVolume"])
+            if not math.isfinite(notional) or notional < 0.0:
+                raise ValueError(f"normalized row {line_number} has invalid quote volume")
+            day = datetime.fromtimestamp(event_time / 1000.0, tz=timezone.utc).date().isoformat()
+            key = (symbol, day)
+            if current_key is not None and key != current_key:
+                completed = finalize(current_key[0], current_key[1], aggregate or {})
+                if completed is not None:
+                    row_count += 1
+                    yield completed
+                aggregate = None
+            if aggregate is None:
+                aggregate = {
+                    "quoteNotional": 0.0,
+                    "observedAtEpochMillis": 0,
+                    "sourceRows": 0,
+                    "eventTimes": [],
+                    "intervals": set(),
+                }
+                current_key = key
+            aggregate["quoteNotional"] += notional
+            aggregate["observedAtEpochMillis"] = max(aggregate["observedAtEpochMillis"], available_time)
+            aggregate["sourceRows"] += 1
+            aggregate["eventTimes"].append(event_time)
+            aggregate["intervals"].add(available_time - event_time)
+        if current_key is not None:
+            completed = finalize(current_key[0], current_key[1], aggregate or {})
+            if completed is not None:
+                row_count += 1
+                yield completed
+
+    output_hash = write_once_records(output, rows())
     manifest = {
         "schemaVersion": "marketlab.daily-universe-observations.v1",
         "normalizedPath": str(normalized_path.absolute()),
@@ -112,7 +127,7 @@ def build_daily_universe_observations(normalized_path: Path, output: Path) -> di
         "normalizedManifestSha256": sha256_file(source_manifest_path),
         "outputPath": str(output.absolute()),
         "outputSha256": output_hash,
-        "rows": len(rows),
+        "rows": row_count,
         "quarantinedDays": quarantined_days,
         "availabilitySemantics": "daily quote notional is available at the latest contributing kline availability time",
         "missingDaySemantics": "absent or incomplete days are quarantined, never zero-filled and never interpreted as a delisting",
@@ -126,43 +141,52 @@ def normalize_kline_manifest(manifest_path: Path, output: Path) -> dict[str, Any
     if manifest.get("schemaVersion") != "marketlab.binance-archive-manifest.v1":
         raise ValueError("unsupported Binance archive manifest")
     root = manifest_path.parent
-    rows = []
-    sources = []
-    for entry in manifest["entries"]:
-        if entry["status"] == "MISSING":
-            continue
-        request = entry["request"]
-        if request["dataType"] != "klines":
-            raise ValueError("kline normalizer cannot consume another archive family")
-        archive = root / entry["archiveObject"]["path"]
-        if sha256_file(archive) != entry["archiveObject"]["sha256"]:
-            raise ValueError(f"normalized source differs from manifest: {archive}")
-        sources.append(entry["archiveObject"]["sha256"])
-        rows.extend(_read_archive(
-            archive,
-            request["symbol"],
-            entry["archiveObject"]["sha256"],
-            request.get("interval"),
-        ))
-    rows.sort(key=lambda value: (value["eventTimeEpochMillis"], value["symbol"]))
-    seen: set[tuple[str, int]] = set()
+    sources: list[str] = []
     previous: dict[str, tuple[int, int]] = {}
     gaps = []
-    for row in rows:
-        identity = (row["symbol"], row["eventTimeEpochMillis"])
-        if identity in seen:
-            raise ValueError(f"duplicate kline {identity}")
-        seen.add(identity)
-        prior = previous.get(row["symbol"])
-        interval = row["availableTimeEpochMillis"] - row["eventTimeEpochMillis"]
-        if prior and row["eventTimeEpochMillis"] != prior[0] + prior[1]:
-            gaps.append({
-                "symbol": row["symbol"],
-                "afterEpochMillis": prior[0],
-                "beforeEpochMillis": row["eventTimeEpochMillis"],
-            })
-        previous[row["symbol"]] = (row["eventTimeEpochMillis"], interval)
-    output_hash = write_once_jsonl(output, rows)
+    row_count = 0
+
+    def rows() -> Any:
+        nonlocal row_count
+        ordered_entries = sorted(
+            manifest["entries"],
+            key=lambda entry: (
+                entry["request"]["symbol"],
+                entry["request"].get("month", ""),
+                entry.get("uri", ""),
+            ),
+        )
+        for entry in ordered_entries:
+            if entry["status"] == "MISSING":
+                continue
+            request = entry["request"]
+            if request["dataType"] != "klines":
+                raise ValueError("kline normalizer cannot consume another archive family")
+            archive = root / entry["archiveObject"]["path"]
+            if sha256_file(archive) != entry["archiveObject"]["sha256"]:
+                raise ValueError(f"normalized source differs from manifest: {archive}")
+            sources.append(entry["archiveObject"]["sha256"])
+            for row in _read_archive(
+                archive,
+                request["symbol"],
+                entry["archiveObject"]["sha256"],
+                request.get("interval"),
+            ):
+                prior = previous.get(row["symbol"])
+                interval = row["availableTimeEpochMillis"] - row["eventTimeEpochMillis"]
+                if prior and row["eventTimeEpochMillis"] <= prior[0]:
+                    raise ValueError(f"duplicate or reversed kline {(row['symbol'], row['eventTimeEpochMillis'])}")
+                if prior and row["eventTimeEpochMillis"] != prior[0] + prior[1]:
+                    gaps.append({
+                        "symbol": row["symbol"],
+                        "afterEpochMillis": prior[0],
+                        "beforeEpochMillis": row["eventTimeEpochMillis"],
+                    })
+                previous[row["symbol"]] = (row["eventTimeEpochMillis"], interval)
+                row_count += 1
+                yield row
+
+    output_hash = write_once_records(output, rows())
     normalized = {
         "schemaVersion": "marketlab.binance-normalized-klines.v1",
         "archiveManifestPath": str(manifest_path.absolute()),
@@ -170,8 +194,9 @@ def normalize_kline_manifest(manifest_path: Path, output: Path) -> dict[str, Any
         "sourceObjectSha256": sorted(set(sources)),
         "outputPath": str(output.absolute()),
         "outputSha256": output_hash,
-        "rows": len(rows),
+        "rows": row_count,
         "gaps": gaps,
+        "sortOrder": ["symbol", "eventTimeEpochMillis"],
         "availabilitySemantics": "exchange close time plus one millisecond; retrospective proxy, not local receipt",
     }
     normalized["artifactSha256"] = write_once_json(output.with_suffix(output.suffix + ".manifest.json"), normalized)

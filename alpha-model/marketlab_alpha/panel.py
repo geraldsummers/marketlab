@@ -65,6 +65,7 @@ def materialize_panel(
     base_interval_ms: int,
     lag_count: int = 32,
     mandatory_cross_assets: Sequence[str] = (),
+    enrich_cross_assets: bool = True,
 ) -> list[dict[str, Any]]:
     """Create causal rows; labels are attached only to separate target fields.
 
@@ -165,10 +166,8 @@ def materialize_panel(
                 "baseIntervalMillis": base_interval_ms,
                 "continuitySegmentId": continuity_segment,
             })
-    return enrich_cross_asset_features(
-        sorted(rows, key=lambda row: (row["decisionTimeEpochMillis"], row["symbol"])),
-        mandatory_cross_assets,
-    )
+    ordered = sorted(rows, key=lambda row: (row["decisionTimeEpochMillis"], row["symbol"]))
+    return enrich_cross_asset_features(ordered, mandatory_cross_assets) if enrich_cross_assets else ordered
 
 
 def enrich_cross_asset_features(
@@ -233,9 +232,8 @@ def temporal_windows(
         if row.get("continuitySegmentId") is None:
             raise ValueError("temporal rows must declare continuitySegmentId")
         by_symbol[str(row["symbol"])].append((index, row))
-    tensors: list[list[list[float]]] = []
-    indices: list[int] = []
-    for values in by_symbol.values():
+    windows: list[tuple[int, str, int]] = []
+    for symbol, values in by_symbol.items():
         values.sort(key=lambda item: int(item[1]["decisionTimeEpochMillis"]))
         decision_times = [int(item[1]["decisionTimeEpochMillis"]) for item in values]
         if len(decision_times) != len(set(decision_times)):
@@ -254,13 +252,35 @@ def temporal_windows(
             segments = {item[1]["continuitySegmentId"] for item in window}
             if len(segments) != 1:
                 continue
-            tensors.append([
+            windows.append((values[end][0], symbol, end))
+    windows.sort(key=lambda item: item[0])
+    indices = [item[0] for item in windows]
+    if len(windows) < 10_000:
+        tensors = [
+            [
                 [float(item[1]["features"][feature]) for feature in feature_names]
-                for item in window
-            ])
-            indices.append(values[end][0])
-    order = sorted(range(len(indices)), key=indices.__getitem__)
-    return [tensors[index] for index in order], [indices[index] for index in order]
+                for item in by_symbol[symbol][end - lookback + 1 : end + 1]
+            ]
+            for _, symbol, end in windows
+        ]
+        return tensors, indices
+
+    import numpy as np
+
+    tensors = np.empty((len(windows), lookback, len(feature_names)), dtype=np.float32)
+    outputs_by_symbol: dict[str, list[tuple[int, int]]] = defaultdict(list)
+    for output_index, (_, symbol, end) in enumerate(windows):
+        outputs_by_symbol[symbol].append((output_index, end))
+    for symbol, outputs in outputs_by_symbol.items():
+        matrix = np.asarray([
+            [float(item[1]["features"][feature]) for feature in feature_names]
+            for item in by_symbol[symbol]
+        ], dtype=np.float32)
+        views = np.lib.stride_tricks.sliding_window_view(matrix, lookback, axis=0).transpose(0, 2, 1)
+        output_indices = [item[0] for item in outputs]
+        window_indices = [item[1] - lookback + 1 for item in outputs]
+        tensors[output_indices] = views[window_indices]
+    return tensors, indices
 
 
 def resample_bars(bars: Sequence[MarketBar], target_interval_ms: int) -> list[MarketBar]:

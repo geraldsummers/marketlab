@@ -6,6 +6,10 @@ import math
 import os
 import pickle
 import random
+import shutil
+import signal
+import tempfile
+import time
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -631,6 +635,14 @@ def run_development_search(
 ) -> dict[str, Any]:
     """Run a selection-aware development search without reading confirmation labels."""
     campaign = validate_campaign_lock(read_json(lock_path))
+    if campaign.get("iterativeSearch") and not test_mode:
+        return _run_iterative_development_search(
+            panel_path,
+            lock_path,
+            output_directory,
+            confirmation_ledger_root,
+            campaign,
+        )
     development_start = _instant_ms(campaign["developmentPeriod"]["startInclusive"])
     development_end = _instant_ms(campaign["developmentPeriod"]["endExclusive"])
     panel_manifest = _panel_manifest_for_period(
@@ -920,6 +932,536 @@ def run_development_search(
         "openedOutcomePeriods": [],
     }
     result["artifactSha256"] = write_once_json(result_path, result)
+    return result
+
+
+def _time_stratified_panel_rows(panel_path: Path, manifest: Mapping[str, Any], maximum_rows: int) -> list[dict[str, Any]]:
+    """Retain complete chronological blocks spread across the locked period."""
+    total_rows = int(manifest.get("rows", 0))
+    if maximum_rows < 80:
+        raise ValueError("a development rung must permit at least 80 rows")
+    if total_rows and total_rows <= maximum_rows:
+        return list(iter_jsonl(panel_path))
+    basket_size = int(manifest["basketSize"])
+    interval = int(manifest["baseIntervalMillis"])
+    period = manifest["outcomePeriod"]
+    start = _instant_ms(period["startInclusive"])
+    end = _instant_ms(period["endExclusive"])
+    block_count = 8
+    maximum_times = max(1, maximum_rows // basket_size)
+    block_times = max(1, maximum_times // block_count)
+    duration = block_times * interval
+    span = end - start
+    intervals = []
+    for index in range(block_count):
+        center = start + int(span * (index + 0.5) / block_count)
+        left = max(start, min(end - duration, center - duration // 2))
+        intervals.append((left, min(end, left + duration)))
+    rows = [
+        row for row in iter_jsonl(panel_path)
+        if any(left <= int(row["decisionTimeEpochMillis"]) < right for left, right in intervals)
+    ]
+    if len(rows) > maximum_rows:
+        rows = rows[: maximum_rows - (maximum_rows % basket_size)]
+    if len(rows) < 80:
+        raise ValueError("time-stratified sampling retained fewer than 80 rows")
+    return rows
+
+
+def _breadth_cells(campaign: Mapping[str, Any], model_index: int) -> list[tuple[str, str, str]]:
+    dimensions = campaign["searchDimensions"]
+    horizons = list(dimensions["horizons"])
+    factors = [value for value in dimensions["factorRepresentations"] if value != "none"]
+    if len(horizons) != int(campaign["iterativeSearch"]["breadth"]["trialsPerFamily"]):
+        raise ValueError("breadth rung must cover every frozen horizon exactly once")
+    return [
+        (horizon, "outright-return", "none")
+        if index % 2 == 0
+        else (horizon, "factor-residual-return", factors[(model_index + index // 2) % len(factors)])
+        for index, horizon in enumerate(horizons)
+    ]
+
+
+def _low_fidelity_configuration(model_id: str, configuration: Mapping[str, Any]) -> dict[str, Any]:
+    value = dict(configuration)
+    if "epochs" in value:
+        value["epochs"] = min(4, int(value["epochs"]))
+    if "n_estimators" in value:
+        value["n_estimators"] = min(100, int(value["n_estimators"]))
+    if "max_iter" in value:
+        value["max_iter"] = min(50, int(value["max_iter"]))
+    return value
+
+
+def _write_search_status(path: Path, value: Mapping[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            from .artifacts import canonical_json_bytes
+
+            handle.write(canonical_json_bytes(value))
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary_name, path)
+    finally:
+        Path(temporary_name).unlink(missing_ok=True)
+
+
+def _checkpointed_trial(
+    *,
+    output_directory: Path,
+    manifest: Mapping[str, Any],
+    rows: Sequence[Mapping[str, Any]],
+    features: Sequence[str],
+    horizon: str,
+    target: str,
+    factor: str,
+    model_id: str,
+    configuration: Mapping[str, Any],
+    seed: int,
+    outer_folds: int,
+    rung: str,
+    trial_id: str,
+    mechanism: str,
+    load_bundle: bool = False,
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    trial_root = output_directory / "checkpoints" / "trials" / trial_id
+    trial_path = trial_root / "trial.json"
+    bundle_path = trial_root / "bundle.pickle"
+    if trial_root.exists():
+        if not trial_path.is_file():
+            raise ValueError(f"incomplete immutable trial checkpoint: {trial_root}")
+        trial = read_json(trial_path)
+        validate_trial_ledger_entry(trial, manifest)
+        bundle = None
+        if trial["status"] == "COMPLETED":
+            if not bundle_path.is_file():
+                raise ValueError(f"completed checkpoint has no model bundle: {trial_root}")
+            artifacts = {item["path"]: item for item in trial["artifactHashes"]}
+            relative = str(bundle_path.relative_to(output_directory))
+            expected = artifacts.get(relative, {}).get("sha256")
+            if expected != sha256_file(bundle_path):
+                raise ValueError(f"trial checkpoint bundle hash mismatch: {trial_root}")
+            if load_bundle:
+                with bundle_path.open("rb") as handle:
+                    bundle = pickle.load(handle)
+        return trial, bundle
+
+    started = _utc_now()
+    selection = {
+        "assets": "dynamic-basket",
+        "basketSizes": int(manifest["searchDimensions"]["basketSizes"][0]),
+        "factorRepresentations": factor,
+        "horizons": horizon,
+        "targets": target,
+        "informationSets": mechanism,
+        "modelFamilies": model_id,
+        "variants": "unrestricted-sign",
+    }
+    entry: dict[str, Any] = {
+        "schemaVersion": TRIAL_SCHEMA,
+        "campaignId": manifest["campaignId"],
+        "candidateId": manifest["candidateId"],
+        "trialId": trial_id,
+        "startedAt": started,
+        "completedAt": started,
+        "status": "FAILED",
+        "seed": seed,
+        "selection": selection,
+        "metrics": {},
+        "artifactHashes": [],
+        "configuration": dict(configuration),
+        "searchStage": rung,
+        "mechanism": mechanism,
+    }
+    bundle = None
+    try:
+        timeout_seconds = int(manifest.get("trialTimeoutSeconds", 86400))
+        prior_handler = signal.getsignal(signal.SIGALRM)
+
+        def timed_out(_signum: int, _frame: Any) -> None:
+            raise TimeoutError(f"trial exceeded frozen {timeout_seconds}-second timeout")
+
+        signal.signal(signal.SIGALRM, timed_out)
+        signal.alarm(timeout_seconds)
+        try:
+            metrics, bundle = _evaluate_with_market_baseline(
+                rows, features, horizon, target, factor, model_id, configuration, seed, outer_folds
+            )
+        finally:
+            signal.alarm(0)
+            signal.signal(signal.SIGALRM, prior_handler)
+        entry.update(metrics)
+        entry.update({
+            "completedAt": _utc_now(),
+            "status": "COMPLETED",
+            "metrics": {
+                "meanOuterImprovement": metrics["meanOuterImprovement"],
+                "positiveOuterFolds": metrics["positiveOuterFolds"],
+                "fitCount": metrics["fitCount"],
+            },
+        })
+    except Exception as error:
+        entry.update({"completedAt": _utc_now(), "error": f"{type(error).__name__}: {error}"})
+
+    trial_parent = trial_root.parent
+    trial_parent.mkdir(parents=True, exist_ok=True)
+    temporary = Path(tempfile.mkdtemp(prefix=f".{trial_id}.", dir=trial_parent))
+    try:
+        if entry["status"] == "COMPLETED":
+            payload = pickle.dumps(bundle, protocol=5)
+            temporary_bundle = temporary / "bundle.pickle"
+            temporary_bundle.write_bytes(payload)
+            relative = str(bundle_path.relative_to(output_directory))
+            from .artifacts import sha256_bytes, canonical_json_bytes
+
+            entry["artifactHashes"] = [{"path": relative, "sha256": sha256_bytes(payload), "sizeBytes": len(payload)}]
+        validate_trial_ledger_entry(entry, manifest)
+        from .artifacts import canonical_json_bytes
+
+        (temporary / "trial.json").write_bytes(canonical_json_bytes(entry))
+        os.rename(temporary, trial_root)
+    finally:
+        if temporary.exists():
+            shutil.rmtree(temporary)
+    return entry, bundle if load_bundle else None
+
+
+def _run_iterative_development_search(
+    panel_path: Path,
+    lock_path: Path,
+    output_directory: Path,
+    confirmation_ledger_root: Path,
+    campaign: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Run the v2 automatic expansion plan with immutable per-trial checkpoints."""
+    result_path = output_directory / "search-result.json"
+    if result_path.exists():
+        result = read_json(result_path)
+        if result.get("artifactSha256") not in (None, sha256_file(result_path)):
+            raise ValueError("completed search result has an invalid identity")
+        result["artifactSha256"] = sha256_file(result_path)
+        return result
+    output_directory.mkdir(parents=True, exist_ok=True)
+    development = campaign["developmentPeriod"]
+    panel_manifest = _panel_manifest_for_period(
+        panel_path, development["startInclusive"], development["endExclusive"]
+    )
+    basket_size = int(panel_manifest["basketSize"])
+    if basket_size not in campaign["searchDimensions"]["basketSizes"]:
+        raise ValueError("panel basket size is outside the iterative campaign")
+    iterative = campaign["iterativeSearch"]
+    full_maximum = int(iterative["fullDevelopment"]["maximumRows"])
+    breadth_maximum = int(iterative["breadth"]["maximumRows"])
+    load_started = time.monotonic()
+    full_rows = _time_stratified_panel_rows(panel_path, panel_manifest, full_maximum)
+    breadth_rows = _time_stratified_panel_rows(panel_path, panel_manifest, breadth_maximum)
+    gpu_identity = _gpu_identity()
+    engineering_path = output_directory / "checkpoints" / "engineering.json"
+    if not engineering_path.exists():
+        from .models import model_availability
+
+        engineering = {
+            "schemaVersion": "marketlab.alpha-engineering-checkpoint.v1",
+            "campaignId": campaign["campaignId"],
+            "createdAt": _utc_now(),
+            "predictiveScoresSuppressed": True,
+            "promotionUseProhibited": True,
+            "breadthRows": len(breadth_rows),
+            "fullDevelopmentRows": len(full_rows),
+            "panelLoadSeconds": time.monotonic() - load_started,
+            "gpuIdentity": gpu_identity,
+            "modelAvailability": model_availability(),
+        }
+        write_once_json(engineering_path, engineering)
+
+    all_feature_names = sorted(set.intersection(*(set(row["features"]) for row in full_rows)))
+    feature_schema_hash = canonical_sha256(all_feature_names)
+    trials: list[dict[str, Any]] = []
+    bundles: dict[str, dict[str, Any]] = {}
+    manifests: dict[str, dict[str, Any]] = {}
+    blocked: list[dict[str, str]] = []
+    started = _utc_now()
+    model_families = list(campaign["searchDimensions"]["modelFamilies"])
+    maximum_trials = (
+        campaign["searchBudget"]["stageATrialsPerFamily"] * len(model_families)
+        + campaign["searchBudget"]["stageBAdditionalTrialsPerSurvivor"]
+        * campaign["searchBudget"]["stageBMaxFamiliesPerMechanism"]
+        * len(campaign["searchBudget"]["stageBSeeds"])
+    )
+    active_mechanism_count = sum(
+        bool(_feature_names(full_rows, mechanism)) for mechanism in campaign["mechanisms"]
+    )
+    declared_trial_ceiling = active_mechanism_count * maximum_trials
+    completed_counter = 0
+
+    def publish_status(rung: str) -> None:
+        elapsed = max(0.001, time.monotonic() - load_started)
+        _write_search_status(output_directory / "status.json", {
+            "schemaVersion": "marketlab.alpha-search-operational-status.v1",
+            "campaignId": campaign["campaignId"],
+            "basketSize": basket_size,
+            "rung": rung,
+            "completedTrials": completed_counter,
+            "declaredTrialCeiling": declared_trial_ceiling,
+            "remainingTrialCeiling": max(0, declared_trial_ceiling - completed_counter),
+            "elapsedSeconds": elapsed,
+            "meanSecondsPerTrial": elapsed / max(1, completed_counter),
+            "projectedUpperBoundSeconds": (
+                max(0, declared_trial_ceiling - completed_counter)
+                * elapsed / max(1, completed_counter)
+            ),
+            "confirmationOpened": False,
+            "updatedAt": _utc_now(),
+        })
+
+    for mechanism in campaign["mechanisms"]:
+        features = _feature_names(full_rows, mechanism)
+        candidate_id = f"{mechanism}-direction-v1"
+        if not features:
+            blocked.append({"mechanism": mechanism, "candidateId": candidate_id, "reason": "no mechanism-specific causal fields in panel"})
+            continue
+        dimensions = {
+            "assets": ["dynamic-basket"],
+            "basketSizes": [basket_size],
+            "factorRepresentations": campaign["searchDimensions"]["factorRepresentations"],
+            "horizons": campaign["searchDimensions"]["horizons"],
+            "targets": campaign["searchDimensions"]["targets"],
+            "informationSets": [mechanism],
+            "modelFamilies": model_families,
+            "variants": ["unrestricted-sign", "time-shift-placebo"],
+        }
+        manifest = {
+            "schemaVersion": SEARCH_SCHEMA,
+            "campaignId": campaign["campaignId"],
+            "candidateId": candidate_id,
+            "mechanism": mechanism,
+            "stage": "EXPLORATORY",
+            "createdAt": started,
+            "userConstraints": campaign["userConstraints"],
+            "designConventions": campaign["designConventions"],
+            "empiricalClaims": [f"{mechanism} fields may or may not add directional forecast value"],
+            "searchDimensions": dimensions,
+            "maximumTrials": maximum_trials,
+            "trialTimeoutSeconds": int(iterative["trialTimeoutSeconds"]),
+            "gpuIdentity": gpu_identity,
+            "openedOutcomePeriods": [],
+            "limitations": {
+                "survivorship": "Confirmation is prohibited where historical membership cannot be reconstructed",
+                "sourceTransfer": "Archive-source evidence does not establish transfer to Hyperliquid or another venue",
+            },
+            "artifacts": [],
+        }
+        validate_candidate_search_manifest(manifest, campaign)
+        manifests[candidate_id] = manifest
+
+        breadth_by_family: dict[str, list[dict[str, Any]]] = defaultdict(list)
+        for model_index, model_id in enumerate(model_families):
+            configurations = _model_configurations(
+                model_id,
+                int(iterative["breadth"]["trialsPerFamily"]),
+                campaign["searchBudget"]["stageASeeds"][0],
+            )
+            for index, (configuration, cell) in enumerate(zip(configurations, _breadth_cells(campaign, model_index))):
+                configuration = _low_fidelity_configuration(model_id, configuration)
+                trial_id = f"{candidate_id}-{basket_size}-{model_id}-breadth-{index}-seed-{campaign['searchBudget']['stageASeeds'][0]}".replace("_", "-")
+                trial, bundle = _checkpointed_trial(
+                    output_directory=output_directory, manifest=manifest, rows=breadth_rows,
+                    features=features, horizon=cell[0], target=cell[1], factor=cell[2],
+                    model_id=model_id, configuration=configuration,
+                    seed=campaign["searchBudget"]["stageASeeds"][0],
+                    outer_folds=int(iterative["breadth"]["outerFolds"]), rung="BREADTH",
+                    trial_id=trial_id, mechanism=mechanism,
+                )
+                trials.append(trial)
+                breadth_by_family[model_id].append(trial)
+                completed_counter += 1
+                publish_status("BREADTH")
+
+        family_best = []
+        for family, values in breadth_by_family.items():
+            completed = [value for value in values if value["status"] == "COMPLETED"]
+            if not completed:
+                continue
+            best = max(completed, key=lambda value: (value["positiveOuterFolds"], value["meanOuterImprovement"], value["trialId"]))
+            family_best.append((family, best))
+        family_best.sort(key=lambda item: (-item[1]["positiveOuterFolds"], -item[1]["meanOuterImprovement"], item[0]))
+        promotion = iterative["breadth"]["automaticPromotion"]
+        promoted = [family for family, _ in family_best[: int(promotion["rankedFamilies"])]]
+        for family, best in family_best:
+            improvements = best["outerFoldImprovements"]
+            strong = (
+                best["meanOuterImprovement"] > float(promotion["strongMeanImprovementAbove"])
+                and sum(value > 0 for value in improvements) / len(improvements) >= float(promotion["strongPositiveFoldFraction"])
+            )
+            if strong and family not in promoted:
+                promoted.append(family)
+        promoted = promoted[: int(promotion["maximumFamilies"])]
+
+        full_best: list[dict[str, Any]] = []
+        for model_id in promoted:
+            model_index = model_families.index(model_id)
+            configurations = _model_configurations(
+                model_id,
+                int(iterative["fullDevelopment"]["trialsPerFamily"]),
+                campaign["searchBudget"]["stageASeeds"][0],
+            )
+            values = []
+            for index, (configuration, cell) in enumerate(zip(configurations, _stage_a_cells(campaign, model_index, len(configurations)))):
+                trial_id = f"{candidate_id}-{basket_size}-{model_id}-full-{index}-seed-{campaign['searchBudget']['stageASeeds'][0]}".replace("_", "-")
+                trial, bundle = _checkpointed_trial(
+                    output_directory=output_directory, manifest=manifest, rows=full_rows,
+                    features=features, horizon=cell[0], target=cell[1], factor=cell[2],
+                    model_id=model_id, configuration=configuration,
+                    seed=campaign["searchBudget"]["stageASeeds"][0],
+                    outer_folds=int(iterative["fullDevelopment"]["outerFolds"]), rung="FULL_DEVELOPMENT",
+                    trial_id=trial_id, mechanism=mechanism,
+                )
+                trials.append(trial)
+                values.append(trial)
+                completed_counter += 1
+                publish_status("FULL_DEVELOPMENT")
+            completed = [value for value in values if value["status"] == "COMPLETED"]
+            if completed:
+                full_best.append(max(completed, key=lambda value: (value["positiveOuterFolds"], value["meanOuterImprovement"], value["trialId"])))
+
+        full_gate = iterative["fullDevelopment"]["automaticPromotion"]
+        eligible = [
+            value for value in full_best
+            if value["meanOuterImprovement"] > float(full_gate["meanImprovementAbove"])
+            and value["positiveOuterFolds"] >= int(full_gate["minimumPositiveFolds"])
+        ]
+        eligible.sort(key=lambda value: (-value["positiveOuterFolds"], -value["meanOuterImprovement"], value["trialId"]))
+        eligible = eligible[: int(full_gate["maximumFamilies"])]
+
+        robustness_groups = []
+        for survivor in eligible:
+            selection = survivor["selection"]
+            model_id = selection["modelFamilies"]
+            configurations = _model_configurations(
+                model_id,
+                int(iterative["robustness"]["additionalConfigurationsPerFamily"]),
+                int(iterative["robustness"]["seeds"][0]),
+                extra=True,
+            )
+            for config_index, configuration in enumerate(configurations):
+                seed_results = []
+                canonical_bundle = None
+                for seed in iterative["robustness"]["seeds"]:
+                    trial_id = f"{candidate_id}-{basket_size}-{model_id}-robust-{config_index}-seed-{seed}".replace("_", "-")
+                    trial, bundle = _checkpointed_trial(
+                        output_directory=output_directory, manifest=manifest, rows=full_rows,
+                        features=features, horizon=selection["horizons"], target=selection["targets"],
+                        factor=selection["factorRepresentations"], model_id=model_id,
+                        configuration=configuration, seed=int(seed),
+                        outer_folds=int(iterative["robustness"]["outerFolds"]), rung="ROBUSTNESS",
+                        trial_id=trial_id, mechanism=mechanism,
+                        load_bundle=int(seed) == int(iterative["robustness"]["seeds"][0]),
+                    )
+                    trials.append(trial)
+                    if trial["status"] == "COMPLETED":
+                        seed_results.append(trial)
+                        if int(seed) == int(iterative["robustness"]["seeds"][0]):
+                            canonical_bundle = bundle
+                    completed_counter += 1
+                    publish_status("ROBUSTNESS")
+                if len(seed_results) == len(iterative["robustness"]["seeds"]):
+                    improvements = [value for trial in seed_results for value in trial["outerFoldImprovements"]]
+                    group_id = f"{candidate_id}-{basket_size}-{model_id}-robust-{config_index}-group".replace("_", "-")
+                    group = {
+                        "campaignId": campaign["campaignId"], "candidateId": candidate_id,
+                        "trialId": group_id, "selection": selection,
+                        "configuration": dict(configuration), "canonicalSeed": int(iterative["robustness"]["seeds"][0]),
+                        "mechanism": mechanism, "outerFoldImprovements": improvements,
+                        "meanOuterImprovement": _mean(improvements),
+                        "positiveOuterFolds": sum(value > 0 for value in improvements),
+                        "status": "COMPLETED",
+                    }
+                    robustness_groups.append(group)
+                    if canonical_bundle is not None:
+                        bundles[group_id] = canonical_bundle
+
+        winners = select_development_winners(robustness_groups, maximum_total=1)
+        for winner in winners:
+            bundle = bundles[winner["trialId"]]
+            winner_rows = _rows_with_targets_inside_period(
+                full_rows,
+                _instant_ms(development["startInclusive"]),
+                _instant_ms(development["endExclusive"]),
+                winner["selection"]["horizons"],
+            )
+            placebo_rows = _time_shift_placebo(winner_rows, winner["selection"]["horizons"], HORIZON_MILLIS["7d"])
+            try:
+                placebo_metrics, _ = _evaluate_with_market_baseline(
+                    placebo_rows, _feature_names(placebo_rows, mechanism),
+                    winner["selection"]["horizons"], winner["selection"]["targets"],
+                    winner["selection"]["factorRepresentations"], winner["selection"]["modelFamilies"],
+                    bundle["configuration"], int(winner["canonicalSeed"]), 5,
+                )
+                placebo = {**placebo_metrics, "status": "COMPLETED"}
+            except Exception as error:
+                placebo = {"status": "FAILED", "error": f"{type(error).__name__}: {error}"}
+            suspicious = (
+                placebo.get("status") == "COMPLETED"
+                and placebo["positiveOuterFolds"] > len(placebo["outerFoldImprovements"]) // 2
+                and placebo["meanOuterImprovement"] > 0.0
+            )
+            if placebo.get("status") == "FAILED" or suspicious:
+                blocked.append({"mechanism": mechanism, "candidateId": candidate_id, "reason": "time-shift integrity audit failed or retained predictive structure"})
+                continue
+            model_path = output_directory / "models" / f"{winner['trialId']}.pickle"
+            model_hash = write_once_bytes(model_path, pickle.dumps(bundle, protocol=5))
+            exact_schema = canonical_sha256({
+                "featureNames": bundle["featureNames"],
+                "marketBaselineFeatureNames": bundle["marketBaseline"]["featureNames"],
+                "symbols": bundle["symbols"],
+                "unknownSymbolPolicy": bundle["unknownSymbolPolicy"],
+            })
+            winner["developmentCandidate"] = {
+                "candidateId": candidate_id, "trialId": winner["trialId"], "mechanism": mechanism,
+                "selection": winner["selection"], "configuration": dict(bundle["configuration"]),
+                "seed": int(winner["canonicalSeed"]), "outerFoldImprovements": winner["outerFoldImprovements"],
+                "featureSchemaSha256": exact_schema, "searchManifest": manifest,
+                "modelArtifactPath": str(model_path.absolute()), "modelArtifactSha256": model_hash,
+                "panelSha256": sha256_file(panel_path), "timeShiftPlacebo": placebo,
+            }
+        manifests[candidate_id]["developmentCandidates"] = [
+            winner["developmentCandidate"] for winner in winners if "developmentCandidate" in winner
+        ]
+
+    development_candidates = [
+        candidate
+        for manifest in manifests.values()
+        for candidate in manifest.pop("developmentCandidates", [])
+    ]
+    ranked = select_development_winners(
+        [{**candidate, "mechanism": candidate["mechanism"]} for candidate in development_candidates],
+        maximum_total=campaign["searchBudget"]["maxFrozenOverall"],
+    )
+    confirmation_family = _confirmation_family_manifest(
+        campaign, ranked, sha256_file(lock_path), [sha256_file(panel_path)], confirmation_ledger_root
+    )
+    result = {
+        "schemaVersion": "marketlab.alpha-development-search-result.v1",
+        "campaignId": campaign["campaignId"], "campaignLockSha256": sha256_file(lock_path),
+        "panelSha256": sha256_file(panel_path), "basketSize": basket_size,
+        "featureSchemaSha256": feature_schema_hash,
+        "trialLedger": trials, "developmentCandidates": development_candidates,
+        "selected": ranked, "blockedMechanisms": blocked,
+        "trialAccounting": {
+            "ledgerEntries": len(trials),
+            "completed": sum(trial["status"] == "COMPLETED" for trial in trials),
+            "failed": sum(trial["status"] != "COMPLETED" for trial in trials),
+            "maximumPerActiveMechanism": maximum_trials,
+            "budgetUnit": campaign["searchBudget"]["budgetUnit"],
+        },
+        "confirmationFamily": confirmation_family,
+        "openedOutcomePeriods": [],
+        "completionState": "AWAITING_CONFIRMATION_REVIEW",
+    }
+    result["artifactSha256"] = write_once_json(result_path, result)
+    publish_status("AWAITING_CONFIRMATION_REVIEW")
     return result
 
 

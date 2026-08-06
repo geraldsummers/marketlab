@@ -11,11 +11,12 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from marketlab_alpha.artifact_commands import freeze_candidate, register_archives, verify_frozen_inputs
-from marketlab_alpha.artifacts import read_json, sha256_file, write_once_json
+from marketlab_alpha.artifacts import iter_jsonl, read_json, sha256_file, write_once_json, write_once_records
 from marketlab_alpha.contracts import FAMILY_SCHEMA, RESULT_SCHEMA, canonical_sha256
 from marketlab_alpha.panel import materialize_panel, temporal_windows
 from marketlab_alpha.search import (
     _clustered_hac_p_value,
+    _breadth_cells,
     _confirmation_marker_root,
     _rows_with_targets_inside_period,
     _stage_a_cells,
@@ -28,6 +29,21 @@ from marketlab_alpha.search import run_development_search
 
 
 class ArtifactTest(unittest.TestCase):
+    @unittest.skipUnless(importlib.util.find_spec("duckdb"), "Parquet round-trip requires pinned DuckDB")
+    def test_nested_records_round_trip_through_immutable_parquet(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "panel.parquet"
+            rows = [{
+                "rowId": "BTC:1", "decisionTimeEpochMillis": 1, "symbol": "BTC",
+                "features": {"latest_return": 0.1, "realized_variance": 0.01},
+                "targets": {"5m": 0.2, "1h": None},
+            }]
+            digest = write_once_records(path, rows)
+            self.assertEqual(sha256_file(path), digest)
+            self.assertEqual(rows, list(iter_jsonl(path)))
+            with self.assertRaises(FileExistsError):
+                write_once_records(path, rows)
+
     def test_archive_registration_and_freeze_are_write_once(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -179,6 +195,15 @@ class SearchPolicyTest(unittest.TestCase):
         self.assertEqual(set(campaign["searchDimensions"]["horizons"]), {cell[0] for cell in cells})
         self.assertEqual(8, sum(cell[1] == "outright-return" for cell in cells))
         self.assertEqual(8, sum(cell[1] == "factor-residual-return" for cell in cells))
+
+    def test_v2_breadth_rung_covers_every_horizon_target_and_factor_family(self):
+        campaign = read_json(
+            Path(__file__).parents[1] / "research/alpha/campaigns/archive-directional-gpu-v2.lock.json"
+        )
+        cells = _breadth_cells(campaign, model_index=0)
+        self.assertEqual(set(campaign["searchDimensions"]["horizons"]), {cell[0] for cell in cells})
+        self.assertEqual({"outright-return", "factor-residual-return"}, {cell[1] for cell in cells})
+        self.assertEqual(set(campaign["searchDimensions"]["factorRepresentations"]), {cell[2] for cell in cells})
 
     def test_purge_selection_and_holm(self):
         times = [hour * 3_600_000 for hour in range(40)]

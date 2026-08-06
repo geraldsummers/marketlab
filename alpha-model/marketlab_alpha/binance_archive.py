@@ -5,12 +5,13 @@ from __future__ import annotations
 import hashlib
 import urllib.error
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable, Iterable
 
-from .artifacts import sha256_bytes, write_once_bytes, write_once_json
+from .artifacts import read_json, sha256_bytes, sha256_file, write_once_bytes, write_once_json
 
 
 ROOT = "https://data.binance.vision/data/futures"
@@ -67,6 +68,7 @@ def acquire_binance_archives(
     output_root: Path,
     *,
     fetch: Callable[[str], bytes] | None = None,
+    max_workers: int = 1,
 ) -> dict:
     """Acquire exact archive/checksum bytes into a content-addressed store.
 
@@ -74,13 +76,34 @@ def acquire_binance_archives(
     activity. The returned manifest is write-once for one request family.
     """
     fetch = fetch or _fetch
+    if max_workers < 1 or max_workers > 32:
+        raise ValueError("max_workers must be between 1 and 32")
+    ordered_requests = sorted(requests, key=lambda value: value.uri)
     output_root = output_root.absolute()
     output_root.mkdir(parents=True, exist_ok=True)
     manifest_path = output_root / "manifest.json"
     if manifest_path.exists():
-        raise FileExistsError(f"archive manifest already exists: {manifest_path}")
-    entries = []
-    for request in sorted(requests, key=lambda value: value.uri):
+        manifest = read_json(manifest_path)
+        if manifest.get("schemaVersion") != "marketlab.binance-archive-manifest.v1":
+            raise ValueError(f"archive manifest schema is invalid: {manifest_path}")
+        if [entry.get("uri") for entry in manifest.get("entries", [])] != [request.uri for request in ordered_requests]:
+            raise ValueError("archive manifest request family differs from the frozen invocation")
+        manifest["artifactSha256"] = sha256_file(manifest_path)
+        return manifest
+    request_root = output_root / "requests"
+    request_root.mkdir(parents=True, exist_ok=True)
+    def acquire_one(request: ArchiveRequest) -> dict:
+        request_id = hashlib.sha256(request.uri.encode()).hexdigest()
+        checkpoint = request_root / request_id[:2] / f"{request_id}.json"
+        if checkpoint.exists():
+            entry = read_json(checkpoint)
+            if entry.get("uri") != request.uri:
+                raise ValueError(f"archive request checkpoint identity mismatch: {checkpoint}")
+            if entry.get("status") == "ACQUIRED":
+                archive = output_root / entry["archiveObject"]["path"]
+                if sha256_file(archive) != entry["archiveObject"]["sha256"]:
+                    raise ValueError(f"archive request checkpoint object mismatch: {checkpoint}")
+            return entry
         retrieved_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
         try:
             checksum_bytes = fetch(request.uri + ".CHECKSUM")
@@ -90,22 +113,23 @@ def acquire_binance_archives(
             archive_bytes = fetch(request.uri)
         except urllib.error.HTTPError as error:
             if error.code == 404:
-                entries.append({
+                entry = {
                     "request": _request_dict(request),
                     "uri": request.uri,
                     "retrievedAt": retrieved_at,
                     "status": "MISSING",
                     "httpStatus": 404,
                     "interpretation": "missing archive is not zero activity",
-                })
-                continue
+                }
+                write_once_json(checkpoint, entry)
+                return entry
             raise
         actual = sha256_bytes(archive_bytes)
         if actual != expected:
             raise ValueError(f"official checksum mismatch: {request.uri}")
         checksum_object = _store_object(output_root, checksum_bytes, "checksum")
         archive_object = _store_object(output_root, archive_bytes, "zip")
-        entries.append({
+        entry = {
             "request": _request_dict(request),
             "uri": request.uri,
             "retrievedAt": retrieved_at,
@@ -114,7 +138,15 @@ def acquire_binance_archives(
             "archiveObject": archive_object,
             "checksumObject": checksum_object,
             "bytes": len(archive_bytes),
-        })
+        }
+        write_once_json(checkpoint, entry)
+        return entry
+
+    if max_workers == 1:
+        entries = [acquire_one(request) for request in ordered_requests]
+    else:
+        with ThreadPoolExecutor(max_workers=max_workers, thread_name_prefix="binance-archive") as executor:
+            entries = list(executor.map(acquire_one, ordered_requests))
     if not entries:
         raise ValueError("archive request family must not be empty")
     manifest = {
@@ -155,7 +187,11 @@ def _store_object(root: Path, payload: bytes, extension: str) -> dict[str, objec
         if path.read_bytes() != payload:
             raise ValueError(f"content-address collision at {path}")
     else:
-        write_once_bytes(path, payload)
+        try:
+            write_once_bytes(path, payload)
+        except FileExistsError:
+            if path.read_bytes() != payload:
+                raise ValueError(f"content-address collision at {path}")
     return {"path": str(path.relative_to(root)), "sha256": digest, "bytes": len(payload)}
 
 

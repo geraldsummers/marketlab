@@ -11,7 +11,7 @@
   "informationSet": ["Point-in-time basket membership, prior returns, and training-only factor estimates"],
   "primaryBaseline": "Strongest own-market and factor-only model",
   "evidence": [],
-  "frozenLocks": [],
-  "touchPoints": ["alpha-model", "research/alpha/campaigns/archive-directional-gpu-v1.lock.json"],
+  "frozenLocks": ["research/alpha/campaigns/archive-directional-gpu-v2.lock.json"],
+  "touchPoints": ["alpha-model", "research/alpha/campaigns/archive-directional-gpu-v2.lock.json"],
   "nextAction": "Pass the historical delisting and membership audit before allowing confirmation."
 }
