@@ -129,6 +129,12 @@ class SklearnModelTest(unittest.TestCase):
     "torch is an optional model-worker dependency",
 )
 class TorchModelTest(unittest.TestCase):
+    def test_seed_enforces_strict_deterministic_algorithms(self):
+        import torch
+
+        models.set_deterministic_seed(37)
+        self.assertTrue(torch.are_deterministic_algorithms_enabled())
+
     def test_mlp_depth_changes_the_registered_architecture(self):
         shallow = models._make_torch_module(
             "mlp", channels=4, output_dim=1, hidden_size=8, layers=1, dropout=0.0, heads=1

@@ -196,7 +196,10 @@ def _gpu_identity() -> dict[str, Any]:
     from .models import probe_gpu_environment
 
     probe = probe_gpu_environment()
-    notes = ["PyTorch deterministic algorithms requested; unsupported kernels warn and are recorded"]
+    notes = [
+        "PyTorch deterministic algorithms enforced; nondeterministic kernels fail closed",
+        "CUDA requires CUBLAS_WORKSPACE_CONFIG=:4096:8 and math-only scaled-dot-product attention",
+    ]
     if not probe.available:
         return {
             "available": False,

@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import importlib.util
 import math
+import os
 import random
 from dataclasses import asdict, dataclass
 from enum import Enum
@@ -144,12 +145,20 @@ def set_deterministic_seed(seed: int, *, deterministic_algorithms: bool = True) 
         torch = __import__("torch")
         torch.manual_seed(seed)
         if torch.cuda.is_available():
+            if os.environ.get("CUBLAS_WORKSPACE_CONFIG") not in {":4096:8", ":16:8"}:
+                raise RuntimeError(
+                    "deterministic CUDA training requires CUBLAS_WORKSPACE_CONFIG=:4096:8"
+                )
             torch.cuda.manual_seed_all(seed)
         if deterministic_algorithms:
-            torch.use_deterministic_algorithms(True, warn_only=True)
+            torch.use_deterministic_algorithms(True)
             if hasattr(torch.backends, "cudnn"):
                 torch.backends.cudnn.benchmark = False
                 torch.backends.cudnn.deterministic = True
+            if hasattr(torch.backends, "cuda"):
+                torch.backends.cuda.enable_flash_sdp(False)
+                torch.backends.cuda.enable_mem_efficient_sdp(False)
+                torch.backends.cuda.enable_math_sdp(True)
 
 
 def probe_gpu_environment(device_index: int = 0) -> GpuEnvironment:
