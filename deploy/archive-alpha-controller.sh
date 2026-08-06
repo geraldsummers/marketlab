@@ -86,14 +86,15 @@ run_offline() {
 }
 
 run_gpu() {
-    local gpu_uuid driver_version
+    local gpu_uuid driver_version image_digest
     gpu_uuid=$(nvidia-smi --query-gpu=uuid --format=csv,noheader | head -1)
     driver_version=$(nvidia-smi --query-gpu=driver_version --format=csv,noheader | head -1)
+    image_digest=${MARKETLAB_ALPHA_IMAGE##*@}
     "${container_base[@]}" --network=none --device=nvidia.com/gpu=0 \
         --env "CUBLAS_WORKSPACE_CONFIG=:4096:8" \
         --env "MARKETLAB_GPU_UUID=$gpu_uuid" \
         --env "MARKETLAB_NVIDIA_DRIVER_VERSION=$driver_version" \
-        --env "MARKETLAB_WORKER_IMAGE_DIGEST=$MARKETLAB_ALPHA_IMAGE" \
+        --env "MARKETLAB_WORKER_IMAGE_DIGEST=$image_digest" \
         "$MARKETLAB_ALPHA_IMAGE" "$@"
 }
 
