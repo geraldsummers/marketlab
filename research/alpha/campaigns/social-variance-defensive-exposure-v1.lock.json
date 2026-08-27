@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "marketlab.variance-exposure-lock.v1",
+  "candidateId": "social-variance-defensive-exposure-v1",
+  "stage": "EXPLORATORY",
+  "classification": "PREREGISTERED_OPENED_OUTCOME_PORTFOLIO_REPLAY",
+  "claim": "Frozen social-attention one-hour variance forecasts improve defensive allocation over the stored market-only variance scaler in the consumed July panel.",
+  "universe": ["BTC", "ETH", "HYPE", "LIT", "NEAR", "PUMP", "SOL", "WLD", "XRP", "ZEC"],
+  "decisionClock": "UTC hourly",
+  "evaluationPeriod": {"startInclusive": "2026-07-01T00:00:00Z", "endExclusive": "2026-08-01T00:00:00Z"},
+  "fundingMonth": "2026-07",
+  "portfolio": {"baseWeightPerAsset": 0.1, "cashReturn": 0.0, "shorting": false, "maximumMultiplier": 1.0, "targetVolatility": "per-asset development median market-only predicted hourly volatility", "multiplier": "min(1, targetVolatility / predictedVolatility)"},
+  "costs": {"turnoverBps": [5, 10], "funding": "official observed Binance fundingRate archive", "missingFundingPolicy": "fail closed"},
+  "primaryMetric": "annualized certainty equivalent with gamma=4",
+  "phaseTwoGate": "social beats market-only certainty equivalent and at least one of expected shortfall or maximum drawdown at both 5 and 10 bps",
+  "compute": {"processes": 1, "blasThreads": 2, "maximumBlasThreads": 4, "gpu": false},
+  "artifacts": {
+    "frozenModelSetSha256": "70d73e2f3c12d05b0d31cc5460b6b97fd113e692f85e61f698a8835b009fb983",
+    "developmentFeatureRowsSha256": "f10279e39bb6a03d1a5cbeb3d1ef90a87080efcdd7dd597a7db6d8f60f0a8372",
+    "evaluationFeatureRowsSha256": "a376614dc095e6c0a053f59e07e88fe67cd670e9774fe9729408266a598564e7"
+  },
+  "paperTradingAuthorized": false,
+  "liveTradingAuthorized": false
+}

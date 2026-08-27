@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "replace-with-unique-kebab-case-id",
+  "spaceId": "replace-with-space-id",
+  "title": "Short falsifiable candidate title",
+  "stage": "IDEA",
+  "claim": "Point-in-time information X predicts target Y at horizon Z under condition C.",
+  "mechanism": "Why X should contain information not already reflected in the decision price.",
+  "target": "Exact signed return, variance, event, spread, or portfolio quantity.",
+  "horizon": "Exact forecast horizon.",
+  "informationSet": [
+    "Features knowable at the decision timestamp"
+  ],
+  "primaryBaseline": "Strongest reasonable point-in-time baseline.",
+  "evidence": [],
+  "frozenLocks": [],
+  "touchPoints": [],
+  "nextAction": "Smallest safe action that advances or falsifies the candidate."
+}

@@ -1,0 +1,1 @@
+{"schemaVersion":"marketlab.theory-inventory.v1","id":"cross-venue-lead-lag","kind":"PARENT","disposition":"DATA_BLOCKED","alphaSpace":"cross-venue","candidateId":"cross-venue-lead-lag","implementationPath":"theories/src/main/kotlin/dev/marketlab/theories/AcademicTheoryRegistry.kt"}

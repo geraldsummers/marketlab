@@ -75,8 +75,15 @@ class CausalFeatureAggregatorTest {
                 .compile(rows, listOf(instrument), decision)
                 .single()
 
+        assertEquals(4, feature.socialAttention15m)
         assertEquals(4, feature.socialAttention1h)
+        assertEquals(4, feature.socialAttention6h)
+        assertTrue(feature.socialHasPosts15m)
+        assertEquals(2, feature.socialUniqueAuthors1h)
+        assertEquals(2, feature.socialSourcesWithPosts15m)
         assertEquals(2, feature.socialSourceCount1h)
+        assertEquals(4, feature.socialAttentionChange1h)
+        assertEquals(4_000.0 / 60_000.0, feature.socialMinutesSincePost, 1.0e-12)
         assertEquals(0.075, checkNotNull(feature.socialPolarity1h), 1.0e-12)
         assertEquals(0.0, checkNotNull(feature.socialDisagreement1h))
         assertEquals(0.5, feature.crossSectionalAttentionRank)
@@ -102,6 +109,9 @@ class CausalFeatureAggregatorTest {
                 .single()
 
         assertEquals(0, feature.socialAttention1h)
+        assertEquals(0, feature.socialAttention15m)
+        assertTrue(!feature.socialHasPosts15m)
+        assertEquals(43_200.0, feature.socialMinutesSincePost)
         assertNull(feature.socialPolarity1h)
     }
 

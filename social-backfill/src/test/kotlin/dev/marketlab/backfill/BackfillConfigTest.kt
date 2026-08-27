@@ -18,7 +18,10 @@ class BackfillConfigTest {
                     "--model-lock",
                     "/opt/marketlab/research/sentiment-models.lock.json",
                     "--program-lock",
-                    "/opt/marketlab/research/social-backfill-program.lock.json",
+                    Path.of("../research/social-backfill-program.lock.json")
+                        .toAbsolutePath()
+                        .normalize()
+                        .toString(),
                     "--start",
                     "2025-10-04T00:00:00Z",
                     "--end",
@@ -30,7 +33,7 @@ class BackfillConfigTest {
 
         assertEquals(Path.of("/mnt/media/marketlab/raw/social-backfill"), config.outputRoot)
         assertEquals(setOf("market", "social"), config.sources)
-        assertEquals(ASSETS.map(AssetSpec::symbol).toSet(), config.assets)
+        assertEquals(config.study.assetSymbols, config.assets)
         assertEquals(null, config.analysisLock)
     }
 

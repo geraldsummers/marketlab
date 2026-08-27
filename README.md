@@ -9,6 +9,14 @@ The project never generates synthetic market prices. Empirical tests use
 production data with provenance, point-in-time availability, and explicit gap
 reports.
 
+## Start here
+
+- [`AGENTS.md`](AGENTS.md): mandatory policy for agents pursuing market alpha
+- [`docs/repository-map.md`](docs/repository-map.md): architecture and ownership
+- [`research/alpha/`](research/alpha/README.md): parallel alpha spaces and candidates
+- [`research/inventory/`](research/inventory/README.md): theories, evidence, data sources, components, and operations
+- [`deploy/README.md`](deploy/README.md): deployment and recovery
+
 ## Build
 
 ```sh
@@ -25,6 +33,9 @@ MARKETLAB_MAINNET_TESTS=1 ./gradlew :data:test \
 ## Components
 
 - `contracts`: immutable domain and wire contracts
+- `evidence-core`: atomic, content-addressed immutable evidence storage
+- `historical-data`: typed study locks, universes, slices, and time boundaries
+- `sentiment-core`: frozen preprocessing, language detection, and ONNX inference
 - `theory-dsl`: compiled, canonical theory configuration DSL
 - `data`: real-data collectors and snapshot construction
 - `engine`: causal features, validation, forecasting, and paper execution
@@ -36,9 +47,11 @@ MARKETLAB_MAINNET_TESTS=1 ./gradlew :data:test \
 - `collector`: continuous BTC trades/BBO/L2 mainnet capture into bounded raw segments
 - `social-collector`: exact-byte public social and news capture
 - `sentiment-worker`: hash-locked ONNX inference and causal feature materialization
+- `social-backfill`: registered historical acquisition and offline analysis
 - `worker-kotlin`: isolated batch worker entry point
 - `runner`: allowlisted rootless Podman launcher
 - `research-cli`: the first production real-data funding screen
+- `alpha-model`: archive-backed point-in-time basket research across classical and GPU model families
 
 ## Research guarantees
 
@@ -67,6 +80,23 @@ forecast-only adaptation), cross-venue lead/lag, and five prospective
 social/news hypotheses.
 Literature selection, contradictory evidence, and the source policy are
 documented in [`research/`](research/README.md).
+
+## Parallel alpha workspace
+
+[`research/alpha/`](research/alpha/README.md) organizes the research program by
+information and market-mechanism space. Each space exposes independent
+candidate directories and ready or blocked work so multiple agents can explore
+without sharing a mutable backlog or rewriting frozen evidence.
+
+```sh
+python3 research/alpha/tools/workspace.py list
+python3 research/alpha/tools/workspace.py ready
+python3 research/alpha/tools/workspace.py validate
+```
+
+The workspace is a navigation and coordination layer. Compiled theory plans,
+experiment locks, immutable artifacts, promotion gates, and the append-only
+decision log remain authoritative.
 
 ## Prospective social/news program
 
@@ -112,3 +142,9 @@ owner/API/coordinator PostgreSQL roles, loopback-only HTTP, no container-engine
 socket in application containers, and hot/cold storage split across
 `/mnt/stack/marketlab` and `/mnt/media/marketlab`. Build, verification, rollback,
 and SSH-tunnel instructions are in [`deploy/README.md`](deploy/README.md).
+
+Historical backfill is release-managed as four persistent user services:
+Binance market acquisition, two deterministic Bluesky shards, and a
+network-isolated analyzer. Their single source of study configuration is
+[`research/social-backfill-program.lock.json`](research/social-backfill-program.lock.json);
+the v2 program explicitly contains no Farcaster source.

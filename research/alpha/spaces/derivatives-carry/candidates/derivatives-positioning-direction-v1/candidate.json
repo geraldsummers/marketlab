@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "derivatives-positioning-direction-v1",
+  "spaceId": "derivatives-carry",
+  "title": "Derivatives positioning and future direction",
+  "stage": "DATA_FEASIBILITY",
+  "claim": "Funding, premium, open-interest, or liquidation state may incrementally predict basket returns after market controls.",
+  "mechanism": "Positioning can represent informed demand, crowded exposure, or compensation; direction is not assumed.",
+  "target": "Outright or factor-residual basket-member log return.",
+  "horizon": "Locked campaign horizon grid, subject to native observation cadence.",
+  "informationSet": [
+    "Point-in-time funding, mark-index premium, open interest, liquidations, and market controls"
+  ],
+  "primaryBaseline": "Strongest frozen market-only model",
+  "evidence": [],
+  "frozenLocks": [],
+  "touchPoints": [
+    "alpha-model",
+    "research/alpha/campaigns/archive-directional-gpu-v1.lock.json"
+  ],
+  "nextAction": "Register fields only where historical rule identity and availability timestamps pass.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
+}

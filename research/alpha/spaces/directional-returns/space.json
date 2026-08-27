@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "marketlab.alpha-space.v2",
+  "id": "directional-returns",
+  "title": "Directional returns",
+  "purpose": "Forecast signed returns or price distributions at declared horizons using point-in-time information.",
+  "state": "OPEN",
+  "dependencies": [
+    "volatility",
+    "microstructure",
+    "derivatives-carry",
+    "cross-venue",
+    "social-information",
+    "execution-portfolio"
+  ],
+  "readyWork": [
+    {
+      "id": "directional-generation-2-contract",
+      "status": "READY",
+      "kind": "research",
+      "summary": "Preregister a one-to-four-hour conditional return-distribution candidate using genuinely signed features and an abstention rule.",
+      "blockedBy": [],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "externalBlockers": [],
+      "priority": "P2",
+      "candidateIds": [
+        "social-information-direction-v1"
+      ],
+      "deliverables": [
+        "Durable research artifact for directional-generation-2-contract",
+        "Evidence-linked task handoff"
+      ],
+      "acceptanceCriteria": [
+        "Preregister a one-to-four-hour conditional return-distribution candidate using genuinely signed features and an abstention rule.",
+        "No epistemic stage is promoted without linked evidence"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/directional-returns/"
+      ],
+      "resourceClass": "METADATA_ONLY",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 1,
+        "maxTrials": 0,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": []
+    },
+    {
+      "id": "directional-generation-2-confirmation",
+      "status": "BLOCKED",
+      "kind": "evaluation",
+      "summary": "Evaluate the frozen generation-two candidate on untouched eligible historical outcomes.",
+      "blockedBy": [],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "externalBlockers": [
+        "frozen candidate does not exist",
+        "untouched eligible historical outcomes have not been identified"
+      ],
+      "priority": "P2",
+      "candidateIds": [],
+      "deliverables": [
+        "Durable evaluation artifact for directional-generation-2-confirmation",
+        "Evidence-linked task handoff"
+      ],
+      "acceptanceCriteria": [
+        "Evaluate the frozen generation-two candidate on untouched eligible historical outcomes.",
+        "No epistemic stage is promoted without linked evidence"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/directional-returns/"
+      ],
+      "resourceClass": "CPU_MODEL",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 2,
+        "maxTrials": 16,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": []
+    }
+  ]
+}

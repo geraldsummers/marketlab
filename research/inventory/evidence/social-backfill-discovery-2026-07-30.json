@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v2",
+  "id": "social-backfill-discovery-2026-07-30",
+  "candidateIds": [
+    "social-attention-hourly-variance-linear-v1",
+    "social-disagreement-hourly-variance-linear-v1",
+    "social-polarity-return-15m-v1",
+    "cross-sectional-attention-daily-return-linear-v1"
+  ],
+  "classification": "RETROSPECTIVE_DISCOVERY_ONLY",
+  "decision": "ALL_FOUR_DISCOVERY_SCREENS_FAILED",
+  "runId": null,
+  "summarySource": "research/social-backfill-results.md",
+  "artifacts": [
+    {
+      "role": "report",
+      "sha256": "e30aef8ec930fb86604ef2170ae7fca49b69dca024b674317298664fce43845c",
+      "location": "/mnt/media/marketlab/raw/social-backfill-v2/objects/e3/e30aef8ec930fb86604ef2170ae7fca49b69dca024b674317298664fce43845c.json",
+      "verification": "REMOTE_FILE"
+    }
+  ],
+  "summary": "All four registered single-source linear social discovery screens failed.",
+  "candidateDecisions": [
+    {
+      "candidateId": "social-attention-hourly-variance-linear-v1",
+      "stage": "REJECTED",
+      "decision": "DISCOVERY_SCREEN_NOT_PASSED",
+      "current": true
+    },
+    {
+      "candidateId": "social-disagreement-hourly-variance-linear-v1",
+      "stage": "REJECTED",
+      "decision": "DISCOVERY_SCREEN_NOT_PASSED",
+      "current": true
+    },
+    {
+      "candidateId": "social-polarity-return-15m-v1",
+      "stage": "REJECTED",
+      "decision": "DISCOVERY_SCREEN_NOT_PASSED",
+      "current": true
+    },
+    {
+      "candidateId": "cross-sectional-attention-daily-return-linear-v1",
+      "stage": "REJECTED",
+      "decision": "DISCOVERY_SCREEN_NOT_PASSED",
+      "current": true
+    }
+  ],
+  "outcomesOpened": true,
+  "openedOutcomes": [
+    {
+      "id": "social-backfill-discovery-2026-07-30-opened-outcomes",
+      "candidateIds": [
+        "social-attention-hourly-variance-linear-v1",
+        "social-disagreement-hourly-variance-linear-v1",
+        "social-polarity-return-15m-v1",
+        "cross-sectional-attention-daily-return-linear-v1"
+      ],
+      "venue": "binance",
+      "target": "registered four-target social discovery family",
+      "periodStatus": "UNKNOWN",
+      "unknownReason": "Exact retrospective search boundaries remain in the immutable report.",
+      "reuseStatus": "OPENED_NOT_CONFIRMATION_ELIGIBLE"
+    }
+  ]
+}

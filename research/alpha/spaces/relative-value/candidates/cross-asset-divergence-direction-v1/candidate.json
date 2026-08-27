@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "cross-asset-divergence-direction-v1",
+  "spaceId": "relative-value",
+  "title": "Cross-asset divergence without a presumed sign",
+  "stage": "INCONCLUSIVE",
+  "claim": "Point-in-time basket divergence may predict continuation, reversal, or neither in a fresh frozen evaluation.",
+  "mechanism": "Temporary or informational common-factor departures are observationally distinct only after conditional testing.",
+  "target": "Outright and training-only factor-residual log returns within a dynamic basket.",
+  "horizon": "Locked campaign horizon grid; sign and one horizon selected only in development.",
+  "informationSet": [
+    "Point-in-time basket membership, prior returns, and training-only factor estimates"
+  ],
+  "primaryBaseline": "Strongest own-market and factor-only model",
+  "evidence": [
+    {
+      "kind": "development-evidence-audit",
+      "classification": "archive-development-evidence-audit",
+      "decision": "INSUFFICIENT_EVIDENCE",
+      "campaignId": "archive-directional-gpu-v2",
+      "stage": "INCONCLUSIVE",
+      "recommendation": "INSUFFICIENT_EVIDENCE",
+      "artifactPath": "/mnt/media/marketlab/artifacts/archive-alpha-v2/evidence-audit-v3/audit.json",
+      "artifactSha256": "a07fbec0156327a68b2f9c457420be949fd6287d4fbfd1dc10bc11ceacd45117",
+      "ledgerManifestSha256": "6a04f1e6ff99a820a90708558055f5e2918f29fd23828007839e549ff84a0d44",
+      "openedOutcomePeriod": "2020-01-01T00:00:00Z/2025-06-01T00:00:00Z",
+      "summary": "Basket-4 development produced a positive selected specification and a clean registered placebo, but basket-6 work stopped in breadth, basket 10 was untested, and the historical membership limitation still prohibits confirmation.",
+      "evidenceId": "archive-directional-v2-audit-2026-08-25"
+    }
+  ],
+  "frozenLocks": [
+    "research/alpha/campaigns/archive-directional-gpu-v2.lock.json"
+  ],
+  "touchPoints": [
+    "alpha-model",
+    "research/alpha/campaigns/archive-directional-gpu-v2.lock.json"
+  ],
+  "nextAction": "Resolve point-in-time delisting and membership provenance before proposing fresh evidence. Do not use the opened V2 development period as confirmation.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
+}

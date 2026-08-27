@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "marketlab.social-backfill-program-lock.v1",
+  "schemaVersion": "marketlab.social-backfill-program-lock.v2",
   "programId": "social-information-retrospective-discovery-2025q4-2026q2",
   "classification": "RETROSPECTIVE_DISCOVERY_ONLY",
   "period": {
@@ -23,7 +23,20 @@
         "WLD": "worldcoin",
         "XRP": "xrp ripple",
         "ZEC": "zcash"
-      }
+      },
+      "matchTerms": {
+        "BTC": ["bitcoin"],
+        "ETH": ["ethereum", "ether"],
+        "HYPE": ["hyperliquid"],
+        "LIT": ["lighter"],
+        "NEAR": ["near protocol"],
+        "PUMP": ["pump.fun"],
+        "SOL": ["solana"],
+        "WLD": ["worldcoin", "world network"],
+        "XRP": ["ripple"],
+        "ZEC": ["zcash"]
+      },
+      "plainSymbols": ["XRP"]
     },
     "market": {
       "provider": "binance-public-futures-archive",

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "marketlab.social-functional-search-lock.v1",
+  "searchId": "attention-forecast-search-v1",
+  "classification": "RETROSPECTIVE_EXPLORATION",
+  "developmentPeriod": {
+    "startInclusive": "2025-11-03T00:00:00Z",
+    "endExclusive": "2026-07-01T00:00:00Z"
+  },
+  "blindExtension": {
+    "startInclusive": "2026-07-01T00:00:00Z",
+    "endExclusive": "2026-08-01T00:00:00Z",
+    "policy": "Winner manifests must be frozen before acquisition or inspection. Failure does not authorize refitting."
+  },
+  "families": ["elastic_net", "gradient_boosted_trees", "temporal_convolution", "gated_recurrent_unit"],
+  "maximumTrialsPerFamilyAndTarget": 40,
+  "outerValidation": "Six expanding 30-day tests after at least 60 training days; target-overlap purge at every boundary.",
+  "selection": {
+    "primary": "Mean loss improvement over the strongest market-only baseline",
+    "minimumPositiveOuterFolds": 4,
+    "maximumSingleAssetGainShare": 0.5
+  },
+  "blindAcceptance": {
+    "beatsEveryMarketOnlyBaseline": true,
+    "minimumAssetsWithPositiveImprovement": 6,
+    "multiplicity": "Holm across four target comparisons"
+  },
+  "prospectiveConfirmationDays": 90,
+  "paperTradingAuthorized": false
+}

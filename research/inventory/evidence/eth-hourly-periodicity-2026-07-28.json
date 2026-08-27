@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v2",
+  "id": "eth-hourly-periodicity-2026-07-28",
+  "candidateIds": [
+    "eth-hourly-periodicity-v1"
+  ],
+  "classification": "SEALED_HOLDOUT",
+  "decision": "SEALED_HOLDOUT_HOURLY_VOLATILITY_PERIODICITY_NOT_SUPPORTED",
+  "runId": "9f3c33a6-4b5f-419a-9fba-b2af984b3b38",
+  "summarySource": "research/decision-log.md",
+  "artifacts": [
+    {
+      "role": "report",
+      "sha256": "ce2fd80019dd2a3a37e6aa726dadc10759c91376d5805440c0b7202c3e8bea43",
+      "location": "coordinator content-addressed artifact store",
+      "verification": "CONTENT_ADDRESS_ONLY"
+    },
+    {
+      "role": "predictions",
+      "sha256": "9a87809cffb9fa0e2c33d384aa4249721c3633c689e86dd58f57d9f33cf608e6",
+      "location": "coordinator content-addressed artifact store",
+      "verification": "CONTENT_ADDRESS_ONLY"
+    }
+  ],
+  "summary": "The ETH volatility clock failed against clock-free and expanding-mean controls.",
+  "candidateDecisions": [
+    {
+      "candidateId": "eth-hourly-periodicity-v1",
+      "stage": "REJECTED",
+      "decision": "SEALED_HOLDOUT_HOURLY_VOLATILITY_PERIODICITY_NOT_SUPPORTED",
+      "current": true
+    }
+  ],
+  "outcomesOpened": true,
+  "openedOutcomes": [
+    {
+      "id": "eth-hourly-periodicity-2026-07-28-opened-outcomes",
+      "candidateIds": [
+        "eth-hourly-periodicity-v1"
+      ],
+      "venue": "hyperliquid",
+      "target": "ETH next-hour variance",
+      "periodStatus": "UNKNOWN",
+      "unknownReason": "Exact boundaries remain in the immutable run report and have not yet been transcribed.",
+      "reuseStatus": "OPENED_NOT_CONFIRMATION_ELIGIBLE"
+    }
+  ]
+}

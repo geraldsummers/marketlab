@@ -1,6 +1,7 @@
 package dev.marketlab.backfill
 
 import dev.marketlab.contracts.MarketTimestamp
+import dev.marketlab.evidence.ImmutableEvidenceStore
 import dev.marketlab.engine.FeatureVector
 import dev.marketlab.engine.ForecastMetrics
 import dev.marketlab.engine.LabeledObservation
@@ -24,9 +25,16 @@ import org.hipparchus.special.Erf
 
 internal class RetrospectiveAnalysis(
     private val config: BackfillConfig,
-    private val store: ArtifactStore,
+    private val store: ImmutableEvidenceStore,
     private val clock: Clock = Clock.systemUTC(),
 ) {
+    private val assets = config.study.assets
+    private val boundaries = config.study.schedule.boundaries(config.study.startInclusive)
+    private val trainingStart = boundaries.trainingStartInclusive.toEpochMilli()
+    private val developmentStart = boundaries.developmentStartInclusive.toEpochMilli()
+    private val holdoutStart = boundaries.holdoutStartInclusive.toEpochMilli()
+    private val holdoutEnd = boundaries.holdoutEndExclusive.toEpochMilli()
+
     fun run() {
         val reportPath = store.root.resolve("analysis/report.json")
         if (Files.isRegularFile(reportPath)) {
@@ -138,7 +146,7 @@ internal class RetrospectiveAnalysis(
         )
         require(
             root.getValue("acquisitionProgramId").jsonPrimitive.content ==
-                "social-information-retrospective-discovery-2025q4-2026q2",
+                config.study.programId,
         )
         val frozen = store.root.resolve("analysis-lock.json")
         if (Files.isRegularFile(frozen)) {
@@ -154,7 +162,7 @@ internal class RetrospectiveAnalysis(
         val social = linkedMapOf<String, List<SocialObservation>>()
         val market = linkedMapOf<String, TreeMap<Long, MarketBar15m>>()
         val manifestHashes = mutableListOf<String>()
-        for (asset in ASSETS) {
+        for (asset in assets) {
             val marketManifestPath = store.root.resolve("market/manifests/${asset.symbol}.json")
             require(Files.isRegularFile(marketManifestPath)) {
                 "missing market manifest for ${asset.symbol}"
@@ -236,14 +244,14 @@ internal class RetrospectiveAnalysis(
         socialFeature: SocialFeature,
     ): List<ScreenRow> {
         val output = mutableListOf<ScreenRow>()
-        for (asset in ASSETS) {
+        for (asset in assets) {
             val bars = market.getValue(asset.symbol)
             val byHour =
                 social.getValue(asset.symbol).groupBy {
                     completedBucket(it.indexedAtAvailabilityProxyEpochMillis, HOUR)
                 }
-            var decision = TRAINING_START
-            while (decision < HOLDOUT_END) {
+            var decision = trainingStart
+            while (decision < holdoutEnd) {
                 val trailing1h = variance(bars, decision - HOUR, decision, 4)
                 val trailing24h = variance(bars, decision - DAY, decision, 96)
                 val target = variance(bars, decision, decision + HOUR, 4)
@@ -290,14 +298,14 @@ internal class RetrospectiveAnalysis(
     ): List<ScreenRow> {
         val output = mutableListOf<ScreenRow>()
         val btc = market.getValue("BTC")
-        for (asset in ASSETS) {
+        for (asset in assets) {
             val bars = market.getValue(asset.symbol)
             val byBucket =
                 social.getValue(asset.symbol).groupBy {
                     completedBucket(it.indexedAtAvailabilityProxyEpochMillis, QUARTER_HOUR)
                 }
-            var decision = TRAINING_START
-            while (decision < HOLDOUT_END) {
+            var decision = trainingStart
+            while (decision < holdoutEnd) {
                 val latest = bars[decision - QUARTER_HOUR]
                 val btcLatest = btc[decision - QUARTER_HOUR]
                 val target = bars[decision]
@@ -332,10 +340,10 @@ internal class RetrospectiveAnalysis(
                 }.eachCount()
             }
         val output = mutableListOf<ScreenRow>()
-        var decision = TRAINING_START
-        while (decision < HOLDOUT_END) {
+        var decision = trainingStart
+        while (decision < holdoutEnd) {
             val candidates =
-                ASSETS.mapNotNull { asset ->
+                assets.mapNotNull { asset ->
                     val bars = market.getValue(asset.symbol)
                     val history =
                         (1..30).map { offset ->
@@ -382,7 +390,7 @@ internal class RetrospectiveAnalysis(
         require(rows.isNotEmpty()) { "$id emitted no complete rows" }
         val developmentImprovements = mutableListOf<Double>()
         repeat(4) { fold ->
-            val testStart = DEVELOPMENT_START + fold * 14L * DAY
+            val testStart = developmentStart + fold * 14L * DAY
             val testEnd = testStart + 14L * DAY
             val training = rows.filter { it.decisionTime < testStart }
             val test = rows.filter { it.decisionTime >= testStart && it.decisionTime < testEnd }
@@ -394,9 +402,9 @@ internal class RetrospectiveAnalysis(
             developmentImprovements +=
                 controlLoss.zip(candidateLoss) { base, proposed -> base - proposed }.average()
         }
-        val fitting = rows.filter { it.decisionTime < HOLDOUT_START }
+        val fitting = rows.filter { it.decisionTime < holdoutStart }
         val holdout =
-            rows.filter { it.decisionTime >= HOLDOUT_START && it.decisionTime < HOLDOUT_END }
+            rows.filter { it.decisionTime >= holdoutStart && it.decisionTime < holdoutEnd }
         require(fitting.isNotEmpty() && holdout.isNotEmpty()) { "$id holdout is empty" }
         val candidate = fit(fitting, candidateFeatures)
         val control = fit(fitting, controlFeatures)
@@ -635,10 +643,6 @@ internal class RetrospectiveAnalysis(
         const val HOUR = 60L * 60L * 1_000L
         const val DAY = 24L * HOUR
         const val EPSILON = 1.0e-12
-        val TRAINING_START = Instant.parse("2025-11-03T00:00:00Z").toEpochMilli()
-        val DEVELOPMENT_START = Instant.parse("2026-03-03T00:00:00Z").toEpochMilli()
-        val HOLDOUT_START = Instant.parse("2026-04-28T00:00:00Z").toEpochMilli()
-        val HOLDOUT_END = Instant.parse("2026-06-27T00:00:00Z").toEpochMilli()
         val JSON =
             Json {
                 ignoreUnknownKeys = false

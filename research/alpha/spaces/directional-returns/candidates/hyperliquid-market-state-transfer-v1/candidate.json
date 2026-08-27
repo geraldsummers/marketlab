@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "hyperliquid-market-state-transfer-v1",
+  "spaceId": "directional-returns",
+  "title": "Retrospective Hyperliquid market-state source transfer",
+  "stage": "INCONCLUSIVE",
+  "claim": "The frozen Binance market-state model may retain descriptive 15-minute forecast-loss improvement when applied without tuning to an existing Hyperliquid period.",
+  "mechanism": "Normalized return, range, activity, and basket-state relationships may transfer across liquid perpetual venues, but venue microstructure and volume scales may prevent transfer.",
+  "target": "Fifteen-minute outright Hyperliquid perpetual log return in a point-in-time basket four.",
+  "horizon": "15m from each completed historical 5m candle.",
+  "informationSet": [
+    "Official Hyperliquid historical candles and point-in-time universe snapshots already existing at task start"
+  ],
+  "primaryBaseline": "Frozen Binance model's strongest aligned baseline",
+  "evidence": [
+    {
+      "kind": "retrospective-source-transfer-diagnostic",
+      "classification": "RETROSPECTIVE_SOURCE_TRANSFER_DIAGNOSTIC",
+      "decision": "DESCRIPTIVE_TRANSFER_RESULT_ONLY",
+      "stage": "INCONCLUSIVE",
+      "artifactPath": "/mnt/media/marketlab/artifacts/archive-alpha-v2/focused-v3/hyperliquid-transfer-result.json",
+      "artifactSha256": "808d45f4e6124ab942f9a9f28fbdd1f4cdf6d1aa65c060d8dc8479aa57e592a5",
+      "acquisitionManifestSha256": "aaa24b31d292ade376470c377dd04b91d5a04721b4ac9233d4fdc04aa9f2ae51",
+      "openedOutcomePeriod": "2026-08-08T11:15:00Z/2026-08-25T00:00:00Z",
+      "summary": "Across 18,871 rows and 16.53 observed calendar days, the frozen Binance model had -0.0713% relative MSE improvement versus the strongest market-only baseline; descriptive HAC p=0.72. BTC was positive while ETH, HYPE, and SOL were negative. Rolling REST retention shortened the requested August period, and no promotion is permitted.",
+      "evidenceId": "hyperliquid-market-state-transfer-2026-08-25"
+    }
+  ],
+  "frozenLocks": [
+    "research/alpha/campaigns/archive-directional-focused-v3.lock.json"
+  ],
+  "touchPoints": [
+    "alpha-model",
+    "research/alpha/campaigns/archive-directional-focused-v3.lock.json"
+  ],
+  "nextAction": "Preserve the negative transfer evidence and do not tune around it. Any revisit requires a materially distinct venue-normalized mechanism and a fresh candidate ID.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
+}

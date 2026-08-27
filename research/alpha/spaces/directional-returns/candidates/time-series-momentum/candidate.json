@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "time-series-momentum",
+  "spaceId": "directional-returns",
+  "title": "Parent multi-asset time-series momentum",
+  "stage": "DATA_BLOCKED",
+  "claim": "Own-return continuation across a point-in-time multi-venue universe improves intermediate-horizon forecasts and costed long-short performance.",
+  "mechanism": "Underreaction and trend-following flows create intermediate-horizon continuation.",
+  "target": "Future multi-asset spot and perpetual returns",
+  "horizon": "1 to 12 months",
+  "informationSet": [
+    "Five years of continuous point-in-time spot and perpetual history",
+    "Historical universe and delisting state"
+  ],
+  "primaryBaseline": "Historical mean, zero return, and buy-and-hold",
+  "evidence": [
+    {
+      "classification": "DATA_FEASIBILITY",
+      "decision": "DATA_BLOCKED",
+      "summary": "The project lacks five years of continuous multi-venue history and historical universe membership.",
+      "sourcePath": "research/theory-exhaustion.md",
+      "evidenceId": "theory-data-blockers-2026-07-28"
+    }
+  ],
+  "frozenLocks": [],
+  "touchPoints": [
+    "theories/src/main/kotlin/dev/marketlab/theories/AcademicTheoryRegistry.kt"
+  ],
+  "nextAction": "Vet an archive containing inactive and delisted instruments; keep the failed BTC adaptation separate.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
+}

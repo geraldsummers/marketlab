@@ -6,8 +6,10 @@ plugins {
 
 dependencies {
     implementation(project(":contracts"))
+    implementation(project(":evidence-core"))
     implementation(project(":engine"))
-    implementation(project(":sentiment-worker"))
+    implementation(project(":historical-data"))
+    implementation(project(":sentiment-core"))
     implementation(libs.hipparchus.core)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialization.json)

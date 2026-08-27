@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "liquidity-conditioned-reversal",
+  "spaceId": "microstructure",
+  "title": "Liquidity-conditioned short-horizon reversal",
+  "stage": "DATA_BLOCKED",
+  "claim": "Returns following one-sided flow reverse conditionally on thin depth and liquidity stress, after executable costs.",
+  "mechanism": "Temporary inventory concessions reverse when liquidity providers absorb non-informational demand.",
+  "target": "Subsequent executable return after a registered flow/depth shock",
+  "horizon": "Seconds to minutes",
+  "informationSet": [
+    "Signed flow",
+    "BBO and L2 depth",
+    "Spread and resilience",
+    "Observed execution state"
+  ],
+  "primaryBaseline": "Unconditional return, zero return, persistence, and market-only liquidity controls",
+  "evidence": [
+    {
+      "classification": "DATA_FEASIBILITY",
+      "decision": "DATA_BLOCKED",
+      "summary": "The parent plan requires 180 continuous quality-valid days of depth and observed execution replay.",
+      "sourcePath": "research/theory-exhaustion.md",
+      "evidenceId": "theory-data-blockers-2026-07-28"
+    }
+  ],
+  "frozenLocks": [],
+  "touchPoints": [
+    "collector",
+    "theories/src/main/kotlin/dev/marketlab/theories/AcademicTheoryRegistry.kt",
+    "engine/src/main/kotlin/dev/marketlab/engine/ObservedBookExecutor.kt"
+  ],
+  "nextAction": "Accumulate and audit 180 days; do not use the rejected unconditional candle adaptation as a substitute.",
+  "researchModes": [
+    "PROSPECTIVE"
+  ]
+}

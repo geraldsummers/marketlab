@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "marketlab.operations-inventory.v1",
+  "operations": [
+    {"id":"local-validation","kind":"validation","path":"README.md","purpose":"Run repository-local Gradle and opt-in contract checks.","mutatesExternalState":false},
+    {"id":"build-release","kind":"release","path":"deploy/build-release.sh","purpose":"Build digest-pinned deployable images and release metadata.","mutatesExternalState":true},
+    {"id":"activate-release","kind":"release","path":"deploy/activate-release.sh","purpose":"Activate a prepared release on the deployment host.","mutatesExternalState":true},
+    {"id":"verify-deployment","kind":"validation","path":"deploy/verify.sh","purpose":"Verify deployed services, identities, and control-plane behavior.","mutatesExternalState":false},
+    {"id":"rollback-release","kind":"recovery","path":"deploy/rollback.sh","purpose":"Return deployment symlinks and services to a prior release.","mutatesExternalState":true},
+    {"id":"prepare-host","kind":"bootstrap","path":"deploy/prepare-host.sh","purpose":"Prepare rootless host directories, environment, roles, and unit templates.","mutatesExternalState":true},
+    {"id":"service-health","kind":"validation","path":"deploy/service-health.sh","purpose":"Inspect loopback service health without changing research state.","mutatesExternalState":false},
+    {"id":"verify-backfill","kind":"validation","path":"deploy/verify-backfill.sh","purpose":"Verify registered persistent historical backfill services and artifacts.","mutatesExternalState":false},
+    {"id":"research-cli-funding","kind":"research-run","path":"research-cli/README.md","purpose":"Run the production funding-to-next-hour-return diagnostic.","mutatesExternalState":true},
+    {"id":"archive-alpha-campaign","kind":"research-run","path":"alpha-model/README.md","purpose":"Register historical archives, reconstruct baskets, run the bounded GPU model search, and consume frozen confirmation outcomes once.","mutatesExternalState":true},
+    {"id":"social-blind-extension","kind":"research-run","path":"research/social-functional-blind-extension-runbook.md","purpose":"Acquire, materialize, and evaluate the single-use July blind extension.","mutatesExternalState":true},
+    {"id":"social-prospective-shadow","kind":"research-run","path":"research/social-functional-prospective.lock.json","purpose":"Registered 90-day prospective shadow stage for the frozen one-hour variance model; orchestration is not yet implemented.","mutatesExternalState":true}
+  ]
+}

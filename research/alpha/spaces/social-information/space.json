@@ -1,0 +1,337 @@
+{
+  "schemaVersion": "marketlab.alpha-space.v2",
+  "id": "social-information",
+  "title": "Social and news information",
+  "purpose": "Study attention, sentiment, disagreement, novelty, and information diffusion under historical availability constraints.",
+  "state": "ACTIVE",
+  "dependencies": [
+    "directional-returns",
+    "volatility"
+  ],
+  "readyWork": [
+    {
+      "id": "prospective-social-materialization",
+      "status": "READY",
+      "kind": "infrastructure",
+      "summary": "Implement durable live dual-source feature materialization suitable for pre-outcome shadow forecasts.",
+      "blockedBy": [],
+      "researchModes": [
+        "PROSPECTIVE"
+      ],
+      "externalBlockers": [],
+      "priority": "P2",
+      "candidateIds": [],
+      "deliverables": [
+        "Durable infrastructure artifact for prospective-social-materialization",
+        "Evidence-linked task handoff"
+      ],
+      "acceptanceCriteria": [
+        "Implement durable live dual-source feature materialization suitable for pre-outcome shadow forecasts.",
+        "No epistemic stage is promoted without linked evidence"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/social-information/"
+      ],
+      "resourceClass": "DATA_IO",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 1,
+        "maxTrials": 0,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": []
+    },
+    {
+      "id": "conditional-sentiment-direction-thesis",
+      "status": "DONE",
+      "kind": "data",
+      "summary": "Audit manifests for an untouched historical social and market overlap before any event-conditioned directional development.",
+      "blockedBy": [],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "externalBlockers": [],
+      "priority": "P0",
+      "candidateIds": [
+        "event-conditioned-social-direction-v1"
+      ],
+      "deliverables": [
+        "Manifest-only inventory of historical social and market overlap without reading target rows",
+        "Exact opened-outcome overlap analysis and a DATA_FEASIBILITY evidence record",
+        "Candidate update that either identifies an untouched segment or records DATA_BLOCKED"
+      ],
+      "acceptanceCriteria": [
+        "No target-bearing feature rows or confirmation outcomes are opened",
+        "Every candidate period is checked against the opened-outcome inventory",
+        "No future-data waiting is proposed"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/social-information/candidates/event-conditioned-social-direction-v1/",
+        "research/inventory/evidence/",
+        "research/alpha/spaces/social-information/space.json"
+      ],
+      "resourceClass": "METADATA_ONLY",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 1,
+        "maxTrials": 0,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": [
+        "event-conditioned-social-data-feasibility-2026-08-27"
+      ]
+    },
+    {
+      "id": "event-conditioned-social-development",
+      "status": "BLOCKED",
+      "kind": "model",
+      "summary": "Run the registered eight-variant event-conditioned signed-social family on development-only outcomes.",
+      "blockedBy": [
+        "conditional-sentiment-direction-thesis"
+      ],
+      "externalBlockers": [
+        "Disagreement-change has only 87 acted rows in chronological fold one versus the registered minimum of 100; the opened family cannot be narrowed post hoc."
+      ],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "priority": "P1",
+      "candidateIds": [
+        "event-conditioned-social-direction-v1"
+      ],
+      "deliverables": [
+        "Complete eight-variant trial ledger with failures retained",
+        "Chronological purged development report against every registered baseline",
+        "Evidence-linked decision to freeze, reject, or remain inconclusive"
+      ],
+      "acceptanceCriteria": [
+        "Only periods registered as development are opened",
+        "One process, two BLAS threads, eight primary variants, and no GPU",
+        "No subgroup or secondary metric is promoted after outcomes"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/social-information/candidates/event-conditioned-social-direction-v1/",
+        "social-model/",
+        "research/inventory/compute-runs/"
+      ],
+      "resourceClass": "CPU_MODEL",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 2,
+        "maxTrials": 8,
+        "gpu": false
+      },
+      "outcomeAccess": "DEVELOPMENT_ONLY",
+      "completionEvidenceIds": []
+    },
+    {
+      "id": "event-conditioned-social-freeze",
+      "status": "BLOCKED",
+      "kind": "research",
+      "summary": "Freeze one exact event-conditioned social candidate and its single-use untouched historical confirmation.",
+      "blockedBy": [
+        "event-conditioned-social-development"
+      ],
+      "externalBlockers": [
+        "The registered eight-variant development family failed its pre-model coverage gate."
+      ],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "priority": "P1",
+      "candidateIds": [
+        "event-conditioned-social-direction-v1"
+      ],
+      "deliverables": [
+        "Write-once lock binding target, features, availability, model, costs, inference, and period",
+        "Freeze artifact with implementation, model, panel, and lock SHA-256 identities",
+        "Empty single-use confirmation ledger"
+      ],
+      "acceptanceCriteria": [
+        "Candidate is FROZEN_CANDIDATE before confirmation becomes ready",
+        "Confirmation period is exact and absent from the opened-outcome inventory",
+        "No future observations or adaptive stopping are required"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/social-information/candidates/event-conditioned-social-direction-v1/",
+        "research/alpha/campaigns/",
+        "research/inventory/evidence/"
+      ],
+      "resourceClass": "METADATA_ONLY",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 1,
+        "maxTrials": 0,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": []
+    },
+    {
+      "id": "event-conditioned-social-confirmation",
+      "status": "BLOCKED",
+      "kind": "evaluation",
+      "summary": "Autonomously open the exact single-use historical confirmation only after every frozen gate passes.",
+      "blockedBy": [
+        "event-conditioned-social-freeze"
+      ],
+      "externalBlockers": [],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "priority": "P1",
+      "candidateIds": [
+        "event-conditioned-social-direction-v1"
+      ],
+      "deliverables": [
+        "Atomic confirmation marker in the registered empty ledger",
+        "Immutable dependence-aware family result",
+        "Candidate, evidence, opened-outcome, compute, and decision-log updates"
+      ],
+      "acceptanceCriteria": [
+        "Freeze SHA-256, implementation, model, panel, lock, and ledger identities pass",
+        "Exact period has no overlap with any opened outcome",
+        "Result is reported at the earned epistemic stage without retuning"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/social-information/candidates/event-conditioned-social-direction-v1/",
+        "research/inventory/evidence/",
+        "research/decision-log.md"
+      ],
+      "resourceClass": "CPU_MODEL",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 2,
+        "maxTrials": 0,
+        "gpu": false
+      },
+      "outcomeAccess": "SINGLE_USE_HISTORICAL_CONFIRMATION",
+      "completionEvidenceIds": []
+    },
+    {
+      "id": "polarity-shock-direction-v2-contract",
+      "status": "DONE",
+      "kind": "research",
+      "summary": "Preregister a materially distinct polarity-shock-only directional candidate without reusing disagreement or changing the opened V1 family.",
+      "blockedBy": [],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "externalBlockers": [],
+      "priority": "P1",
+      "candidateIds": [
+        "social-information-direction-v1"
+      ],
+      "deliverables": [
+        "Exact polarity-shock-only candidate contract with a new candidate ID",
+        "Bias ledger, bounded family, rejection gates, and prospective activation contract"
+      ],
+      "acceptanceCriteria": [
+        "No target-bearing row from the consumed period is read while writing the contract",
+        "The new candidate is materially distinct and does not reinterpret V1 subgroups as confirmation",
+        "Prospective waiting remains disabled until development passes and one candidate is frozen"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/social-information/"
+      ],
+      "resourceClass": "METADATA_ONLY",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 1,
+        "maxTrials": 0,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": [
+        "polarity-shock-direction-v2-registration-2026-08-27"
+      ]
+    },
+    {
+      "id": "polarity-shock-direction-v2-development",
+      "status": "DONE",
+      "kind": "model",
+      "summary": "Run the registered four-variant polarity-shock family once on explicitly contaminated historical development outcomes.",
+      "blockedBy": [],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "externalBlockers": [],
+      "priority": "P1",
+      "candidateIds": [
+        "polarity-shock-direction-v2"
+      ],
+      "deliverables": [
+        "Complete four-variant trial ledger with failures retained",
+        "Chronological purged development report against every registered baseline",
+        "Evidence-linked decision to freeze, reject, or remain blocked"
+      ],
+      "acceptanceCriteria": [
+        "Use only the registered polarity feature, horizons, estimators, attention gate, folds, and baselines",
+        "One process, two BLAS threads, four primary variants, and no GPU",
+        "Historical evidence remains capped at EXPLORATORY",
+        "No subgroup, horizon, estimator, or secondary metric is promoted after outcomes"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/social-information/candidates/polarity-shock-direction-v2/",
+        "social-model/",
+        "research/inventory/evidence/",
+        "research/inventory/compute-runs/"
+      ],
+      "resourceClass": "CPU_MODEL",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 2,
+        "maxTrials": 4,
+        "gpu": false
+      },
+      "outcomeAccess": "DEVELOPMENT_ONLY",
+      "completionEvidenceIds": [
+        "polarity-shock-direction-v2-development-2026-08-27"
+      ]
+    },
+    {
+      "id": "polarity-shock-direction-v2-freeze",
+      "status": "BLOCKED",
+      "kind": "research",
+      "summary": "Freeze the exact winning polarity-shock candidate only after every development gate passes.",
+      "blockedBy": [
+        "polarity-shock-direction-v2-development"
+      ],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "externalBlockers": [
+        "All four V2 variants failed development forecast-loss and stability gates; candidate is REJECTED."
+      ],
+      "priority": "P1",
+      "candidateIds": [
+        "polarity-shock-direction-v2"
+      ],
+      "deliverables": [
+        "Write-once candidate lock and artifact identities",
+        "Prospective feature-publication and outcome-sealing contract"
+      ],
+      "acceptanceCriteria": [
+        "Candidate is frozen without reading new outcomes",
+        "All four development variants remain in the trial ledger",
+        "Prospective activation remains false until outcome sealing is operational"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/social-information/candidates/polarity-shock-direction-v2/",
+        "research/alpha/campaigns/",
+        "research/inventory/evidence/"
+      ],
+      "resourceClass": "METADATA_ONLY",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 1,
+        "maxTrials": 0,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": []
+    }
+  ]
+}

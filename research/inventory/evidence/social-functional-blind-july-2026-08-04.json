@@ -1,0 +1,79 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v2",
+  "id": "social-functional-blind-july-2026-08-04",
+  "candidateIds": [
+    "social-attention-return-15m-v1",
+    "social-attention-return-1d-v1",
+    "social-attention-variance-1h-v1",
+    "social-attention-variance-1d-v1"
+  ],
+  "classification": "BLIND_RETROSPECTIVE_VALIDATION",
+  "decision": "ONE_HOUR_VARIANCE_FUNCTIONAL_OTHER_TARGETS_NOT_FUNCTIONAL",
+  "runId": null,
+  "summarySource": "research/decision-log.md",
+  "artifacts": [
+    {
+      "role": "blind-report",
+      "sha256": "07537da00a1088b5a445be8adc931e274539b82cecf8a3ca1f0adc28fd15c4c0",
+      "location": "/mnt/media/marketlab/raw/social-functional-blind-extension-2026-07/functional/blind-evaluation.json",
+      "verification": "REMOTE_FILE"
+    },
+    {
+      "role": "blind-feature-rows",
+      "sha256": "a376614dc095e6c0a053f59e07e88fe67cd670e9774fe9729408266a598564e7",
+      "location": "registered blind extension object store",
+      "verification": "CONTENT_ADDRESS_ONLY"
+    },
+    {
+      "role": "frozen-model-set",
+      "sha256": "70d73e2f3c12d05b0d31cc5460b6b97fd113e692f85e61f698a8835b009fb983",
+      "location": "registered social functional model store",
+      "verification": "CONTENT_ADDRESS_ONLY"
+    }
+  ],
+  "summary": "One-hour social-attention variance passed blind July; both return targets and daily variance failed.",
+  "candidateDecisions": [
+    {
+      "candidateId": "social-attention-return-15m-v1",
+      "stage": "REJECTED",
+      "decision": "NOT_FUNCTIONAL",
+      "current": true
+    },
+    {
+      "candidateId": "social-attention-return-1d-v1",
+      "stage": "REJECTED",
+      "decision": "NOT_FUNCTIONAL",
+      "current": true
+    },
+    {
+      "candidateId": "social-attention-variance-1h-v1",
+      "stage": "BLIND_VALIDATED",
+      "decision": "ENGINEERING_FUNCTIONAL",
+      "current": true
+    },
+    {
+      "candidateId": "social-attention-variance-1d-v1",
+      "stage": "REJECTED",
+      "decision": "NOT_FUNCTIONAL",
+      "current": true
+    }
+  ],
+  "outcomesOpened": true,
+  "openedOutcomes": [
+    {
+      "id": "social-functional-blind-july",
+      "candidateIds": [
+        "social-attention-return-15m-v1",
+        "social-attention-return-1d-v1",
+        "social-attention-variance-1h-v1",
+        "social-attention-variance-1d-v1"
+      ],
+      "venue": "binance",
+      "target": "registered four-target functional family",
+      "periodStatus": "EXACT",
+      "startInclusive": "2026-07-01T00:00:00Z",
+      "endExclusive": "2026-08-01T00:00:00Z",
+      "reuseStatus": "OPENED_NOT_CONFIRMATION_ELIGIBLE"
+    }
+  ]
+}

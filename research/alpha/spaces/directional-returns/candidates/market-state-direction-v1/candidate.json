@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "market-state-direction-v1",
+  "spaceId": "directional-returns",
+  "title": "Market-state directional benchmark",
+  "stage": "INCONCLUSIVE",
+  "claim": "Causal own-market and basket state may improve future return loss at one frozen horizon over zero, mean, persistence, and reversal controls.",
+  "mechanism": "Price, volume, and volatility state may summarize conditional return dynamics; the sign and horizon are not presumed.",
+  "target": "Outright or training-only factor-residual log return selected from the locked target family.",
+  "horizon": "One of 5m, 15m, 1h, 4h, 12h, 1d, 3d, or 7d, selected in development and frozen.",
+  "informationSet": [
+    "Point-in-time candles, volume, trade count, realized variance, and basket controls"
+  ],
+  "primaryBaseline": "Strongest frozen zero, mean, persistence, reversal, or market-only control",
+  "evidence": [
+    {
+      "kind": "development-evidence-audit",
+      "classification": "archive-development-evidence-audit",
+      "decision": "INSUFFICIENT_EVIDENCE",
+      "campaignId": "archive-directional-gpu-v2",
+      "stage": "INCONCLUSIVE",
+      "recommendation": "INSUFFICIENT_EVIDENCE",
+      "artifactPath": "/mnt/media/marketlab/artifacts/archive-alpha-v2/evidence-audit-v3/audit.json",
+      "artifactSha256": "a07fbec0156327a68b2f9c457420be949fd6287d4fbfd1dc10bc11ceacd45117",
+      "ledgerManifestSha256": "6a04f1e6ff99a820a90708558055f5e2918f29fd23828007839e549ff84a0d44",
+      "openedOutcomePeriod": "2020-01-01T00:00:00Z/2025-06-01T00:00:00Z",
+      "summary": "The same 15m outright-return ExtraTrees specification had positive aggregate development loss differences in baskets 4 and 6, but basket 6 was not finalized, its placebo was unavailable, basket 10 was untested, and no dependence-aware inference or economic evidence was produced.",
+      "evidenceId": "archive-directional-v2-audit-2026-08-25"
+    }
+  ],
+  "frozenLocks": [
+    "research/alpha/campaigns/archive-directional-gpu-v2.lock.json"
+  ],
+  "touchPoints": [
+    "alpha-model",
+    "research/alpha/campaigns/archive-directional-gpu-v2.lock.json"
+  ],
+  "nextAction": "Keep V2 suspended. A smaller V3 requires a fresh reviewed lock, explicit family-wide inference, and outcomes not reused as confirmation; do not open the V2 confirmation ledger.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
+}

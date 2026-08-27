@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "marketlab.alpha-workspace-policy.v2",
+  "activeResearchMode": "HISTORICAL",
+  "futureOutcomeWaitingAllowed": false,
+  "discoveryPolicy": {
+    "availabilityBiasedHistoricalDiscoveryAllowed": true,
+    "allowedBiases": ["AVAILABILITY_TIMESTAMP_PROXY", "OPENED_OUTCOMES", "REVISED_VALUES", "SURVIVOR_UNIVERSE"],
+    "targetLeakageAllowed": false,
+    "promotionCeiling": "EXPLORATORY",
+    "requireBiasLedger": true
+  },
+  "prospectiveActivationPolicy": {
+    "ordinaryFutureWaitingAllowed": false,
+    "requiresFrozenCandidate": true,
+    "requiresPassedDevelopmentGates": true,
+    "requiresOutcomeSealing": true,
+    "requiresNoInterimOutcomeAccess": true,
+    "minimumQualityValidDays": 30,
+    "minimumActedOnEvents": 1000,
+    "maximumCalendarDays": 90
+  },
+  "routing": {
+    "defaultReadyView": "HIGHEST_PRIORITY_ONLY",
+    "maxConcurrentDataAudits": 2,
+    "maxConcurrentModelJobs": 1
+  },
+  "computeDefaults": {
+    "maxConcurrentTrials": 1,
+    "blasThreads": 2,
+    "maxBlasThreads": 4,
+    "defaultCandidateTrialBudget": 16,
+    "gpuRequiresJustification": true
+  },
+  "historicalConfirmation": {
+    "authorization": "AUTONOMOUS_AFTER_VALIDATED_FREEZE",
+    "requireEmptyLedger": true,
+    "requireNoOpenedOutcomeOverlap": true,
+    "requireExactArtifactHashes": true
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "social-attention-return-15m-v1",
+  "spaceId": "social-information",
+  "title": "Attention-complete panel to fifteen-minute return",
+  "stage": "REJECTED",
+  "claim": "Causal social-attention features improve next-fifteen-minute return forecasts over the strongest market-only model across assets.",
+  "mechanism": "Attention bursts precede rapid price incorporation of public information.",
+  "target": "Next fifteen-minute Binance perpetual return",
+  "horizon": "15 minutes",
+  "informationSet": [
+    "Attention-complete Bluesky panel",
+    "Recent asset and BTC returns",
+    "Recent realized variance",
+    "Calendar controls"
+  ],
+  "primaryBaseline": "Strongest registered market-only model",
+  "evidence": [
+    {
+      "classification": "BLIND_RETROSPECTIVE_VALIDATION",
+      "decision": "NOT_FUNCTIONAL",
+      "summary": "The elastic-net winner passed 2/6 development folds; blind July loss improvement was 3.90e-9 with Holm-adjusted p=1.0.",
+      "sourcePath": "research/decision-log.md",
+      "evidenceId": "social-functional-blind-july-2026-08-04"
+    }
+  ],
+  "frozenLocks": [
+    "research/social-functional-feature.lock.json",
+    "research/social-functional-search.lock.json",
+    "research/social-functional-blind-extension.lock.json"
+  ],
+  "touchPoints": [
+    "social-model/trainer.py",
+    "social-backfill/src/main/kotlin/dev/marketlab/backfill/FunctionalFeatureMaterializer.kt"
+  ],
+  "nextAction": "Do not refit on July; use a new signed-information mechanism and future confirmation period.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
+}

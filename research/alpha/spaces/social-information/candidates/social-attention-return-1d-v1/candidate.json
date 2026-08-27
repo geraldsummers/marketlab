@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "social-attention-return-1d-v1",
+  "spaceId": "social-information",
+  "title": "Attention-complete panel to next-day return",
+  "stage": "REJECTED",
+  "claim": "Causal attention and cross-sectional rank improve next-day asset return forecasts over the strongest market-only model.",
+  "mechanism": "Cross-sectional attention identifies slower information diffusion into relatively neglected or newly salient assets.",
+  "target": "Next UTC-day Binance perpetual return",
+  "horizon": "1 day",
+  "informationSet": [
+    "Attention-complete Bluesky panel",
+    "Cross-sectional attention rank",
+    "Market and calendar controls"
+  ],
+  "primaryBaseline": "Strongest registered market-only model",
+  "evidence": [
+    {
+      "classification": "BLIND_RETROSPECTIVE_VALIDATION",
+      "decision": "NOT_FUNCTIONAL",
+      "summary": "The elastic-net winner passed 2/6 development folds; blind July was worse than baseline and improved in only 3/10 assets, Holm-adjusted p=1.0.",
+      "sourcePath": "research/decision-log.md",
+      "evidenceId": "social-functional-blind-july-2026-08-04"
+    }
+  ],
+  "frozenLocks": [
+    "research/social-functional-feature.lock.json",
+    "research/social-functional-search.lock.json",
+    "research/social-functional-blind-extension.lock.json"
+  ],
+  "touchPoints": [
+    "social-model/trainer.py",
+    "social-backfill/src/main/kotlin/dev/marketlab/backfill/FunctionalFeatureMaterializer.kt"
+  ],
+  "nextAction": "Keep the opened version rejected; do not rescue it with alternate assets, estimators, or thresholds.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
+}

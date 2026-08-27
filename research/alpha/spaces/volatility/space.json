@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "marketlab.alpha-space.v2",
+  "id": "volatility",
+  "title": "Volatility and tail risk",
+  "purpose": "Forecast realized variance, ranges, jumps, and tail intensity without relabeling risk forecasts as return-direction alpha.",
+  "state": "ACTIVE",
+  "dependencies": [
+    "social-information",
+    "microstructure",
+    "execution-portfolio"
+  ],
+  "readyWork": [
+    {
+      "id": "social-variance-prospective-shadow",
+      "status": "READY",
+      "kind": "infrastructure",
+      "summary": "Implement durable pre-outcome publication and outcome sealing for the frozen one-hour social-attention variance model.",
+      "blockedBy": [],
+      "researchModes": [
+        "PROSPECTIVE"
+      ],
+      "externalBlockers": [],
+      "priority": "P2",
+      "candidateIds": [],
+      "deliverables": [
+        "Durable infrastructure artifact for social-variance-prospective-shadow",
+        "Evidence-linked task handoff"
+      ],
+      "acceptanceCriteria": [
+        "Implement durable pre-outcome publication and outcome sealing for the frozen one-hour social-attention variance model.",
+        "No epistemic stage is promoted without linked evidence"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/volatility/"
+      ],
+      "resourceClass": "DATA_IO",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 1,
+        "maxTrials": 0,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": []
+    },
+    {
+      "id": "volatility-options-economic-mapping",
+      "status": "BLOCKED",
+      "kind": "evaluation",
+      "summary": "Evaluate whether the variance forecast contains value relative to contemporaneous implied variance and executable option costs.",
+      "blockedBy": [],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "externalBlockers": [
+        "point-in-time option surface and execution data are unavailable"
+      ],
+      "priority": "P2",
+      "candidateIds": [],
+      "deliverables": [
+        "Durable evaluation artifact for volatility-options-economic-mapping",
+        "Evidence-linked task handoff"
+      ],
+      "acceptanceCriteria": [
+        "Evaluate whether the variance forecast contains value relative to contemporaneous implied variance and executable option costs.",
+        "No epistemic stage is promoted without linked evidence"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/volatility/"
+      ],
+      "resourceClass": "CPU_MODEL",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 2,
+        "maxTrials": 16,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": []
+    }
+  ]
+}

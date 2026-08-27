@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "funding-basis-carry",
+  "spaceId": "derivatives-carry",
+  "title": "Funding, basis convergence, and hedged carry",
+  "stage": "DATA_BLOCKED",
+  "claim": "Point-in-time funding and basis jointly identify executable delta-neutral carry after every leg and cost.",
+  "mechanism": "Constrained arbitrage allows funding and basis dislocations to persist until capital and positioning rebalance them.",
+  "target": "Net hedged carry and basis convergence",
+  "horizon": "Funding interval to months",
+  "informationSet": [
+    "Historical funding rule",
+    "Mark/oracle and spot basis",
+    "Borrow and funding legs",
+    "Observed execution books"
+  ],
+  "primaryBaseline": "Flat allocation and passive hedged carry controls",
+  "evidence": [
+    {
+      "classification": "DATA_FEASIBILITY",
+      "decision": "DATA_BLOCKED",
+      "summary": "Synchronized basis history and 180 days of execution state are unavailable; funding alone cannot identify carry.",
+      "sourcePath": "research/theory-exhaustion.md",
+      "evidenceId": "theory-data-blockers-2026-07-28"
+    },
+    {
+      "classification": "DATA_FEASIBILITY",
+      "decision": "DATA_BLOCKED",
+      "summary": "Official checksum-verified funding, perpetual, mark, index, premium, and spot price archives can reconstruct basis, but official monthly spot quote history, historical rule and fee versions, and borrow availability are absent, so executable net carry is not identifiable.",
+      "artifactPath": "/mnt/media/marketlab/artifacts/next-program-audits/data-feasibility-20260827/audit.json",
+      "artifactSha256": "6764b2afc00345bf2d09161e8f01b07ecd326fccd0f1a721f411c059e4d2410a",
+      "sourcePath": "research/decision-log.md",
+      "evidenceId": "funding-basis-data-feasibility-2026-08-27"
+    }
+  ],
+  "frozenLocks": [],
+  "touchPoints": [
+    "theories/src/main/kotlin/dev/marketlab/theories/AcademicTheoryRegistry.kt",
+    "research-cli/src/main/kotlin/dev/marketlab/research/FundingResearchSuite.kt"
+  ],
+  "nextAction": "Preserve DATA_BLOCKED. Reopen only with provenance-preserving historical spot quote or book data, exchange-rule and fee vintages, and borrow availability sufficient to reconstruct both executable legs.",
+  "researchModes": [
+    "HISTORICAL",
+    "PROSPECTIVE"
+  ]
+}

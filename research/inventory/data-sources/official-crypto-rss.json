@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "marketlab.data-source-inventory.v1",
+  "id": "official-crypto-rss",
+  "title": "Reviewed crypto RSS feeds",
+  "category": "news",
+  "status": "IMPLEMENTED_NOT_RUNNING",
+  "pointInTimeUse": "Prospectively received feed items with publisher and local receipt clocks.",
+  "implementations": ["social-collector"],
+  "alphaSpaces": ["social-information", "volatility"],
+  "limitations": ["Prospective program D0 has not started", "Feed identity and revision must remain frozen"],
+  "nextAction": "Complete source readiness and preserve reviewed feed identities."
+}

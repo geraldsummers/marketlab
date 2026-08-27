@@ -1,0 +1,1 @@
+{"schemaVersion":"marketlab.theory-inventory.v1","id":"hyperliquid-eth-hourly-volatility-periodicity","kind":"ADAPTATION","disposition":"REJECTED","alphaSpace":"volatility","candidateId":"eth-hourly-periodicity-v1","implementationPath":"theories/src/main/kotlin/dev/marketlab/theories/AcademicTheoryRegistry.kt"}

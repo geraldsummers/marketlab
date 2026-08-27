@@ -1,0 +1,1 @@
+{"schemaVersion":"marketlab.theory-inventory.v1","id":"control-buy-and-hold","kind":"CONTROL","disposition":"CONTROL","alphaSpace":null,"candidateId":null,"implementationPath":"theories/src/main/kotlin/dev/marketlab/theories/AcademicTheoryRegistry.kt"}

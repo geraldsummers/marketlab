@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "marketlab.data-source-inventory.v1",
+  "id": "gdelt-gkg-2-1",
+  "title": "GDELT GKG 2.1",
+  "category": "news",
+  "status": "IMPLEMENTED_NOT_RUNNING",
+  "pointInTimeUse": "Prospective GKG files with retrieval and availability clocks feed negative-news intensity.",
+  "implementations": ["social-collector"],
+  "alphaSpaces": ["social-information", "volatility"],
+  "limitations": ["Prospective program D0 has not started", "Publication and revision latency must remain explicit"],
+  "nextAction": "Complete readiness checks with the locked FinBERT path."
+}

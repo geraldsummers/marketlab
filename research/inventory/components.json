@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "marketlab.component-inventory.v1",
+  "components": [
+    {"id":"contracts","path":"contracts","type":"GRADLE_MODULE","layer":"foundation","role":"Immutable domain and wire contracts","alphaSpaces":[],"shared":true},
+    {"id":"evidence-core","path":"evidence-core","type":"GRADLE_MODULE","layer":"foundation","role":"Atomic content-addressed immutable evidence storage","alphaSpaces":[],"shared":true},
+    {"id":"historical-data","path":"historical-data","type":"GRADLE_MODULE","layer":"foundation","role":"Typed historical study locks, universes, and time boundaries","alphaSpaces":["directional-returns","volatility","relative-value"],"shared":true},
+    {"id":"sentiment-core","path":"sentiment-core","type":"GRADLE_MODULE","layer":"features","role":"Frozen language, preprocessing, and ONNX sentiment inference","alphaSpaces":["social-information"],"shared":true},
+    {"id":"theory-dsl","path":"theory-dsl","type":"GRADLE_MODULE","layer":"research-contract","role":"Canonical compiled theory and validation configuration","alphaSpaces":[],"shared":true},
+    {"id":"data","path":"data","type":"GRADLE_MODULE","layer":"acquisition","role":"Production market clients, adapters, integrity checks, and snapshots","alphaSpaces":["directional-returns","volatility","microstructure","derivatives-carry","cross-venue","relative-value"],"shared":true},
+    {"id":"engine","path":"engine","type":"GRADLE_MODULE","layer":"evaluation","role":"Causal features, chronological validation, forecasting, and observed execution","alphaSpaces":["directional-returns","volatility","microstructure","derivatives-carry","cross-venue","relative-value","execution-portfolio"],"shared":true},
+    {"id":"persistence","path":"persistence","type":"GRADLE_MODULE","layer":"control-plane","role":"Append-only runs, jobs, submissions, artifacts, and paper ledgers","alphaSpaces":["execution-portfolio"],"shared":true},
+    {"id":"analytics-duckdb","path":"analytics-duckdb","type":"GRADLE_MODULE","layer":"analytics","role":"Job-local Parquet and DuckDB analytics","alphaSpaces":[],"shared":true},
+    {"id":"theories","path":"theories","type":"GRADLE_MODULE","layer":"research-contract","role":"Reviewed compiled academic theory catalog","alphaSpaces":["directional-returns","volatility","microstructure","derivatives-carry","cross-venue","social-information"],"shared":true},
+    {"id":"service","path":"service","type":"GRADLE_MODULE","layer":"interface","role":"Authenticated asynchronous research and paper-session API","alphaSpaces":["execution-portfolio"],"shared":true},
+    {"id":"worker-kotlin","path":"worker-kotlin","type":"GRADLE_MODULE","layer":"execution","role":"Isolated allowlisted batch worker","alphaSpaces":[],"shared":true},
+    {"id":"runner","path":"runner","type":"GRADLE_MODULE","layer":"orchestration","role":"Rootless Podman worker launcher and manifest enforcement","alphaSpaces":[],"shared":true},
+    {"id":"coordinator","path":"coordinator","type":"GRADLE_MODULE","layer":"orchestration","role":"Leased ingestion and experiment execution handlers","alphaSpaces":["directional-returns","volatility"],"shared":true},
+    {"id":"research-cli","path":"research-cli","type":"GRADLE_MODULE","layer":"research-application","role":"Production real-data funding diagnostic","alphaSpaces":["derivatives-carry","directional-returns"],"shared":false},
+    {"id":"collector","path":"collector","type":"GRADLE_MODULE","layer":"acquisition","role":"Continuous Hyperliquid trades, BBO, and L2 segment capture","alphaSpaces":["microstructure","directional-returns","derivatives-carry","cross-venue","execution-portfolio"],"shared":true},
+    {"id":"social-collector","path":"social-collector","type":"GRADLE_MODULE","layer":"acquisition","role":"Exact-byte public social and news capture","alphaSpaces":["social-information"],"shared":true},
+    {"id":"sentiment-worker","path":"sentiment-worker","type":"GRADLE_MODULE","layer":"features","role":"Hash-locked scoring and causal prospective feature materialization","alphaSpaces":["social-information","volatility","directional-returns"],"shared":true},
+    {"id":"social-backfill","path":"social-backfill","type":"GRADLE_MODULE","layer":"acquisition-and-analysis","role":"Registered historical social/market acquisition and retrospective analysis","alphaSpaces":["social-information","volatility","directional-returns"],"shared":false},
+    {"id":"social-model","path":"social-model","type":"PYTHON_COMPONENT","layer":"modeling","role":"Frozen chronological model search, blind evaluation, and shadow scoring","alphaSpaces":["social-information","volatility","directional-returns"],"shared":false},
+    {"id":"alpha-model","path":"alpha-model","type":"PYTHON_COMPONENT","layer":"modeling","role":"Archive registration, point-in-time baskets, causal panels, bounded CPU/GPU model-family search, and single-use confirmation","alphaSpaces":["directional-returns","microstructure","derivatives-carry","cross-venue","social-information","relative-value"],"shared":true},
+    {"id":"deploy","path":"deploy","type":"OPERATIONS_COMPONENT","layer":"operations","role":"Digest-pinned release, activation, verification, rollback, and rootless services","alphaSpaces":[],"shared":true},
+    {"id":"research","path":"research","type":"GOVERNANCE_COMPONENT","layer":"governance","role":"Policies, locks, alpha workspace, inventories, decisions, and runbooks","alphaSpaces":[],"shared":true}
+  ]
+}

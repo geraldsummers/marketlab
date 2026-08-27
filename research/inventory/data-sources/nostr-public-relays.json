@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "marketlab.data-source-inventory.v1",
+  "id": "nostr-public-relays",
+  "title": "Nostr public relays",
+  "category": "social",
+  "status": "IMPLEMENTED_NOT_RUNNING",
+  "pointInTimeUse": "Signed relay events are intended for prospective receipt-time collection with canonical ID and BIP-340 verification.",
+  "implementations": ["social-collector"],
+  "alphaSpaces": ["social-information", "directional-returns", "volatility"],
+  "limitations": ["Prospective v2 program D0 has not started", "Relay coverage and uptime must pass readiness checks"],
+  "nextAction": "Exercise multi-relay readiness and continuity before D0."
+}

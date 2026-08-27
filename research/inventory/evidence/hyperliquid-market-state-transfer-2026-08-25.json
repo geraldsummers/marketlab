@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v2",
+  "id": "hyperliquid-market-state-transfer-2026-08-25",
+  "candidateIds": [
+    "hyperliquid-market-state-transfer-v1"
+  ],
+  "classification": "RETROSPECTIVE_SOURCE_TRANSFER_DIAGNOSTIC",
+  "decision": "DESCRIPTIVE_TRANSFER_RESULT_ONLY",
+  "summarySource": "research/decision-log.md",
+  "summary": "The unchanged Binance V3 model transferred negatively to 16.53 days of Hyperliquid candles.",
+  "candidateDecisions": [
+    {
+      "candidateId": "hyperliquid-market-state-transfer-v1",
+      "stage": "INCONCLUSIVE",
+      "decision": "DESCRIPTIVE_TRANSFER_RESULT_ONLY",
+      "current": true
+    }
+  ],
+  "outcomesOpened": true,
+  "openedOutcomes": [
+    {
+      "id": "hyperliquid-market-state-transfer-august",
+      "candidateIds": [
+        "hyperliquid-market-state-transfer-v1"
+      ],
+      "venue": "hyperliquid",
+      "target": "15-minute outright return",
+      "periodStatus": "EXACT",
+      "startInclusive": "2026-08-08T11:15:00Z",
+      "endExclusive": "2026-08-25T00:00:00Z",
+      "reuseStatus": "OPENED_NOT_CONFIRMATION_ELIGIBLE"
+    }
+  ],
+  "artifacts": [
+    {
+      "role": "acquisition-manifest",
+      "sha256": "aaa24b31d292ade376470c377dd04b91d5a04721b4ac9233d4fdc04aa9f2ae51",
+      "location": "/mnt/media/marketlab/artifacts/archive-alpha-v2/focused-v3/hyperliquid-acquisition/acquisition-manifest.json",
+      "verification": "REMOTE_FILE"
+    },
+    {
+      "role": "transfer-result",
+      "sha256": "808d45f4e6124ab942f9a9f28fbdd1f4cdf6d1aa65c060d8dc8479aa57e592a5",
+      "location": "/mnt/media/marketlab/artifacts/archive-alpha-v2/focused-v3/hyperliquid-transfer-result.json",
+      "verification": "REMOTE_FILE"
+    }
+  ]
+}

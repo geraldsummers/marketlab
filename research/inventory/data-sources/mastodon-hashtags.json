@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "marketlab.data-source-inventory.v1",
+  "id": "mastodon-hashtags",
+  "title": "Mastodon hashtag timelines",
+  "category": "social-robustness",
+  "status": "IMPLEMENTED_NOT_RUNNING",
+  "pointInTimeUse": "Prospective robustness sample only; not a mandatory primary social source.",
+  "implementations": ["social-collector"],
+  "alphaSpaces": ["social-information"],
+  "limitations": ["Coverage is instance-dependent and not a primary confirmation source"],
+  "nextAction": "Use only under the registered robustness policy."
+}

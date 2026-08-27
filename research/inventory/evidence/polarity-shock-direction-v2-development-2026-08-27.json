@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v2",
+  "id": "polarity-shock-direction-v2-development-2026-08-27",
+  "candidateIds": [
+    "polarity-shock-direction-v2"
+  ],
+  "classification": "AVAILABILITY_BIASED_RETROSPECTIVE_DISCOVERY",
+  "decision": "REJECTED",
+  "summarySource": "research/decision-log.md",
+  "summary": "All four polarity-shock variants had negative aggregate forecast-loss improvement and zero positive folds; no candidate was frozen.",
+  "candidateDecisions": [
+    {
+      "candidateId": "polarity-shock-direction-v2",
+      "stage": "REJECTED",
+      "decision": "REJECTED",
+      "current": true
+    }
+  ],
+  "outcomesOpened": true,
+  "openedOutcomes": [
+    {
+      "id": "polarity-shock-direction-v2-development",
+      "candidateIds": [
+        "polarity-shock-direction-v2"
+      ],
+      "venue": "binance",
+      "target": "one-hour and four-hour outright log returns",
+      "periodStatus": "EXACT",
+      "startInclusive": "2025-11-03T00:00:00Z",
+      "endExclusive": "2026-07-01T00:00:00Z",
+      "reuseStatus": "OPENED_NOT_CONFIRMATION_ELIGIBLE"
+    }
+  ],
+  "artifacts": [
+    {
+      "role": "development-report",
+      "sha256": "67a5ce9d16f07661f210132cac4c26eb7a24677210ce56c3325c813154f55c51",
+      "location": "/mnt/media/marketlab/artifacts/polarity-shock-direction-v2-20260827-run1/report.json",
+      "verification": "REMOTE_FILE"
+    },
+    {
+      "role": "trial-ledger",
+      "sha256": "26895f75e06346cb257d8dadd975427499f4949fd4fe97f0f696fafc630f3946",
+      "location": "/mnt/media/marketlab/artifacts/polarity-shock-direction-v2-20260827-run1/trial-ledger.json",
+      "verification": "REMOTE_FILE"
+    },
+    {
+      "role": "panel",
+      "sha256": "d4509e2541e46559f0685a416f141eaa595b9360cd15f4018f1837c2785d3bbb",
+      "location": "/mnt/media/marketlab/artifacts/polarity-shock-direction-v2-20260827-run1/panel.jsonl",
+      "verification": "REMOTE_FILE"
+    }
+  ]
+}

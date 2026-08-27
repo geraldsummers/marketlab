@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "onchain-macro-direction-v1",
+  "spaceId": "directional-returns",
+  "title": "Vintage on-chain and macro direction",
+  "stage": "DATA_FEASIBILITY",
+  "claim": "Historically available on-chain or macro releases may add future-return information after market controls.",
+  "mechanism": "Flows or public releases may change demand or risk appetite, but no sign or lag is presumed.",
+  "target": "Outright or factor-residual basket-member log return.",
+  "horizon": "Locked campaign horizon grid, subject to publication-frequency eligibility.",
+  "informationSet": [
+    "Native-chain observations and vintage public releases with causal availability clocks"
+  ],
+  "primaryBaseline": "Strongest frozen market-only model",
+  "evidence": [],
+  "frozenLocks": [],
+  "touchPoints": [
+    "alpha-model",
+    "research/alpha/campaigns/archive-directional-gpu-v1.lock.json"
+  ],
+  "nextAction": "Audit vintage availability; run no model when revised or point-in-time values cannot be reconstructed.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
+}

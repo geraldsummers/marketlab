@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v2",
+  "id": "social-variance-defensive-exposure-2026-08-26",
+  "candidateIds": [
+    "social-variance-defensive-exposure-v1"
+  ],
+  "classification": "PREREGISTERED_OPENED_OUTCOME_PORTFOLIO_REPLAY",
+  "decision": "EXPLORATORY_GATE_FAILED",
+  "summarySource": "research/decision-log.md",
+  "summary": "Social-aware defensive sizing underperformed the frozen market-only variance scaler in certainty equivalent, expected shortfall, and drawdown at both registered turnover costs; the candidate and its dependent phase two were rejected.",
+  "candidateDecisions": [
+    {
+      "candidateId": "social-variance-defensive-exposure-v1",
+      "stage": "REJECTED",
+      "decision": "EXPLORATORY_GATE_FAILED",
+      "current": true
+    }
+  ],
+  "outcomesOpened": true,
+  "openedOutcomes": [
+    {
+      "id": "social-functional-blind-july-portfolio-replay",
+      "candidateIds": [
+        "social-variance-defensive-exposure-v1"
+      ],
+      "venue": "binance",
+      "target": "costed equal-weight defensive exposure portfolio returns",
+      "periodStatus": "EXACT",
+      "startInclusive": "2026-07-01T00:00:00Z",
+      "endExclusive": "2026-08-01T00:00:00Z",
+      "reuseStatus": "OPENED_NOT_CONFIRMATION_ELIGIBLE"
+    }
+  ],
+  "artifacts": [
+    {
+      "role": "frozen-replay",
+      "sha256": "5d161ad3aba41a35c98422c17660ef5fcbab8aa66b0317a6e2d9205e3aed784f",
+      "location": "/mnt/media/marketlab/artifacts/social-variance-defensive-exposure-v1-run8/frozen.json",
+      "verification": "REMOTE_FILE"
+    },
+    {
+      "role": "official-funding-manifest",
+      "sha256": "e14ff8427f5f77fbc5715f1913ba2c5e5de7f76db263d0ddf7d274d627c0f01e",
+      "location": "/mnt/media/marketlab/artifacts/social-variance-defensive-exposure-v1-run8/funding/manifest.json",
+      "verification": "REMOTE_FILE"
+    },
+    {
+      "role": "portfolio-result",
+      "sha256": "7acfb54e99609e94da385285a78215e7aa8496542f7cddfbe9a85a025338fccf",
+      "location": "/mnt/media/marketlab/artifacts/social-variance-defensive-exposure-v1-run8/result.json",
+      "verification": "REMOTE_FILE"
+    },
+    {
+      "role": "portfolio-rows",
+      "sha256": "cfefba1a3e376a0271b509855887b5f2d92e6c36c20cb2a9769bd87a0ae779b1",
+      "location": "/mnt/media/marketlab/artifacts/social-variance-defensive-exposure-v1-run8/result.rows.jsonl",
+      "verification": "REMOTE_FILE"
+    }
+  ]
+}

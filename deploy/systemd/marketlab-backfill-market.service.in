@@ -1,0 +1,31 @@
+[Unit]
+Description=Marketlab registered Binance historical market acquisition
+After=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Environment=CONTAINERS_STORAGE_CONF=%h/.config/marketlab/storage.conf
+ExecStart=/usr/bin/podman run --rm --replace \
+  --name marketlab-backfill-market \
+  --network=slirp4netns:allow_host_loopback=false \
+  --read-only --cap-drop=all --security-opt=no-new-privileges \
+  --userns=keep-id:uid=10001,gid=10001 \
+  --cpus=4 --memory=8192m --memory-swap=8192m \
+  --tmpfs=/tmp:rw,exec,nosuid,nodev,size=2g \
+  --mount=type=bind,src=/mnt/media/marketlab/raw/social-backfill-v2,dst=/mnt/media/marketlab/raw/social-backfill-v2,rw=true,relabel=shared \
+  @SOCIAL_BACKFILL_IMAGE_DIGEST@ \
+  --output-root /mnt/media/marketlab/raw/social-backfill-v2 \
+  --models-root /mnt/stack/marketlab/models \
+  --model-lock /opt/marketlab/research/sentiment-models.lock.json \
+  --program-lock /opt/marketlab/research/social-backfill-program.lock.json \
+  --start 2025-10-04T00:00:00Z \
+  --end 2026-07-01T00:00:00Z \
+  --sources market
+ExecStop=-/usr/bin/podman stop --time 30 marketlab-backfill-market
+Restart=on-failure
+RestartSec=15min
+TimeoutStopSec=45
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target

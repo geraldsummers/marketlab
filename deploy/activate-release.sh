@@ -77,10 +77,12 @@ render_template() {
     sed \
         -e "s|@SERVICE_IMAGE_DIGEST@|$service_image|g" \
         -e "s|@WORKER_IMAGE_DIGEST@|$worker_image|g" \
+        -e "s|@ALPHA_MODEL_IMAGE_DIGEST@|$alpha_model_image|g" \
         -e "s|@COORDINATOR_IMAGE_DIGEST@|$coordinator_image|g" \
         -e "s|@COLLECTOR_IMAGE_DIGEST@|$collector_image|g" \
         -e "s|@SOCIAL_COLLECTOR_IMAGE_DIGEST@|$social_collector_image|g" \
         -e "s|@SENTIMENT_WORKER_IMAGE_DIGEST@|$sentiment_worker_image|g" \
+        -e "s|@SOCIAL_BACKFILL_IMAGE_DIGEST@|$social_backfill_image|g" \
         -e "s|@RESEARCH_IMAGE_DIGEST@|$research_image|g" \
         -e "s|@POSTGRES_IMAGE_DIGEST@|$postgres_image|g" \
         -e "s|@RUNNER_INSTALL_DIR@|$release_directory/runner|g" \
@@ -115,6 +117,10 @@ restore_file() {
 restore_previous_configuration() {
     set +e
     systemctl --user stop \
+        marketlab-backfill-analysis.service \
+        marketlab-backfill-market.service \
+        marketlab-backfill-social-a.service \
+        marketlab-backfill-social-b.service \
         marketlab-sentiment-worker.service \
         marketlab-social-market.service \
         marketlab-social-collector.service
@@ -127,6 +133,10 @@ restore_previous_configuration() {
     restore_file "$QUADLET_ROOT/marketlab-social-market.container" quadlet-social-market
     restore_file "$QUADLET_ROOT/marketlab-sentiment-worker.container" quadlet-sentiment-worker
     restore_file "$USER_UNIT_ROOT/marketlab-runner.service" runner-service
+    restore_file "$USER_UNIT_ROOT/marketlab-backfill-market.service" backfill-market-service
+    restore_file "$USER_UNIT_ROOT/marketlab-backfill-social-a.service" backfill-social-a-service
+    restore_file "$USER_UNIT_ROOT/marketlab-backfill-social-b.service" backfill-social-b-service
+    restore_file "$USER_UNIT_ROOT/marketlab-backfill-analysis.service" backfill-analysis-service
     restore_file "$USER_BIN_ROOT/marketlab-research" research-cli
     systemctl --user daemon-reload
     if [[ -f "$activation_directory/previous-release" ]]; then
@@ -149,7 +159,23 @@ restore_previous_configuration() {
                 systemctl --user stop "$social_unit.service"
             fi
         done
+        for backfill_unit in \
+            marketlab-backfill-market \
+            marketlab-backfill-social-a \
+            marketlab-backfill-social-b \
+            marketlab-backfill-analysis; do
+            if [[ -f "$USER_UNIT_ROOT/$backfill_unit.service" ]]; then
+                systemctl --user enable --now "$backfill_unit.service"
+            else
+                systemctl --user disable --now "$backfill_unit.service"
+            fi
+        done
     else
+        systemctl --user disable --now \
+            marketlab-backfill-analysis.service \
+            marketlab-backfill-market.service \
+            marketlab-backfill-social-a.service \
+            marketlab-backfill-social-b.service
         systemctl --user stop \
             marketlab-collector.service \
             marketlab-social-collector.service \
@@ -201,10 +227,13 @@ source_sha256=$(release_value SOURCE_SHA256)
 postgres_image=$(release_value POSTGRES_IMAGE)
 service_image=$(release_value SERVICE_IMAGE)
 worker_image=$(release_value WORKER_IMAGE)
+alpha_model_image=$(release_value ALPHA_MODEL_IMAGE)
 coordinator_image=$(release_value COORDINATOR_IMAGE)
 collector_image=$(release_value COLLECTOR_IMAGE 2>/dev/null || true)
 social_collector_image=$(release_value SOCIAL_COLLECTOR_IMAGE 2>/dev/null || true)
 sentiment_worker_image=$(release_value SENTIMENT_WORKER_IMAGE 2>/dev/null || true)
+social_backfill_image=$(release_value SOCIAL_BACKFILL_IMAGE 2>/dev/null || true)
+backfill_program_schema=$(release_value BACKFILL_PROGRAM_SCHEMA 2>/dev/null || true)
 research_image=$(release_value RESEARCH_IMAGE)
 runner_image=$(release_value RUNNER_IMAGE)
 [[ "$manifest_release" == "$release_id" ]] || die "release manifest id does not match its directory"
@@ -212,9 +241,17 @@ runner_image=$(release_value RUNNER_IMAGE)
 assert_digest_reference POSTGRES_IMAGE "$postgres_image"
 assert_digest_reference SERVICE_IMAGE "$service_image"
 assert_digest_reference WORKER_IMAGE "$worker_image"
+assert_digest_reference ALPHA_MODEL_IMAGE "$alpha_model_image"
 assert_digest_reference COORDINATOR_IMAGE "$coordinator_image"
 assert_digest_reference RESEARCH_IMAGE "$research_image"
 assert_digest_reference RUNNER_IMAGE "$runner_image"
+backfill_enabled=false
+if [[ "$backfill_program_schema" == marketlab.social-backfill-program-lock.v2 ]]; then
+    assert_digest_reference SOCIAL_BACKFILL_IMAGE "$social_backfill_image"
+    backfill_enabled=true
+elif [[ -n "$backfill_program_schema" ]]; then
+    die "unsupported backfill program schema: $backfill_program_schema"
+fi
 social_enabled=false
 if [[ -n "$social_collector_image" || -n "$sentiment_worker_image" ]]; then
     [[ -n "$social_collector_image" && -n "$sentiment_worker_image" ]] ||
@@ -319,10 +356,14 @@ fi
 local_images=(
     "$service_image"
     "$worker_image"
+    "$alpha_model_image"
     "$coordinator_image"
     "$research_image"
     "$runner_image"
 )
+if [[ "$backfill_enabled" == true ]]; then
+    local_images+=("$social_backfill_image")
+fi
 if [[ "$social_enabled" == true ]]; then
     local_images+=("$social_collector_image" "$sentiment_worker_image")
 fi
@@ -347,6 +388,9 @@ flock 9
 if [[ -f "$STATE_ROOT/active-release" ]] &&
     [[ $(<"$STATE_ROOT/active-release") == "$release_id" ]]; then
     "$DEPLOY_ROOT/verify.sh" "$release_id"
+    if [[ "$backfill_enabled" == true ]]; then
+        "$DEPLOY_ROOT/verify-backfill.sh" "$release_id"
+    fi
     printf 'Release %s is already active and verified.\n' "$release_id"
     exit 0
 fi
@@ -378,6 +422,10 @@ backup_file "$QUADLET_ROOT/marketlab-social-collector.container" quadlet-social-
 backup_file "$QUADLET_ROOT/marketlab-social-market.container" quadlet-social-market
 backup_file "$QUADLET_ROOT/marketlab-sentiment-worker.container" quadlet-sentiment-worker
 backup_file "$USER_UNIT_ROOT/marketlab-runner.service" runner-service
+backup_file "$USER_UNIT_ROOT/marketlab-backfill-market.service" backfill-market-service
+backup_file "$USER_UNIT_ROOT/marketlab-backfill-social-a.service" backfill-social-a-service
+backup_file "$USER_UNIT_ROOT/marketlab-backfill-social-b.service" backfill-social-b-service
+backup_file "$USER_UNIT_ROOT/marketlab-backfill-analysis.service" backfill-analysis-service
 backup_file "$USER_BIN_ROOT/marketlab-research" research-cli
 
 render_template \
@@ -411,11 +459,18 @@ fi
 render_template \
     "$DEPLOY_ROOT/systemd/marketlab-runner.service.in" \
     "$activation_directory/rendered/systemd/marketlab-runner.service"
+if [[ "$backfill_enabled" == true ]]; then
+    for backfill_unit in market social-a social-b analysis; do
+        render_template \
+            "$DEPLOY_ROOT/systemd/marketlab-backfill-$backfill_unit.service.in" \
+            "$activation_directory/rendered/systemd/marketlab-backfill-$backfill_unit.service"
+    done
+fi
 render_template \
     "$DEPLOY_ROOT/bin/marketlab-research.in" \
     "$activation_directory/rendered/bin/marketlab-research"
 chmod 0644 "$activation_directory"/rendered/quadlet/*
-chmod 0644 "$activation_directory/rendered/systemd/marketlab-runner.service"
+chmod 0644 "$activation_directory"/rendered/systemd/*.service
 chmod 0755 "$activation_directory/rendered/bin/marketlab-research"
 
 generator=/usr/lib/systemd/system-generators/podman-system-generator
@@ -482,10 +537,25 @@ fi
 install -m 0644 \
     "$activation_directory/rendered/systemd/marketlab-runner.service" \
     "$USER_UNIT_ROOT/marketlab-runner.service"
+if [[ "$backfill_enabled" == true ]]; then
+    for backfill_unit in market social-a social-b analysis; do
+        install -m 0644 \
+            "$activation_directory/rendered/systemd/marketlab-backfill-$backfill_unit.service" \
+            "$USER_UNIT_ROOT/marketlab-backfill-$backfill_unit.service"
+    done
+else
+    rm -f -- "$USER_UNIT_ROOT"/marketlab-backfill-{market,social-a,social-b,analysis}.service
+fi
 install -m 0755 \
     "$activation_directory/rendered/bin/marketlab-research" \
     "$USER_BIN_ROOT/marketlab-research"
 activation_installed=true
+
+systemctl --user stop \
+    marketlab-backfill-analysis.service \
+    marketlab-backfill-market.service \
+    marketlab-backfill-social-a.service \
+    marketlab-backfill-social-b.service || true
 
 if systemctl --user is-active --quiet marketlab-collector.service ||
     podman container exists marketlab-collector; then
@@ -561,6 +631,21 @@ if [[ "$social_enabled" == true ]]; then
 fi
 
 "$DEPLOY_ROOT/verify.sh" "$release_id"
+
+if [[ "$backfill_enabled" == true ]]; then
+    systemctl --user enable --now \
+        marketlab-backfill-market.service \
+        marketlab-backfill-social-a.service \
+        marketlab-backfill-social-b.service \
+        marketlab-backfill-analysis.service
+    "$DEPLOY_ROOT/verify-backfill.sh" "$release_id"
+else
+    systemctl --user disable \
+        marketlab-backfill-market.service \
+        marketlab-backfill-social-a.service \
+        marketlab-backfill-social-b.service \
+        marketlab-backfill-analysis.service 2>/dev/null || true
+fi
 
 active_release_temporary=$(mktemp "$STATE_ROOT/.active-release.XXXXXX")
 active_activation_temporary=$(mktemp "$STATE_ROOT/.active-activation.XXXXXX")

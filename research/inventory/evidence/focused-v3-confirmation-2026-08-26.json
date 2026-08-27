@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v2",
+  "id": "focused-v3-confirmation-2026-08-26",
+  "candidateIds": [
+    "binance-market-state-direction-v3"
+  ],
+  "classification": "HISTORICAL_SINGLE_USE_CONFIRMATION",
+  "decision": "PREDICTIVE_SIGNAL_GATE_FAILED",
+  "summarySource": "research/decision-log.md",
+  "summary": "Focused V3 improved MSE by 1.087% but failed its dependence-aware significance gate and was rejected.",
+  "candidateDecisions": [
+    {
+      "candidateId": "binance-market-state-direction-v3",
+      "stage": "REJECTED",
+      "decision": "PREDICTIVE_SIGNAL_GATE_FAILED",
+      "current": true
+    }
+  ],
+  "outcomesOpened": true,
+  "openedOutcomes": [
+    {
+      "id": "focused-v3-binance-confirmation",
+      "candidateIds": [
+        "binance-market-state-direction-v3"
+      ],
+      "venue": "binance",
+      "target": "15-minute outright return",
+      "periodStatus": "EXACT",
+      "startInclusive": "2025-06-01T00:00:00Z",
+      "endExclusive": "2026-08-01T00:00:00Z",
+      "reuseStatus": "OPENED_NOT_CONFIRMATION_ELIGIBLE"
+    }
+  ],
+  "artifacts": [
+    {
+      "role": "freeze",
+      "sha256": "2c33653130199327393c98b84f3962feb04825c374bd39c6ea6bbfe89a27277f",
+      "location": "/mnt/media/marketlab/artifacts/archive-alpha-v2/focused-v3/frozen-v3.json",
+      "verification": "REMOTE_FILE"
+    },
+    {
+      "role": "confirmation-result",
+      "sha256": "dae6cdc0025db03304a5a6e16228fc5b5998f0ea1a4681bcaee29b2985625068",
+      "location": "/mnt/media/marketlab/artifacts/archive-alpha-v2/focused-v3/confirmation-result.json",
+      "verification": "REMOTE_FILE"
+    },
+    {
+      "role": "confirmation-marker",
+      "sha256": "634802393b440efc075d61042e95e1b9048dc6bd366bc4825cc24c722b6a1c10",
+      "location": "/mnt/media/marketlab/artifacts/archive-alpha-v2/confirmation-ledger/focused-v3/binance-market-state-direction-v3-confirmation-1.json",
+      "verification": "REMOTE_FILE"
+    }
+  ]
+}

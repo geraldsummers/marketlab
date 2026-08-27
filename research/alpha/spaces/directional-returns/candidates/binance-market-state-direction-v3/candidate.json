@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "binance-market-state-direction-v3",
+  "spaceId": "directional-returns",
+  "title": "Focused Binance market-state 15-minute confirmation",
+  "stage": "REJECTED",
+  "claim": "The exact V2 market-state ExtraTrees specification improves 15-minute outright-return MSE over the strongest frozen baseline in the untouched Binance archive period.",
+  "mechanism": "Short-horizon nonlinear interactions among causal return, range, volume, trade-count, and basket state may persist beyond the development period.",
+  "target": "Fifteen-minute outright log return for the point-in-time dynamic top-four Binance USDT perpetual basket.",
+  "horizon": "15m from each completed 5m decision interval.",
+  "informationSet": [
+    "Exact nine-field V2 market-state feature schema available at the decision timestamp"
+  ],
+  "primaryBaseline": "Strongest frozen zero, historical-mean, persistence, reversal, or market-state Ridge baseline",
+  "evidence": [
+    {
+      "kind": "focused-candidate-freeze",
+      "classification": "historical-single-use-confirmation-freeze",
+      "decision": "AWAITING_CONFIRMATION_AUTHORIZATION",
+      "stage": "FROZEN_CANDIDATE",
+      "artifactPath": "/mnt/media/marketlab/artifacts/archive-alpha-v2/focused-v3/frozen-v3.json",
+      "artifactSha256": "2c33653130199327393c98b84f3962feb04825c374bd39c6ea6bbfe89a27277f",
+      "implementationSha256": "3967a4c38d427f3409ad034affae5d8ca10647d31c8b2d24e2e92344c029b572",
+      "confirmationPanelSha256": "6d30ddd10efe843bafed58323ae9747aae44c534d2433d4ee3cc658ceb3b99f7",
+      "summary": "The exact audited basket-four 15-minute ExtraTrees specification, feature schema, model, baselines, inference, thresholds, and sealed historical confirmation panel are bound before outcome access. Earlier engineering freezes are superseded and remain preserved.",
+      "evidenceId": "focused-v3-confirmation-2026-08-26"
+    },
+    {
+      "kind": "blind-confirmation-result",
+      "classification": "historical-single-use-confirmation",
+      "decision": "PREDICTIVE_SIGNAL_GATE_FAILED",
+      "stage": "REJECTED",
+      "artifactPath": "/mnt/media/marketlab/artifacts/archive-alpha-v2/focused-v3/confirmation-result.json",
+      "artifactSha256": "dae6cdc0025db03304a5a6e16228fc5b5998f0ea1a4681bcaee29b2985625068",
+      "confirmationMarkerPath": "/mnt/media/marketlab/artifacts/archive-alpha-v2/confirmation-ledger/focused-v3/binance-market-state-direction-v3-confirmation-1.json",
+      "openedOutcomePeriod": "2025-06-01T00:00:00Z/2026-08-01T00:00:00Z",
+      "relativeMseImprovement": 0.01087216115933958,
+      "adjustedPValue": 0.10519928843783445,
+      "summary": "The candidate improved MSE by 1.087% over the strongest market-only baseline and passed the frozen loss, economic-size, calendar-month, mandatory-asset, and placebo gates, but failed the preregistered dependence-aware significance gate (adjusted p=0.1052 versus 0.05). The predictive claim is rejected without subgroup rescue or retuning.",
+      "evidenceId": "focused-v3-confirmation-2026-08-26"
+    }
+  ],
+  "frozenLocks": [
+    "research/alpha/campaigns/archive-directional-focused-v3.lock.json"
+  ],
+  "touchPoints": [
+    "alpha-model",
+    "research/alpha/campaigns/archive-directional-focused-v3.lock.json"
+  ],
+  "nextAction": "Preserve this rejection and consumed period. Use the result only as hypothesis-generating evidence for a materially distinct candidate with a separately frozen specification and fresh confirmation outcomes.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
+}

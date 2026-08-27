@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "marketlab.alpha-space.v2",
+  "id": "relative-value",
+  "title": "Relative value and cross-sectional factors",
+  "purpose": "Study point-in-time cross-sectional ranking, related-instrument convergence, and factor-neutral relative returns.",
+  "state": "DATA_BLOCKED",
+  "dependencies": [
+    "execution-portfolio"
+  ],
+  "readyWork": [
+    {
+      "id": "point-in-time-universe-feasibility",
+      "status": "READY",
+      "kind": "data",
+      "summary": "Identify a provenance-preserving archive with delistings, historical eligibility, supply, and synchronized prices.",
+      "blockedBy": [],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "externalBlockers": [],
+      "priority": "P2",
+      "candidateIds": [],
+      "deliverables": [
+        "Durable data artifact for point-in-time-universe-feasibility",
+        "Evidence-linked task handoff"
+      ],
+      "acceptanceCriteria": [
+        "Identify a provenance-preserving archive with delistings, historical eligibility, supply, and synchronized prices.",
+        "No epistemic stage is promoted without linked evidence"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/relative-value/"
+      ],
+      "resourceClass": "DATA_IO",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 1,
+        "maxTrials": 0,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": []
+    },
+    {
+      "id": "cross-sectional-factor-confirmation",
+      "status": "BLOCKED",
+      "kind": "evaluation",
+      "summary": "Evaluate size, momentum, liquidity, or related-value returns without survivorship bias.",
+      "blockedBy": [],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "externalBlockers": [
+        "point-in-time multi-asset universe is unavailable"
+      ],
+      "priority": "P2",
+      "candidateIds": [],
+      "deliverables": [
+        "Durable evaluation artifact for cross-sectional-factor-confirmation",
+        "Evidence-linked task handoff"
+      ],
+      "acceptanceCriteria": [
+        "Evaluate size, momentum, liquidity, or related-value returns without survivorship bias.",
+        "No epistemic stage is promoted without linked evidence"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/relative-value/"
+      ],
+      "resourceClass": "CPU_MODEL",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 2,
+        "maxTrials": 16,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": []
+    }
+  ]
+}

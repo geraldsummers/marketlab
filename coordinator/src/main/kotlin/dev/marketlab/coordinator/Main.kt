@@ -146,10 +146,16 @@ fun main() =
                     val experiments =
                         RoutingExperimentJobHandler(
                             controls = controls,
-                            momentum = momentum,
-                            harVariance = harVariance,
-                            hourlyReversal = hourlyReversal,
-                            hourlyVolatilityPeriodicity = hourlyVolatilityPeriodicity,
+                            handlers =
+                                mapOf(
+                                    HYPERLIQUID_BTC_MOMENTUM_THEORY_ID to momentum,
+                                    HYPERLIQUID_BTC_FOUR_HOUR_LOG_HAR_VARIANCE_THEORY_ID to
+                                        harVariance,
+                                    HYPERLIQUID_BTC_HOURLY_RETURN_REVERSAL_THEORY_ID to
+                                        hourlyReversal,
+                                    HYPERLIQUID_ETH_HOURLY_VOLATILITY_PERIODICITY_THEORY_ID to
+                                        hourlyVolatilityPeriodicity,
+                                ),
                         )
                     JobCoordinator(
                         config = coordinatorConfig,

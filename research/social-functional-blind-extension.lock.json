@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "marketlab.social-backfill-program-lock.v2",
+  "programId": "social-functional-blind-extension-2026-07",
+  "classification": "BLIND_RETROSPECTIVE_VALIDATION",
+  "period": {
+    "startInclusive": "2026-06-01T00:00:00Z",
+    "endExclusive": "2026-08-01T00:00:00Z"
+  },
+  "sources": {
+    "social": {
+      "provider": "bluesky-public-appview-search",
+      "endpoint": "https://api.bsky.app/xrpc/app.bsky.feed.searchPosts",
+      "historicalAvailabilityProxy": "indexedAt",
+      "localRetrievalTimeRetainedSeparately": true,
+      "queries": {
+        "BTC": "bitcoin", "ETH": "ethereum", "HYPE": "hyperliquid",
+        "LIT": "lighter crypto", "NEAR": "near protocol", "PUMP": "pump.fun",
+        "SOL": "solana", "WLD": "worldcoin", "XRP": "xrp ripple", "ZEC": "zcash"
+      },
+      "matchTerms": {
+        "BTC": ["bitcoin"], "ETH": ["ethereum", "ether"], "HYPE": ["hyperliquid"],
+        "LIT": ["lighter"], "NEAR": ["near protocol"], "PUMP": ["pump.fun"],
+        "SOL": ["solana"], "WLD": ["worldcoin", "world network"],
+        "XRP": ["ripple"], "ZEC": ["zcash"]
+      },
+      "plainSymbols": ["XRP"]
+    },
+    "market": {
+      "provider": "binance-public-futures-archive",
+      "market": "USDT-M perpetual",
+      "interval": "1m",
+      "months": ["2026-06", "2026-07"]
+    }
+  },
+  "universe": {
+    "symbols": ["BTC", "ETH", "HYPE", "LIT", "NEAR", "PUMP", "SOL", "WLD", "XRP", "ZEC"],
+    "knownBias": "fixed 2026-W31 Hyperliquid top-ten universe; historical membership is not reconstructed"
+  },
+  "schedule": {
+    "featureWarmupDays": 30,
+    "trainingDays": 1,
+    "developmentDays": 1,
+    "holdoutDays": 29,
+    "unusedTailDays": 0
+  },
+  "featureEmissionStartInclusive": "2026-07-01T00:00:00Z",
+  "inspectionPolicy": "Do not acquire, materialize, or inspect this program until frozen-models.json has been durably published. June is feature warm-up only; July is opened once for evaluation.",
+  "paperTradingPromotionAllowed": false,
+  "liveTradingAuthorized": false
+}

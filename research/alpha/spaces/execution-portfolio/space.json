@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "marketlab.alpha-space.v2",
+  "id": "execution-portfolio",
+  "title": "Execution, portfolio, and risk",
+  "purpose": "Translate validated forecasts into costed decisions, capacity limits, portfolio exposure, and operational risk controls.",
+  "state": "OPEN",
+  "dependencies": [],
+  "readyWork": [
+    {
+      "id": "cost-model-audit",
+      "status": "DONE",
+      "kind": "evaluation",
+      "summary": "Inventory fee, spread, slippage, latency, funding, borrow, and capacity assumptions across existing evaluators.",
+      "blockedBy": [],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "externalBlockers": [],
+      "priority": "P1",
+      "candidateIds": [],
+      "deliverables": [
+        "Inventory of fee, spread, slippage, latency, funding, borrow, and capacity assumptions",
+        "Shared conservative historical cost contract"
+      ],
+      "acceptanceCriteria": [
+        "Inventory fee, spread, slippage, latency, funding, borrow, and capacity assumptions across existing evaluators.",
+        "No epistemic stage is promoted without linked evidence"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/execution-portfolio/"
+      ],
+      "resourceClass": "CPU_MODEL",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 2,
+        "maxTrials": 16,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": [
+        "cost-model-audit-2026-08-27"
+      ]
+    },
+    {
+      "id": "volatility-shadow-decision-contract",
+      "status": "READY",
+      "kind": "research",
+      "summary": "Specify a non-trading shadow decision contract that maps the validated variance forecast to observable option or exposure-management outcomes.",
+      "blockedBy": [],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "externalBlockers": [],
+      "priority": "P2",
+      "candidateIds": [
+        "social-variance-defensive-exposure-v1"
+      ],
+      "deliverables": [
+        "Durable research artifact for volatility-shadow-decision-contract",
+        "Evidence-linked task handoff"
+      ],
+      "acceptanceCriteria": [
+        "Specify a non-trading shadow decision contract that maps the validated variance forecast to observable option or exposure-management outcomes.",
+        "No epistemic stage is promoted without linked evidence"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/execution-portfolio/"
+      ],
+      "resourceClass": "METADATA_ONLY",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 1,
+        "maxTrials": 0,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": []
+    }
+  ]
+}

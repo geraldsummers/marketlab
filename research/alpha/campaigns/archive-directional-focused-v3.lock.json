@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "marketlab.alpha-focused-v3-lock.v1",
+  "campaignId": "archive-directional-focused-v3",
+  "candidateId": "binance-market-state-direction-v3",
+  "sourceCandidateId": "market-state-direction-v1",
+  "stage": "FROZEN_CANDIDATE",
+  "createdAt": "2026-08-25T23:30:00Z",
+  "scope": "Historical data already existing at task start; no future wall-clock wait or prospective claim",
+  "selection": {
+    "basketSize": 4,
+    "horizon": "15m",
+    "target": "outright-return",
+    "factorRepresentation": "none",
+    "modelId": "extra_trees",
+    "seed": 19870403,
+    "configuration": {"max_depth": 4, "min_samples_leaf": 5, "n_estimators": 400}
+  },
+  "sourceSelection": {
+    "assets": "dynamic-basket",
+    "basketSizes": 4,
+    "factorRepresentations": "none",
+    "horizons": "15m",
+    "informationSets": "market-state",
+    "modelFamilies": "extra_trees",
+    "targets": "outright-return",
+    "variants": "unrestricted-sign"
+  },
+  "featureNames": [
+    "basket_latest_return",
+    "cross_section_return_rank",
+    "latest_return",
+    "log_quote_volume",
+    "log_range",
+    "log_trade_count",
+    "mean_return",
+    "realized_variance",
+    "volume_change"
+  ],
+  "confirmationPeriod": {"startInclusive": "2025-06-01T00:00:00Z", "endExclusive": "2026-08-01T00:00:00Z"},
+  "acceptance": {
+    "minimumRelativeMseImprovement": 0.0025,
+    "maximumAdjustedPValue": 0.05,
+    "hacLagFiveMinuteOrigins": 288,
+    "minimumPositiveCalendarMonths": 9,
+    "mandatoryPositiveAssets": ["BTC", "ETH"],
+    "cleanDevelopmentTimeShiftPlacebo": true
+  },
+  "transferDiagnostic": {
+    "candidateId": "hyperliquid-market-state-transfer-v1",
+    "classification": "RETROSPECTIVE_SOURCE_TRANSFER_DIAGNOSTIC",
+    "sourceUri": "https://api.hyperliquid.xyz/info",
+    "period": {"startInclusive": "2026-08-01T00:00:00Z", "endExclusive": "2026-08-25T00:00:00Z"},
+    "promotionPermitted": false
+  },
+  "artifacts": {
+    "v2AuditSha256": "a07fbec0156327a68b2f9c457420be949fd6287d4fbfd1dc10bc11ceacd45117",
+    "v2SearchResultSha256": "7f22b362f06f8e4940d1770d72c221cc70472483ca45837a2bce563974d9ff46",
+    "modelArtifactSha256": "10a98ec4e1bb6e76596f4474c5ce4e5c14aade406b4d853e513c9d1714d6f9f7",
+    "developmentPanelSha256": "82f7a1ceb72c3d65d3d6cdc0d81b4a575b3ecc9839647c61489f6803361ed71c",
+    "confirmationPanelSha256": "6d30ddd10efe843bafed58323ae9747aae44c534d2433d4ee3cc658ceb3b99f7",
+    "confirmationPanelManifestSha256": "8ee3118226a87662c069cd142d1d91044f728a7c5850cb13cb79dd4c2ae6f82c"
+  },
+  "limitations": [
+    "V3 was selected after extensive opened V2 development search.",
+    "Binance confirmation does not establish transfer to Hyperliquid.",
+    "Forecast evidence does not establish tradability, portfolio alpha, or operational readiness.",
+    "The Hyperliquid study is a short retrospective source-transfer diagnostic only."
+  ],
+  "confirmationOpenRequiresExplicitUserAuthorization": true,
+  "paperTradingAuthorized": false,
+  "liveTradingAuthorized": false
+}

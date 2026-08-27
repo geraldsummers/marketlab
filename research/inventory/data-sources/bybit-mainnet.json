@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "marketlab.data-source-inventory.v1",
+  "id": "bybit-mainnet",
+  "title": "Bybit perpetual market state",
+  "category": "derivatives-robustness",
+  "status": "MISSING",
+  "pointInTimeUse": "Proposed second-venue funding and open-interest robustness source.",
+  "implementations": [],
+  "alphaSpaces": ["derivatives-carry", "cross-venue"],
+  "limitations": ["No collector or vetted point-in-time archive exists"],
+  "nextAction": "Defer until the primary Hyperliquid derivatives-state contract is specified."
+}

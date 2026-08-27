@@ -8,13 +8,21 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class InformationFeatureRow(
-    val schemaVersion: String = "marketlab.social-information-features.v1",
+    val schemaVersion: String = "marketlab.social-information-features.v2",
     val rowId: String,
     val instrument: String,
     val decisionTimeEpochMillis: Long,
+    val socialAttention15m: Int,
     val socialAttention1h: Int,
+    val socialAttention6h: Int,
     val socialAttention24h: Int,
+    val socialHasPosts15m: Boolean,
+    val socialUniqueAuthors1h: Int,
+    val socialUniqueAuthors24h: Int,
+    val socialSourcesWithPosts15m: Int,
     val socialSourceCount1h: Int,
+    val socialMinutesSincePost: Double,
+    val socialAttentionChange1h: Int,
     val socialPolarity1h: Double?,
     val socialDisagreement1h: Double?,
     val normalizedAttention30d: Double?,
@@ -134,10 +142,26 @@ internal class CausalFeatureAggregator {
         rows: List<ScoredInformationRecord>,
         decision: Long,
     ): InformationFeatureRow {
+        val socialQuarterHour =
+            rows.filter {
+                it.channel == InformationChannel.SOCIAL &&
+                    effectiveAvailability(it) > decision - QUARTER_HOUR_MILLIS
+            }
         val socialHour =
             rows.filter {
                 it.channel == InformationChannel.SOCIAL &&
                     effectiveAvailability(it) > decision - HOUR_MILLIS
+            }
+        val socialPriorHour =
+            rows.filter {
+                it.channel == InformationChannel.SOCIAL &&
+                    effectiveAvailability(it) > decision - 2L * HOUR_MILLIS &&
+                    effectiveAvailability(it) <= decision - HOUR_MILLIS
+            }
+        val socialSixHours =
+            rows.filter {
+                it.channel == InformationChannel.SOCIAL &&
+                    effectiveAvailability(it) > decision - 6L * HOUR_MILLIS
             }
         val socialDay =
             rows.filter {
@@ -176,9 +200,22 @@ internal class CausalFeatureAggregator {
             rowId = sha256("$instrument\u001f$decision"),
             instrument = instrument,
             decisionTimeEpochMillis = decision,
+            socialAttention15m = socialQuarterHour.size,
             socialAttention1h = socialHour.size,
+            socialAttention6h = socialSixHours.size,
             socialAttention24h = socialDay.size,
+            socialHasPosts15m = socialQuarterHour.isNotEmpty(),
+            socialUniqueAuthors1h = socialHour.map(::authorIdentity).distinct().size,
+            socialUniqueAuthors24h = socialDay.map(::authorIdentity).distinct().size,
+            socialSourcesWithPosts15m = socialQuarterHour.map(ScoredInformationRecord::source).distinct().size,
             socialSourceCount1h = socialHour.map(ScoredInformationRecord::source).distinct().size,
+            socialMinutesSincePost =
+                rows.filter { it.channel == InformationChannel.SOCIAL }
+                    .maxOfOrNull(::effectiveAvailability)
+                    ?.let { (decision - it) / 60_000.0 }
+                    ?.coerceIn(0.0, 43_200.0)
+                    ?: 43_200.0,
+            socialAttentionChange1h = socialHour.size - socialPriorHour.size,
             socialPolarity1h = socialPolarity,
             socialDisagreement1h = disagreement,
             normalizedAttention30d = normalized,
@@ -232,10 +269,14 @@ internal class CausalFeatureAggregator {
     private fun effectiveAvailability(row: ScoredInformationRecord): Long =
         maxOf(row.availableAtEpochMillis, row.score?.scoredAt?.epochMillis ?: row.availableAtEpochMillis)
 
+    private fun authorIdentity(row: ScoredInformationRecord): String =
+        row.authorIdHash ?: "${row.source}:${row.sourceEventId}"
+
     private companion object {
         const val MAXIMUM_AUTHOR_MESSAGES_PER_HOUR = 3
         const val MINIMUM_SOURCES_FOR_COMPOSITE = 2
         const val HOUR_MILLIS = 60L * 60L * 1_000L
+        const val QUARTER_HOUR_MILLIS = 15L * 60L * 1_000L
         const val DAY_MILLIS = 24L * HOUR_MILLIS
         const val THIRTY_DAYS_HOURS = 30L * 24L
         const val THIRTY_DAYS_MILLIS = 30L * DAY_MILLIS

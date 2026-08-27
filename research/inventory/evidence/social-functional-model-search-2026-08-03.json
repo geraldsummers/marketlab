@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v2",
+  "id": "social-functional-model-search-2026-08-03",
+  "candidateIds": [
+    "social-attention-return-15m-v1",
+    "social-attention-return-1d-v1",
+    "social-attention-variance-1h-v1",
+    "social-attention-variance-1d-v1"
+  ],
+  "classification": "RETROSPECTIVE_EXPLORATION",
+  "decision": "TWO_VOLATILITY_TARGETS_ENGINEERING_ELIGIBLE_FOR_BLIND_EXTENSION",
+  "runId": null,
+  "summarySource": "research/social-functional-blind-extension-runbook.md",
+  "artifacts": [
+    {
+      "role": "frozen-model-set",
+      "sha256": "70d73e2f3c12d05b0d31cc5460b6b97fd113e692f85e61f698a8835b009fb983",
+      "location": "/mnt/media/marketlab/raw/social-backfill-v2/functional/models/marketlab-social-functional-5f9b1b0/frozen-models.json",
+      "verification": "REMOTE_FILE"
+    },
+    {
+      "role": "development-feature-rows",
+      "sha256": "f10279e39bb6a03d1a5cbeb3d1ef90a87080efcdd7dd597a7db6d8f60f0a8372",
+      "location": "registered social backfill object store",
+      "verification": "CONTENT_ADDRESS_ONLY"
+    }
+  ],
+  "summary": "Development search admitted two variance candidates to blind evaluation and did not validate any result.",
+  "candidateDecisions": [
+    {
+      "candidateId": "social-attention-return-15m-v1",
+      "stage": "EXPLORATORY",
+      "decision": "NOT_SELECTED",
+      "current": false
+    },
+    {
+      "candidateId": "social-attention-return-1d-v1",
+      "stage": "EXPLORATORY",
+      "decision": "NOT_SELECTED",
+      "current": false
+    },
+    {
+      "candidateId": "social-attention-variance-1h-v1",
+      "stage": "FROZEN_CANDIDATE",
+      "decision": "ENGINEERING_ELIGIBLE",
+      "current": false
+    },
+    {
+      "candidateId": "social-attention-variance-1d-v1",
+      "stage": "FROZEN_CANDIDATE",
+      "decision": "ENGINEERING_ELIGIBLE",
+      "current": false
+    }
+  ],
+  "outcomesOpened": true,
+  "openedOutcomes": [
+    {
+      "id": "social-functional-model-search-2026-08-03-opened-outcomes",
+      "candidateIds": [
+        "social-attention-return-15m-v1",
+        "social-attention-return-1d-v1",
+        "social-attention-variance-1h-v1",
+        "social-attention-variance-1d-v1"
+      ],
+      "venue": "binance",
+      "target": "registered four-target functional development family",
+      "periodStatus": "UNKNOWN",
+      "unknownReason": "Exact development boundaries remain in frozen model-set artifacts.",
+      "reuseStatus": "OPENED_NOT_CONFIRMATION_ELIGIBLE"
+    }
+  ]
+}

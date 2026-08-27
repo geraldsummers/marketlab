@@ -1,22 +1,22 @@
 # This is a Gradle generated file for dependency locking.
 # Manual edits can break the build and are not advised.
 # This file is expected to be part of source control.
-ai.djl.huggingface:tokenizers:0.36.0=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
-ai.djl:api:0.36.0=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+ai.djl.huggingface:tokenizers:0.36.0=runtimeClasspath,testRuntimeClasspath
+ai.djl:api:0.36.0=runtimeClasspath,testRuntimeClasspath
 ch.qos.logback:logback-classic:1.5.18=runtimeClasspath,testRuntimeClasspath
 ch.qos.logback:logback-core:1.5.18=runtimeClasspath,testRuntimeClasspath
-com.github.pemistahl:lingua:1.2.2=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
-com.google.code.gson:gson:2.13.1=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
-com.google.errorprone:error_prone_annotations:2.38.0=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
-com.microsoft.onnxruntime:onnxruntime:1.28.0=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+com.github.pemistahl:lingua:1.2.2=runtimeClasspath,testRuntimeClasspath
+com.google.code.gson:gson:2.13.1=runtimeClasspath,testRuntimeClasspath
+com.google.errorprone:error_prone_annotations:2.38.0=runtimeClasspath,testRuntimeClasspath
+com.microsoft.onnxruntime:onnxruntime:1.28.0=runtimeClasspath,testRuntimeClasspath
 com.squareup.moshi:moshi-kotlin:1.13.0=runtimeClasspath,testRuntimeClasspath
 com.squareup.moshi:moshi:1.13.0=runtimeClasspath,testRuntimeClasspath
 com.squareup.okio:okio:2.10.0=runtimeClasspath,testRuntimeClasspath
-commons-codec:commons-codec:1.17.1=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
-commons-io:commons-io:2.16.1=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+commons-codec:commons-codec:1.17.1=runtimeClasspath,testRuntimeClasspath
+commons-io:commons-io:2.16.1=runtimeClasspath,testRuntimeClasspath
 it.unimi.dsi:fastutil:8.5.8=runtimeClasspath,testRuntimeClasspath
-net.java.dev.jna:jna:5.17.0=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
-org.apache.commons:commons-compress:1.27.1=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+net.java.dev.jna:jna:5.17.0=runtimeClasspath,testRuntimeClasspath
+org.apache.commons:commons-compress:1.27.1=runtimeClasspath,testRuntimeClasspath
 org.apiguardian:apiguardian-api:1.1.2=testCompileClasspath
 org.jetbrains.kotlin:kotlin-build-tools-api:2.4.0=kotlinAbiValidationCompatClasspath
 org.jetbrains.kotlin:kotlin-build-tools-api:2.4.10=kotlinBuildToolsApiClasspath,kotlinCompilerClasspath,kotlinKlibCommonizerClasspath

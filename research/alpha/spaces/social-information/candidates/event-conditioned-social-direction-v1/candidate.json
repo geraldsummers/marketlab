@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "event-conditioned-social-direction-v1",
+  "spaceId": "social-information",
+  "title": "Event-conditioned signed social direction",
+  "stage": "DATA_BLOCKED",
+  "claim": "During causally observed social-attention shocks, lagged polarity surprise or disagreement change improves one-hour or four-hour signed return forecasts over market-only, signed-social-only, and attention-state-only baselines; outside those events the strategy abstains.",
+  "mechanism": "Attention shocks identify discrete information arrival while polarity surprise or disagreement change supplies sign. Slow and fragmented public-information diffusion may leave conditional directional information after market controls even though unconditional social direction failed.",
+  "target": "One-hour and four-hour outright log returns for the registered ten-asset Binance USDT perpetual universe, with acted-on and abstained observations reported separately.",
+  "horizon": "1h and 4h from an hourly UTC decision clock.",
+  "informationSet": [
+    "Receipt-causal attention shock available at the decision timestamp",
+    "Lagged polarity surprise or disagreement change computed without future messages or revisions",
+    "Frozen point-in-time market controls and historical asset eligibility"
+  ],
+  "primaryBaseline": "The strongest zero, historical-mean, market-only, signed-social-only, or attention-state-only point-in-time baseline.",
+  "evidence": [
+    {
+      "classification": "PROGRAM_REGISTRATION",
+      "decision": "DATA_FEASIBILITY",
+      "summary": "A materially distinct conditional signed-social mechanism is registered after unconditional direction and variance-based exposure mappings failed. No target outcome or historical period was opened by registration.",
+      "sourcePath": "research/decision-log.md",
+      "evidenceId": "event-conditioned-social-direction-registration-2026-08-26"
+    },
+    {
+      "classification": "DATA_FEASIBILITY",
+      "decision": "DATA_BLOCKED",
+      "summary": "Manifest-only audit found no untouched materialized historical social period: all feature manifests end by 2026-08-01 and overlap opened or unknown-boundary outcomes. No target-bearing row was read.",
+      "artifactPath": "/mnt/media/marketlab/artifacts/next-program-audits/data-feasibility-20260827/audit.json",
+      "artifactSha256": "6764b2afc00345bf2d09161e8f01b07ecd326fccd0f1a721f411c059e4d2410a",
+      "sourcePath": "research/decision-log.md",
+      "evidenceId": "event-conditioned-social-data-feasibility-2026-08-27"
+    },
+    {
+      "classification": "AVAILABILITY_BIASED_RETROSPECTIVE_DISCOVERY",
+      "decision": "DATA_BLOCKED",
+      "summary": "The registered eight-variant family stopped before model fitting because disagreement-change supplied only 87 acted rows in chronological fold one versus the frozen minimum of 100. Polarity surprise passed coverage, but it may not be promoted as a post-outcome subgroup.",
+      "artifactPath": "/mnt/media/marketlab/artifacts/event-conditioned-social-direction-v1-20260827-run1/report.json",
+      "artifactSha256": "0f140ad4120b4bc6f1331c01009df89a6fa1bdc62e57708c48b718662899bf5b",
+      "sourcePath": "research/decision-log.md",
+      "evidenceId": "event-conditioned-social-coverage-gate-2026-08-27"
+    }
+  ],
+  "frozenLocks": [],
+  "touchPoints": [
+    "social-model",
+    "research/source-policy.md"
+  ],
+  "nextAction": "Preserve this DATA_BLOCKED family and consumed discovery period. A successor may preregister a materially distinct polarity-shock-only candidate before fitting, or identify a larger already-existing signed archive; do not lower the coverage gate or silently drop disagreement.",
+  "researchModes": [
+    "HISTORICAL"
+  ],
+  "searchBudget": {
+    "primaryVariants": 8,
+    "horizons": [
+      "1h",
+      "4h"
+    ],
+    "signedFeatures": [
+      "polarity-surprise",
+      "disagreement-change"
+    ],
+    "estimators": [
+      "regularized-linear-interaction",
+      "shallow-histogram-boosted-tree"
+    ],
+    "attentionGate": "one training-only quantile frozen before evaluation",
+    "gpu": false
+  },
+  "confirmationPolicy": "AUTONOMOUS_AFTER_VALIDATED_FREEZE",
+  "dataBiases": [
+    "AVAILABILITY_TIMESTAMP_PROXY",
+    "OPENED_OUTCOMES",
+    "SURVIVOR_UNIVERSE"
+  ],
+  "promotionCeiling": "EXPLORATORY",
+  "openedOutcomeReuse": "DISCOVERY_ONLY",
+  "prospectiveActivationGate": {
+    "developmentPassed": false,
+    "candidateFrozen": false,
+    "outcomeSealingReady": false,
+    "eligible": false
+  }
+}

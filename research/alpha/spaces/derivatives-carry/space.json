@@ -1,0 +1,176 @@
+{
+  "schemaVersion": "marketlab.alpha-space.v2",
+  "id": "derivatives-carry",
+  "title": "Derivatives state and carry",
+  "purpose": "Study funding, basis, open interest, liquidations, term structure, and delta-neutral carry as distinct claims.",
+  "state": "DATA_BLOCKED",
+  "dependencies": [
+    "microstructure",
+    "execution-portfolio"
+  ],
+  "readyWork": [
+    {
+      "id": "derivatives-point-in-time-source-design",
+      "status": "DONE",
+      "kind": "data",
+      "summary": "Audit point-in-time funding, basis, spot, perpetual, rule identity, membership, and both execution legs for historical delta-neutral carry.",
+      "blockedBy": [],
+      "researchModes": [
+        "HISTORICAL",
+        "PROSPECTIVE"
+      ],
+      "externalBlockers": [],
+      "priority": "P0",
+      "candidateIds": [
+        "funding-basis-carry"
+      ],
+      "deliverables": [
+        "Source matrix for funding, mark, index, spot, perpetual, rule identity, membership, and both execution legs",
+        "Causal clock and gap audit with official-byte provenance",
+        "DATA_FEASIBILITY evidence that either unlocks reconstruction or preserves DATA_BLOCKED"
+      ],
+      "acceptanceCriteria": [
+        "Every required carry leg has point-in-time availability semantics",
+        "Missing synchronized basis or executable-leg data produces DATA_BLOCKED",
+        "No funding-only directional proxy is substituted for carry"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/derivatives-carry/candidates/funding-basis-carry/",
+        "research/inventory/data-sources/",
+        "research/inventory/evidence/"
+      ],
+      "resourceClass": "DATA_IO",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 1,
+        "maxTrials": 0,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": [
+        "funding-basis-data-feasibility-2026-08-27"
+      ]
+    },
+    {
+      "id": "funding-basis-carry-confirmation",
+      "status": "BLOCKED",
+      "kind": "evaluation",
+      "summary": "Evaluate synchronized basis convergence and executable hedged carry.",
+      "blockedBy": [],
+      "researchModes": [
+        "PROSPECTIVE"
+      ],
+      "externalBlockers": [
+        "complete basis history is unavailable",
+        "historical execution state is insufficient"
+      ],
+      "priority": "P2",
+      "candidateIds": [],
+      "deliverables": [
+        "Durable evaluation artifact for funding-basis-carry-confirmation",
+        "Evidence-linked task handoff"
+      ],
+      "acceptanceCriteria": [
+        "Evaluate synchronized basis convergence and executable hedged carry.",
+        "No epistemic stage is promoted without linked evidence"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/derivatives-carry/"
+      ],
+      "resourceClass": "CPU_MODEL",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 2,
+        "maxTrials": 16,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": []
+    },
+    {
+      "id": "funding-basis-reconstruction-contract",
+      "status": "BLOCKED",
+      "kind": "research",
+      "summary": "Specify causal funding and basis reconstruction, both legs, and conservative cost accounting.",
+      "blockedBy": [
+        "derivatives-point-in-time-source-design"
+      ],
+      "externalBlockers": [
+        "Historical spot top-of-book or book snapshots are absent from official monthly archives.",
+        "Historical exchange-rule, fee-schedule, and borrow-availability vintages are absent."
+      ],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "priority": "P1",
+      "candidateIds": [
+        "funding-basis-carry"
+      ],
+      "deliverables": [
+        "Exact funding, mark/index, spot, perpetual, fee, and timing contract",
+        "Coverage and fail-closed rules for every required leg",
+        "Deterministic replay specification"
+      ],
+      "acceptanceCriteria": [
+        "Funding alone is never treated as carry",
+        "Both legs and basis convergence are causally reconstructable",
+        "Any missing execution or rule identity keeps the candidate DATA_BLOCKED"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/derivatives-carry/candidates/funding-basis-carry/",
+        "research/alpha/campaigns/",
+        "research/source-policy.md"
+      ],
+      "resourceClass": "METADATA_ONLY",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 1,
+        "maxTrials": 0,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": []
+    },
+    {
+      "id": "funding-basis-exploratory-replay",
+      "status": "BLOCKED",
+      "kind": "evaluation",
+      "summary": "Run a deterministic delta-neutral carry replay before considering any model search.",
+      "blockedBy": [
+        "funding-basis-reconstruction-contract"
+      ],
+      "externalBlockers": [],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "priority": "P1",
+      "candidateIds": [
+        "funding-basis-carry"
+      ],
+      "deliverables": [
+        "Immutable replay rows with both legs, funding, fees, and basis convergence",
+        "Cost-doubled and coverage stress results",
+        "Evidence-linked exploratory decision"
+      ],
+      "acceptanceCriteria": [
+        "No directional model or parameter family is introduced",
+        "Missing prices, funding, or execution state fail closed",
+        "Result remains EXPLORATORY until a separate untouched confirmation is frozen"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/derivatives-carry/candidates/funding-basis-carry/",
+        "research-cli/",
+        "research/inventory/compute-runs/"
+      ],
+      "resourceClass": "CPU_MODEL",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 2,
+        "maxTrials": 0,
+        "gpu": false
+      },
+      "outcomeAccess": "DEVELOPMENT_ONLY",
+      "completionEvidenceIds": []
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "funding-next-hour-return-diagnostic-v1",
+  "spaceId": "derivatives-carry",
+  "title": "Funding rate to next-hour BTC return diagnostic",
+  "stage": "INCONCLUSIVE",
+  "claim": "The latest causally available BTC funding rate improves the subsequent one-hour return forecast.",
+  "mechanism": "Funding reflects directional positioning pressure that may resolve through subsequent price movement.",
+  "target": "Next completed one-hour BTC candle open-to-close log return",
+  "horizon": "1 hour",
+  "informationSet": [
+    "Latest funding observation available before the hourly boundary"
+  ],
+  "primaryBaseline": "Stronger of expanding historical mean and zero return",
+  "evidence": [
+    {
+      "classification": "RETROSPECTIVE_DIAGNOSTIC",
+      "decision": "INCONCLUSIVE",
+      "summary": "Across 1,344 out-of-sample forecasts the candidate underperformed both controls; no sealed final holdout or executable basis leg was present.",
+      "sourcePath": "research/theory-exhaustion.md",
+      "evidenceId": "funding-next-hour-diagnostic-2026-07-28"
+    }
+  ],
+  "frozenLocks": [],
+  "touchPoints": [
+    "research-cli/src/main/kotlin/dev/marketlab/research/FundingResearchSuite.kt"
+  ],
+  "nextAction": "Do not treat funding alone as carry; accumulate synchronized basis, open-interest, liquidation, and execution state for distinct candidates.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
+}

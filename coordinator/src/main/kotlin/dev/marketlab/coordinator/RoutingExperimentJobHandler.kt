@@ -10,25 +10,37 @@ import kotlinx.serialization.json.JsonPrimitive
  */
 internal class RoutingExperimentJobHandler(
     private val controls: ExperimentJobHandler,
-    private val momentum: ExperimentJobHandler,
-    private val harVariance: ExperimentJobHandler,
-    private val hourlyReversal: ExperimentJobHandler,
-    private val hourlyVolatilityPeriodicity: ExperimentJobHandler,
+    handlers: Map<String, ExperimentJobHandler>,
 ) : ExperimentJobHandler {
+    private val handlers = handlers.toMap()
+
+    init {
+        require(this.handlers.keys.none(String::isBlank)) { "theory handler ids must not be blank" }
+    }
+
+    constructor(
+        controls: ExperimentJobHandler,
+        momentum: ExperimentJobHandler,
+        harVariance: ExperimentJobHandler,
+        hourlyReversal: ExperimentJobHandler,
+        hourlyVolatilityPeriodicity: ExperimentJobHandler,
+    ) : this(
+        controls = controls,
+        handlers =
+            mapOf(
+                HYPERLIQUID_BTC_MOMENTUM_THEORY_ID to momentum,
+                HYPERLIQUID_BTC_FOUR_HOUR_LOG_HAR_VARIANCE_THEORY_ID to harVariance,
+                HYPERLIQUID_BTC_HOURLY_RETURN_REVERSAL_THEORY_ID to hourlyReversal,
+                HYPERLIQUID_ETH_HOURLY_VOLATILITY_PERIODICITY_THEORY_ID to
+                    hourlyVolatilityPeriodicity,
+            ),
+    )
+
     override suspend fun execute(lease: JobLease): JobExecutionResult {
         val theoryId =
             (lease.job.payload["theoryId"] as? JsonPrimitive)
                 ?.takeIf(JsonPrimitive::isString)
                 ?.content
-        return when (theoryId) {
-            HYPERLIQUID_BTC_MOMENTUM_THEORY_ID -> momentum.execute(lease)
-            HYPERLIQUID_BTC_FOUR_HOUR_LOG_HAR_VARIANCE_THEORY_ID ->
-                harVariance.execute(lease)
-            HYPERLIQUID_BTC_HOURLY_RETURN_REVERSAL_THEORY_ID ->
-                hourlyReversal.execute(lease)
-            HYPERLIQUID_ETH_HOURLY_VOLATILITY_PERIODICITY_THEORY_ID ->
-                hourlyVolatilityPeriodicity.execute(lease)
-            else -> controls.execute(lease)
-        }
+        return handlers[theoryId]?.execute(lease) ?: controls.execute(lease)
     }
 }

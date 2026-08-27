@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v2",
+  "id": "polarity-shock-direction-v2-registration-2026-08-27",
+  "candidateIds": [
+    "polarity-shock-direction-v2"
+  ],
+  "classification": "PROGRAM_REGISTRATION",
+  "decision": "DATA_FEASIBILITY",
+  "summarySource": "research/decision-log.md",
+  "summary": "Registered a four-variant attention-gated polarity-surprise candidate with explicit historical contamination, rejection gates, and prospective activation disabled.",
+  "candidateDecisions": [
+    {
+      "candidateId": "polarity-shock-direction-v2",
+      "stage": "DATA_FEASIBILITY",
+      "decision": "DATA_FEASIBILITY",
+      "current": false
+    }
+  ],
+  "outcomesOpened": false,
+  "openedOutcomes": [],
+  "artifacts": []
+}

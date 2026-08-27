@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "social-variance-defensive-exposure-v1",
+  "spaceId": "execution-portfolio",
+  "title": "Social-variance defensive exposure replay",
+  "stage": "REJECTED",
+  "claim": "The frozen BLIND_VALIDATED social-attention one-hour variance forecast improves costed defensive exposure sizing over the frozen market-only variance scaler in the already-open July 2026 Binance panel.",
+  "mechanism": "Social attention identifies information arrival and forecastable variance; reducing, but never increasing, equal-weight long exposure during high predicted variance may improve downside risk and certainty equivalent without requiring return direction.",
+  "target": "Annualized certainty equivalent with risk aversion gamma 4 for a ten-asset equal-weight long portfolio after observed Binance funding and frozen turnover stresses.",
+  "horizon": "Hourly decisions and next-hour returns during 2026-07-01T00:00:00Z/2026-08-01T00:00:00Z.",
+  "informationSet": [
+    "Frozen social-attention and market-only one-hour variance forecasts from model set SHA-256 70d73e2f3c12d05b0d31cc5460b6b97fd113e692f85e61f698a8835b009fb983",
+    "Point-in-time July feature rows SHA-256 a376614dc095e6c0a053f59e07e88fe67cd670e9774fe9729408266a598564e7",
+    "Official Binance July 2026 fundingRate archives with publisher checksums"
+  ],
+  "primaryBaseline": "The same de-risk-only volatility scaler using the frozen market-only variance forecast.",
+  "evidence": [
+    {
+      "kind": "preregistered-opened-outcome-portfolio-replay",
+      "classification": "PREREGISTERED_OPENED_OUTCOME_PORTFOLIO_REPLAY",
+      "decision": "EXPLORATORY_GATE_FAILED",
+      "stage": "REJECTED",
+      "artifactPath": "/mnt/media/marketlab/artifacts/social-variance-defensive-exposure-v1-run8/result.json",
+      "artifactSha256": "7acfb54e99609e94da385285a78215e7aa8496542f7cddfbe9a85a025338fccf",
+      "freezeSha256": "5d161ad3aba41a35c98422c17660ef5fcbab8aa66b0317a6e2d9205e3aed784f",
+      "openedOutcomePeriod": "2026-07-01T00:00:00Z/2026-08-01T00:00:00Z",
+      "summary": "Social-aware sizing lost 0.1224 and 0.1260 annualized certainty-equivalent units to market-only sizing at 5 and 10 bps. Expected shortfall and maximum drawdown were also worse at both costs, so the frozen phase-two gate failed.",
+      "evidenceId": "social-variance-defensive-exposure-2026-08-26"
+    }
+  ],
+  "frozenLocks": [
+    "research/alpha/campaigns/social-variance-defensive-exposure-v1.lock.json"
+  ],
+  "touchPoints": [
+    "alpha-model/marketlab_alpha/variance_exposure.py",
+    "research/alpha/campaigns/social-variance-defensive-exposure-v1.lock.json"
+  ],
+  "nextAction": "Preserve the rejection. Do not launch the volatility-conditioned signed-social family under this program; require a materially distinct mechanism and separately registered evidence path.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
+}

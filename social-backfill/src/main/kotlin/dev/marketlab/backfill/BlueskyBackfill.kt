@@ -1,5 +1,7 @@
 package dev.marketlab.backfill
 
+import dev.marketlab.evidence.ImmutableEvidenceStore
+import dev.marketlab.historical.HistoricalAsset
 import dev.marketlab.sentiment.FrozenLanguageDetector
 import dev.marketlab.sentiment.OnnxSentimentModel
 import io.ktor.client.HttpClient
@@ -26,20 +28,20 @@ import kotlinx.serialization.json.jsonPrimitive
 internal class BlueskyBackfill(
     private val config: BackfillConfig,
     private val client: HttpClient,
-    private val store: ArtifactStore,
+    private val store: ImmutableEvidenceStore,
     private val model: OnnxSentimentModel,
     private val languageDetector: FrozenLanguageDetector,
     private val clock: Clock = Clock.systemUTC(),
 ) {
     suspend fun run() {
-        for (asset in ASSETS.filter { it.symbol in config.assets }) {
+        for (asset in config.study.assets.filter { it.symbol in config.assets }) {
             for (date in dates(config.start, config.endExclusive)) {
                 captureDay(asset, date)
             }
         }
     }
 
-    private suspend fun captureDay(asset: AssetSpec, date: LocalDate) {
+    private suspend fun captureDay(asset: HistoricalAsset, date: LocalDate) {
         val manifestPath = store.root.resolve("social/manifests/${asset.symbol}/$date.json")
         if (Files.isRegularFile(manifestPath)) return
         val start = date.atStartOfDay(ZoneOffset.UTC).toInstant()
@@ -137,7 +139,7 @@ internal class BlueskyBackfill(
     }
 
     private fun parse(
-        asset: AssetSpec,
+        asset: HistoricalAsset,
         post: kotlinx.serialization.json.JsonObject,
         retrievedAt: Instant,
         rawHash: String,

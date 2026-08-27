@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "trade-flow-direction-v1",
+  "spaceId": "microstructure",
+  "title": "Trade flow and observed impact direction",
+  "stage": "INCONCLUSIVE",
+  "claim": "Causal aggressive-flow and observed-impact fields may improve return forecasts beyond aggregated market state.",
+  "mechanism": "Aggressive flow can be informed or liquidity-demanding; continuation, reversal, and null are all eligible outcomes.",
+  "target": "Outright or factor-residual basket-member log return.",
+  "horizon": "Locked campaign horizon grid, limited by archive timestamp quality.",
+  "informationSet": [
+    "Aggregate trades, taker imbalance, observed price impact, and market controls"
+  ],
+  "primaryBaseline": "Strongest frozen model without flow-specific fields",
+  "evidence": [
+    {
+      "kind": "development-evidence-audit",
+      "classification": "archive-development-evidence-audit",
+      "decision": "INSUFFICIENT_EVIDENCE",
+      "campaignId": "archive-directional-gpu-v2",
+      "stage": "INCONCLUSIVE",
+      "recommendation": "INSUFFICIENT_EVIDENCE",
+      "artifactPath": "/mnt/media/marketlab/artifacts/archive-alpha-v2/evidence-audit-v3/audit.json",
+      "artifactSha256": "a07fbec0156327a68b2f9c457420be949fd6287d4fbfd1dc10bc11ceacd45117",
+      "ledgerManifestSha256": "6a04f1e6ff99a820a90708558055f5e2918f29fd23828007839e549ff84a0d44",
+      "openedOutcomePeriod": "2020-01-01T00:00:00Z/2025-06-01T00:00:00Z",
+      "summary": "All 104 basket-4 attempts failed and no basket-6 or basket-10 trial was completed, so the ledger establishes operational failure rather than predictive rejection or support.",
+      "evidenceId": "archive-directional-v2-audit-2026-08-25"
+    }
+  ],
+  "frozenLocks": [
+    "research/alpha/campaigns/archive-directional-gpu-v2.lock.json"
+  ],
+  "touchPoints": [
+    "alpha-model",
+    "research/alpha/campaigns/archive-directional-gpu-v2.lock.json"
+  ],
+  "nextAction": "Diagnose the preserved basket-4 failures and archive event-quality limits before any fresh registration; do not rerun the same family or infer a predictive result.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
+}

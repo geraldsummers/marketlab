@@ -1,0 +1,1 @@
+{"schemaVersion":"marketlab.theory-inventory.v1","id":"hyperliquid-btc-four-hour-log-har-variance","kind":"ADAPTATION","disposition":"REJECTED","alphaSpace":"volatility","candidateId":"btc-log-har-variance-v1","implementationPath":"theories/src/main/kotlin/dev/marketlab/theories/AcademicTheoryRegistry.kt"}

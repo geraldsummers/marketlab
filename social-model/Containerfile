@@ -1,0 +1,7 @@
+ARG PYTHON_IMAGE
+FROM ${PYTHON_IMAGE}
+WORKDIR /opt/marketlab
+COPY social-model/requirements.lock /tmp/requirements.lock
+RUN pip install --no-cache-dir -r /tmp/requirements.lock
+COPY social-model/trainer.py /opt/marketlab/trainer.py
+ENTRYPOINT ["python", "/opt/marketlab/trainer.py"]

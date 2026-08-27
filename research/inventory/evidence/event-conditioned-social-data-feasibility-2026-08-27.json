@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v2",
+  "id": "event-conditioned-social-data-feasibility-2026-08-27",
+  "candidateIds": [
+    "event-conditioned-social-direction-v1"
+  ],
+  "classification": "DATA_FEASIBILITY",
+  "decision": "DATA_BLOCKED",
+  "summarySource": "research/decision-log.md",
+  "summary": "Manifest-only audit found no untouched materialized historical social and market period; no target-bearing feature row was read.",
+  "candidateDecisions": [
+    {
+      "candidateId": "event-conditioned-social-direction-v1",
+      "stage": "DATA_BLOCKED",
+      "decision": "DATA_BLOCKED",
+      "current": false
+    }
+  ],
+  "outcomesOpened": false,
+  "openedOutcomes": [],
+  "artifacts": [
+    {
+      "role": "combined-data-feasibility-audit",
+      "sha256": "6764b2afc00345bf2d09161e8f01b07ecd326fccd0f1a721f411c059e4d2410a",
+      "location": "/mnt/media/marketlab/artifacts/next-program-audits/data-feasibility-20260827/audit.json",
+      "verification": "REMOTE_FILE"
+    }
+  ]
+}

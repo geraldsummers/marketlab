@@ -102,6 +102,7 @@ install -d -m 0750 \
     "$MEDIA_ROOT/raw/hyperliquid-stream" \
     "$MEDIA_ROOT/raw/public-information" \
     "$MEDIA_ROOT/raw/social-market" \
+    "$MEDIA_ROOT/raw/social-backfill-v2" \
     "$MEDIA_ROOT/cold-artifacts" \
     "$MEDIA_ROOT/backups"
 

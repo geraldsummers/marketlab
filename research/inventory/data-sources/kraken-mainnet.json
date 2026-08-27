@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "marketlab.data-source-inventory.v1",
+  "id": "kraken-mainnet",
+  "title": "Kraken USD spot",
+  "category": "market-robustness",
+  "status": "REGISTERED_NOT_IMPLEMENTED",
+  "pointInTimeUse": "Registered as an independent spot robustness venue for parent momentum work.",
+  "implementations": ["theories"],
+  "alphaSpaces": ["directional-returns", "relative-value", "cross-venue"],
+  "limitations": ["No production collector or vetted historical archive is connected"],
+  "nextAction": "Implement only as part of a preregistered multi-venue mechanism."
+}

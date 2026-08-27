@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "hyperliquid-top-ten-social-polarity-fifteen-minute-return",
+  "spaceId": "social-information",
+  "title": "Prospective multi-source polarity and fifteen-minute return",
+  "stage": "FROZEN_CANDIDATE",
+  "claim": "Positive multi-source social polarity predicts an executable next-fifteen-minute Hyperliquid return.",
+  "mechanism": "Public information diffuses into fragmented crypto prices with a short delay.",
+  "target": "Next fifteen-minute Hyperliquid return after observed execution costs",
+  "horizon": "15 minutes",
+  "informationSet": [
+    "Causal multi-source polarity",
+    "BTC and asset market controls",
+    "Observed BBO/L2 execution"
+  ],
+  "primaryBaseline": "Asset mean, zero return, latest return, and BTC-market controls",
+  "evidence": [],
+  "frozenLocks": [
+    "research/social-program.lock.json",
+    "research/sentiment-models.lock.json"
+  ],
+  "touchPoints": [
+    "social-collector",
+    "sentiment-worker",
+    "engine",
+    "theories/src/main/kotlin/dev/marketlab/theories/SocialInformationTheories.kt"
+  ],
+  "nextAction": "Do not start D0 until execution and dual-source readiness pass; this version requires its full prospective holdout.",
+  "researchModes": [
+    "PROSPECTIVE"
+  ]
+}

@@ -1,0 +1,165 @@
+{
+  "schemaVersion": "marketlab.alpha-campaign-lock.v1",
+  "campaignId": "archive-directional-gpu-v2",
+  "stage": "EXPLORATORY",
+  "createdAt": "2026-08-06T00:00:00Z",
+  "supersedes": {
+    "campaignId": "archive-directional-gpu-v1",
+    "disposition": "SUPERSEDED_BEFORE_DATA",
+    "reason": "The first lock did not freeze survivorship-safe archive discovery, scalable preparation, resumable checkpoints, or automatic compute expansion. No archive, development outcome, or confirmation outcome was opened under v1."
+  },
+  "userConstraints": [
+    "BTC and ETH are mandatory members of every eligible basket",
+    "Use public or free historical data before requesting paid acquisition",
+    "Directional price prediction is the primary research objective",
+    "This phase must not wait for future wall-clock observations",
+    "Compute expands automatically only through preregistered development gates",
+    "Return after dispatch and a healthy first checkpoint so a lighter model can supervise"
+  ],
+  "designConventions": [
+    "Prior thirty-day notional ranks assets only to bound liquidity and data quality",
+    "Basket sizes and horizons are bounded search dimensions rather than presumed optima",
+    "Forecast evidence is evaluated before execution or portfolio claims",
+    "Every attempted configuration remains in the immutable trial ledger",
+    "Current exchange metadata never supplies the historical research universe",
+    "Engineering throughput measurements cannot rank or promote predictive candidates"
+  ],
+  "empiricalClaims": [
+    "BTC may or may not improve forecasts beyond alternative market factors",
+    "Divergence may continue, reverse, or contain no stable information",
+    "No estimator family or forecast horizon is presumed superior",
+    "A richer information set may fail to improve the strongest market-only baseline"
+  ],
+  "source": {
+    "provider": "binance-public-data",
+    "bucketListingUrl": "https://s3-ap-northeast-1.amazonaws.com/data.binance.vision",
+    "market": "um",
+    "venueSymbolPattern": "^[A-Z0-9]+USDT$",
+    "universeDataType": "klines",
+    "universeInterval": "1d",
+    "researchDataType": "klines",
+    "researchInterval": "5m",
+    "startMonth": "2020-01",
+    "endMonth": "2026-07",
+    "officialChecksumsRequired": true,
+    "missingObjectPolicy": "quarantine; never interpret as zero activity, inactivity, or delisting",
+    "availabilitySemantics": "exchange close time plus one millisecond; retrospective availability proxy"
+  },
+  "universePolicy": {
+    "firstAsOf": "2020-04-01T00:00:00Z",
+    "lastAsOf": "2026-07-29T00:00:00Z",
+    "cadenceDays": 7,
+    "requiredHistoryDays": 90,
+    "rankingWindowDays": 30,
+    "mandatorySymbols": ["BTC", "ETH"],
+    "selection": "rank complete, causally available daily USDT perpetual observations; acquire five-minute bars only after taking the union of all selected venue symbols"
+  },
+  "mechanisms": [
+    "market-state",
+    "market-transmission",
+    "cross-asset-divergence",
+    "trade-flow",
+    "derivatives-positioning",
+    "cross-market",
+    "social-information",
+    "options-implied",
+    "onchain-macro"
+  ],
+  "searchDimensions": {
+    "horizons": ["5m", "15m", "1h", "4h", "12h", "1d", "3d", "7d"],
+    "basketSizes": [4, 6, 10],
+    "factorRepresentations": ["none", "btc", "eth", "equal-weight-basket", "first-principal-component"],
+    "modelFamilies": [
+      "ridge",
+      "elastic_net",
+      "shallow_tree",
+      "random_forest",
+      "extra_trees",
+      "hist_gradient_boosting",
+      "gpu_xgboost",
+      "mlp",
+      "ft_transformer",
+      "tcn",
+      "gru",
+      "lstm",
+      "causal_transformer"
+    ],
+    "targets": ["outright-return", "factor-residual-return"]
+  },
+  "searchBudget": {
+    "stageATrialsPerFamily": 16,
+    "stageBAdditionalTrialsPerSurvivor": 32,
+    "stageBMaxFamiliesPerMechanism": 2,
+    "maxFrozenPerMechanism": 1,
+    "maxFrozenOverall": 4,
+    "stageASeeds": [19870403],
+    "stageBSeeds": [19870403, 230511, 910237],
+    "budgetUnit": "one exact model configuration and seed; every fold-level fit is counted inside the trial ledger entry"
+  },
+  "iterativeSearch": {
+    "trialTimeoutSeconds": 86400,
+    "engineering": {
+      "maximumRows": 20000,
+      "outerFolds": 3,
+      "predictiveScoresSuppressed": true,
+      "promotionUseProhibited": true
+    },
+    "breadth": {
+      "trialsPerFamily": 8,
+      "outerFolds": 3,
+      "maximumRows": 250000,
+      "coverage": "each family sees every horizon once, both targets, and every factor representation before elimination",
+      "automaticPromotion": {
+        "rankedFamilies": 4,
+        "strongPositiveFoldFraction": 0.75,
+        "strongMeanImprovementAbove": 0.0,
+        "maximumFamilies": 6
+      }
+    },
+    "fullDevelopment": {
+      "trialsPerFamily": 16,
+      "outerFolds": 5,
+      "maximumRows": 1000000,
+      "automaticPromotion": {
+        "meanImprovementAbove": 0.0,
+        "minimumPositiveFolds": 4,
+        "maximumFamilies": 2
+      }
+    },
+    "robustness": {
+      "additionalConfigurationsPerFamily": 32,
+      "seeds": [19870403, 230511, 910237],
+      "outerFolds": 5,
+      "maximumRows": 1000000
+    },
+    "sampling": "when a rung has maximumRows, retain eight equal-duration chronological blocks spaced across the complete development period; preserve every basket member and consecutive five-minute row inside each block",
+    "checkpointPolicy": "write one immutable trial and model bundle before scheduling the next trial; resume only after hash verification",
+    "completionState": "AWAITING_CONFIRMATION_REVIEW"
+  },
+  "validation": {
+    "method": "purged chronological expanding-window development scoring followed by one untouched single-use family confirmation",
+    "primaryLoss": "mean squared future log-return loss",
+    "baselines": ["zero-return", "historical-mean", "persistence", "reversal", "strongest-market-only"],
+    "purgeByHorizon": true,
+    "multiplicity": "Holm over the complete frozen confirmation family"
+  },
+  "developmentPeriod": {
+    "startInclusive": "2020-01-01T00:00:00Z",
+    "endExclusive": "2025-06-01T00:00:00Z",
+    "purpose": "archive-backed purged development scoring and bounded selection"
+  },
+  "confirmation": {
+    "singleUse": true,
+    "minimumCalendarDays": 60,
+    "minimumNonOverlappingTargets": 60,
+    "startInclusive": "2025-06-01T00:00:00Z",
+    "endExclusive": "2026-08-01T00:00:00Z",
+    "purpose": "sealed archive confirmation with sufficient coverage for the seven-day horizon"
+  },
+  "supervision": {
+    "allowed": ["read status", "read journal", "verify hashes", "restart the exact frozen service after a transient interruption"],
+    "prohibited": ["edit research choices", "delete checkpoints", "relax failures", "promote manually", "freeze candidates", "open confirmation"],
+    "escalateOn": ["checksum failure", "checkpoint corruption", "nondeterminism", "repeated OOM or timeout", "mandatory-asset coverage failure", "any request to open confirmation"]
+  },
+  "artifacts": []
+}

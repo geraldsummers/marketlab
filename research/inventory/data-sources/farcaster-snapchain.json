@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "marketlab.data-source-inventory.v1",
+  "id": "farcaster-snapchain",
+  "title": "Farcaster Snapchain",
+  "category": "social",
+  "status": "EXCLUDED",
+  "pointInTimeUse": "None in prospective social program v2.",
+  "implementations": ["social-collector", "theories"],
+  "alphaSpaces": ["social-information"],
+  "limitations": ["V1 was superseded because the required local node was unavailable", "The compiled parent social data requirement still names Farcaster and must not be mistaken for the v2 acquisition lock"],
+  "nextAction": "Keep excluded unless a new program version and stable point-in-time source are approved."
+}
