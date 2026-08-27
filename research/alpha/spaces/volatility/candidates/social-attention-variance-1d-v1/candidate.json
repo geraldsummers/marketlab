@@ -8,17 +8,31 @@
   "mechanism": "Elevated attention identifies information episodes whose volatility persists through the next UTC day.",
   "target": "Next UTC-day realized variance from one-minute Binance returns",
   "horizon": "1 day",
-  "informationSet": ["Attention-complete Bluesky panel", "Recent returns and realized variance", "Calendar controls"],
+  "informationSet": [
+    "Attention-complete Bluesky panel",
+    "Recent returns and realized variance",
+    "Calendar controls"
+  ],
   "primaryBaseline": "Strongest registered market-only model",
   "evidence": [
     {
       "classification": "BLIND_RETROSPECTIVE_VALIDATION",
       "decision": "NOT_FUNCTIONAL",
       "summary": "Blind July improved in 9/10 assets but did not survive multiplicity adjustment: raw p=0.0811, Holm-adjusted p=0.2434.",
-      "sourcePath": "research/decision-log.md"
+      "sourcePath": "research/decision-log.md",
+      "evidenceId": "social-functional-blind-july-2026-08-04"
     }
   ],
-  "frozenLocks": ["research/social-functional-feature.lock.json", "research/social-functional-search.lock.json", "research/social-functional-blind-extension.lock.json"],
-  "touchPoints": ["social-model/trainer.py"],
-  "nextAction": "Keep the opened target rejected; only a new version with fresh outcomes may revisit daily variance."
+  "frozenLocks": [
+    "research/social-functional-feature.lock.json",
+    "research/social-functional-search.lock.json",
+    "research/social-functional-blind-extension.lock.json"
+  ],
+  "touchPoints": [
+    "social-model/trainer.py"
+  ],
+  "nextAction": "Keep the opened target rejected; only a new version with fresh outcomes may revisit daily variance.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
 }

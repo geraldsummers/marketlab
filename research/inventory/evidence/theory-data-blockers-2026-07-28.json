@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v2",
+  "id": "theory-data-blockers-2026-07-28",
+  "candidateIds": [
+    "cross-venue-lead-lag",
+    "funding-basis-carry",
+    "har-realized-volatility",
+    "liquidity-conditioned-reversal",
+    "order-flow-queue-imbalance",
+    "time-series-momentum"
+  ],
+  "classification": "DATA_FEASIBILITY",
+  "decision": "DATA_BLOCKED",
+  "summarySource": "research/theory-exhaustion.md",
+  "summary": "Registered parent mechanisms remain blocked by point-in-time history, universe, synchronization, or execution-state requirements.",
+  "candidateDecisions": [
+    {
+      "candidateId": "cross-venue-lead-lag",
+      "stage": "DATA_BLOCKED",
+      "decision": "DATA_BLOCKED",
+      "current": true
+    },
+    {
+      "candidateId": "funding-basis-carry",
+      "stage": "DATA_BLOCKED",
+      "decision": "DATA_BLOCKED",
+      "current": false
+    },
+    {
+      "candidateId": "har-realized-volatility",
+      "stage": "DATA_BLOCKED",
+      "decision": "DATA_BLOCKED",
+      "current": true
+    },
+    {
+      "candidateId": "liquidity-conditioned-reversal",
+      "stage": "DATA_BLOCKED",
+      "decision": "DATA_BLOCKED",
+      "current": true
+    },
+    {
+      "candidateId": "order-flow-queue-imbalance",
+      "stage": "DATA_BLOCKED",
+      "decision": "DATA_BLOCKED",
+      "current": true
+    },
+    {
+      "candidateId": "time-series-momentum",
+      "stage": "DATA_BLOCKED",
+      "decision": "DATA_BLOCKED",
+      "current": true
+    }
+  ],
+  "outcomesOpened": false,
+  "openedOutcomes": [],
+  "artifacts": []
+}

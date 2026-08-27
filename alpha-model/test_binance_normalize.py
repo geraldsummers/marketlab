@@ -102,6 +102,31 @@ class BinanceNormalizeTest(unittest.TestCase):
             self.assertEqual(1735776000000, daily[0]["observedAtEpochMillis"])
             self.assertEqual(2, daily[0]["sourceRows"])
 
+    def test_unordered_normalized_rows_are_stablely_sorted_for_observations(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            normalized = root / "bars.jsonl"
+            rows = [
+                {
+                    "symbol": "BTC", "eventTimeEpochMillis": 1735732800000,
+                    "availableTimeEpochMillis": 1735776000000, "quoteVolume": 306.0,
+                },
+                {
+                    "symbol": "BTC", "eventTimeEpochMillis": 1735689600000,
+                    "availableTimeEpochMillis": 1735732800000, "quoteVolume": 202.0,
+                },
+            ]
+            normalized.write_text("".join(json.dumps(row) + "\n" for row in rows))
+            normalized.with_suffix(".jsonl.manifest.json").write_text(json.dumps({
+                "schemaVersion": "marketlab.binance-normalized-klines.v1",
+                "outputSha256": sha256_file(normalized),
+            }))
+            observations = root / "observations.jsonl"
+            aggregate = build_daily_universe_observations(normalized, observations)
+            daily = [json.loads(line) for line in observations.read_text().splitlines()]
+            self.assertEqual(1, aggregate["rows"])
+            self.assertEqual(508.0, daily[0]["quoteNotional"])
+
     def test_daily_observations_reject_changed_normalized_bytes(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

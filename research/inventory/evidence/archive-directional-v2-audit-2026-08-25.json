@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v2",
+  "id": "archive-directional-v2-audit-2026-08-25",
+  "candidateIds": [
+    "market-state-direction-v1",
+    "market-transmission-direction-v1",
+    "trade-flow-direction-v1",
+    "cross-asset-divergence-direction-v1"
+  ],
+  "classification": "ARCHIVE_DEVELOPMENT_EVIDENCE_AUDIT",
+  "decision": "INSUFFICIENT_EVIDENCE",
+  "summarySource": "research/decision-log.md",
+  "summary": "Opened V2 development was suspended after immutable audit found incomplete family coverage and insufficient dependence-aware evidence.",
+  "candidateDecisions": [
+    {
+      "candidateId": "market-state-direction-v1",
+      "stage": "INCONCLUSIVE",
+      "decision": "INSUFFICIENT_EVIDENCE",
+      "current": true
+    },
+    {
+      "candidateId": "market-transmission-direction-v1",
+      "stage": "INCONCLUSIVE",
+      "decision": "INSUFFICIENT_EVIDENCE",
+      "current": true
+    },
+    {
+      "candidateId": "trade-flow-direction-v1",
+      "stage": "INCONCLUSIVE",
+      "decision": "INSUFFICIENT_EVIDENCE",
+      "current": true
+    },
+    {
+      "candidateId": "cross-asset-divergence-direction-v1",
+      "stage": "INCONCLUSIVE",
+      "decision": "INSUFFICIENT_EVIDENCE",
+      "current": true
+    }
+  ],
+  "outcomesOpened": true,
+  "openedOutcomes": [
+    {
+      "id": "archive-directional-v2-development",
+      "candidateIds": [
+        "market-state-direction-v1",
+        "market-transmission-direction-v1",
+        "trade-flow-direction-v1",
+        "cross-asset-divergence-direction-v1"
+      ],
+      "venue": "binance",
+      "target": "archive directional V2 development target family",
+      "periodStatus": "EXACT",
+      "startInclusive": "2020-01-01T00:00:00Z",
+      "endExclusive": "2025-06-01T00:00:00Z",
+      "reuseStatus": "OPENED_NOT_CONFIRMATION_ELIGIBLE"
+    }
+  ],
+  "artifacts": [
+    {
+      "role": "audit",
+      "sha256": "a07fbec0156327a68b2f9c457420be949fd6287d4fbfd1dc10bc11ceacd45117",
+      "location": "/mnt/media/marketlab/artifacts/archive-alpha-v2/evidence-audit-v3/audit.json",
+      "verification": "REMOTE_FILE"
+    },
+    {
+      "role": "ledger-manifest",
+      "sha256": "6a04f1e6ff99a820a90708558055f5e2918f29fd23828007839e549ff84a0d44",
+      "location": "/mnt/media/marketlab/artifacts/archive-alpha-v2/evidence-audit-v3/ledger-manifest.json",
+      "verification": "REMOTE_FILE"
+    }
+  ]
+}

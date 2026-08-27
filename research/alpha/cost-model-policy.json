@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "marketlab.cost-model-policy.v1",
+  "missingDataPolicy": "FAIL_CLOSED",
+  "levels": [
+    {
+      "id": "FORECAST_ONLY",
+      "permittedClaims": [
+        "predictive-signal"
+      ],
+      "requirements": [
+        "Report forecast loss, calibration, dependence-aware inference, coverage, and strongest baselines.",
+        "Do not report net return, tradability, capacity, paper eligibility, or live eligibility."
+      ]
+    },
+    {
+      "id": "STRESSED_HISTORICAL_REPLAY",
+      "permittedClaims": [
+        "exploratory-strategy-replay"
+      ],
+      "requirements": [
+        "Freeze candidate-specific cost values before evaluation; no universal basis-point default exists.",
+        "Evaluate registered base cost and exactly doubled cost.",
+        "Use actual funding events and actual borrow when those legs apply.",
+        "Label fixed spread or slippage assumptions as stresses, not observed fills.",
+        "Missing historical quotes, latency, or capacity prevents a tradability claim."
+      ]
+    },
+    {
+      "id": "OBSERVED_EXECUTION_REPLAY",
+      "permittedClaims": [
+        "tradable-signal",
+        "paper-eligibility-input"
+      ],
+      "requirements": [
+        "Use the first causally available historical book after frozen execution latency.",
+        "Sweep observed levels on the correct side and retain partial and failed fills.",
+        "Apply point-in-time fee, funding, and borrow rules to every leg.",
+        "Freeze displayed-depth participation and reject orders above it.",
+        "Report turnover, coverage, capacity, concentration, drawdown, and base and doubled costs."
+      ]
+    }
+  ],
+  "paperPromotionRequirements": [
+    "OBSERVED_EXECUTION_REPLAY",
+    "doubled-cost survival",
+    "all registered quality and risk gates"
+  ],
+  "auditArtifact": {
+    "location": "/mnt/media/marketlab/artifacts/next-program-audits/cost-model-audit-20260827/audit.json",
+    "sha256": "62c435fd77129e92db8f1a2307cdc9a31e9395266e4a7bca6330b16f73b1aea9"
+  },
+  "paperTradingAuthorized": false,
+  "liveTradingAuthorized": false
+}

@@ -1,24 +1,81 @@
 {
-  "schemaVersion": "marketlab.alpha-space.v1",
+  "schemaVersion": "marketlab.alpha-space.v2",
   "id": "cross-venue",
   "title": "Cross-venue price discovery",
   "purpose": "Measure synchronized venue leadership, lagged adjustment, liquidity migration, and executable target-venue response.",
   "state": "DATA_BLOCKED",
-  "dependencies": ["microstructure", "execution-portfolio"],
+  "dependencies": [
+    "microstructure",
+    "execution-portfolio"
+  ],
   "readyWork": [
     {
       "id": "cross-venue-capture",
       "status": "READY",
       "kind": "infrastructure",
       "summary": "Implement synchronized Binance and Hyperliquid event capture with measured clock skew and common instrument semantics.",
-      "blockedBy": []
+      "blockedBy": [],
+      "researchModes": [
+        "PROSPECTIVE"
+      ],
+      "externalBlockers": [],
+      "priority": "P2",
+      "candidateIds": [],
+      "deliverables": [
+        "Durable infrastructure artifact for cross-venue-capture",
+        "Evidence-linked task handoff"
+      ],
+      "acceptanceCriteria": [
+        "Implement synchronized Binance and Hyperliquid event capture with measured clock skew and common instrument semantics.",
+        "No epistemic stage is promoted without linked evidence"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/cross-venue/"
+      ],
+      "resourceClass": "DATA_IO",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 1,
+        "maxTrials": 0,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": []
     },
     {
       "id": "cross-venue-lead-lag-confirmation",
       "status": "BLOCKED",
       "kind": "evaluation",
       "summary": "Evaluate whether source-venue innovations predict an executable Hyperliquid response.",
-      "blockedBy": ["synchronized event capture has not accumulated 90 quality-valid days"]
+      "blockedBy": [],
+      "researchModes": [
+        "PROSPECTIVE"
+      ],
+      "externalBlockers": [
+        "synchronized event capture has not accumulated 90 quality-valid days"
+      ],
+      "priority": "P2",
+      "candidateIds": [],
+      "deliverables": [
+        "Durable evaluation artifact for cross-venue-lead-lag-confirmation",
+        "Evidence-linked task handoff"
+      ],
+      "acceptanceCriteria": [
+        "Evaluate whether source-venue innovations predict an executable Hyperliquid response.",
+        "No epistemic stage is promoted without linked evidence"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/cross-venue/"
+      ],
+      "resourceClass": "CPU_MODEL",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 2,
+        "maxTrials": 16,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": []
     }
   ]
 }

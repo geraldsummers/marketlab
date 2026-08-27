@@ -1,12 +1,42 @@
 {
-  "schemaVersion": "marketlab.evidence-inventory.v1",
+  "schemaVersion": "marketlab.evidence-inventory.v2",
   "id": "funding-next-hour-diagnostic-2026-07-28",
-  "candidateIds": ["funding-next-hour-return-diagnostic-v1"],
+  "candidateIds": [
+    "funding-next-hour-return-diagnostic-v1"
+  ],
   "classification": "RETROSPECTIVE_DIAGNOSTIC",
   "decision": "INCONCLUSIVE",
   "runId": null,
   "summarySource": "research/theory-exhaustion.md",
   "artifacts": [
-    {"role":"report","sha256":"c9f3fb2bdb73612892ce0932cc2e859e8fc68e57520ae03611914d2dad221947","location":"research-cli content-addressed report store"}
+    {
+      "role": "report",
+      "sha256": "c9f3fb2bdb73612892ce0932cc2e859e8fc68e57520ae03611914d2dad221947",
+      "location": "research-cli content-addressed report store",
+      "verification": "CONTENT_ADDRESS_ONLY"
+    }
+  ],
+  "summary": "Funding alone underperformed next-hour return controls and did not identify a carry trade.",
+  "candidateDecisions": [
+    {
+      "candidateId": "funding-next-hour-return-diagnostic-v1",
+      "stage": "INCONCLUSIVE",
+      "decision": "INCONCLUSIVE",
+      "current": true
+    }
+  ],
+  "outcomesOpened": true,
+  "openedOutcomes": [
+    {
+      "id": "funding-next-hour-diagnostic-2026-07-28-opened-outcomes",
+      "candidateIds": [
+        "funding-next-hour-return-diagnostic-v1"
+      ],
+      "venue": "hyperliquid",
+      "target": "BTC next-hour return",
+      "periodStatus": "UNKNOWN",
+      "unknownReason": "Exact retrospective boundaries remain in its content-addressed report.",
+      "reuseStatus": "OPENED_NOT_CONFIRMATION_ELIGIBLE"
+    }
   ]
 }

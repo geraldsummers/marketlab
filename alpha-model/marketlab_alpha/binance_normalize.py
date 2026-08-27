@@ -71,11 +71,18 @@ def build_daily_universe_observations(normalized_path: Path, output: Path) -> di
         }
 
     def rows() -> Any:
+        sorted_rows = sorted(
+            iter_jsonl(normalized_path),
+            key=lambda row: (
+                str(row.get("symbol", "")).strip().upper(),
+                int(row["eventTimeEpochMillis"]),
+            ),
+        )
         nonlocal row_count
         current_key: tuple[str, str] | None = None
         aggregate: dict[str, Any] | None = None
         prior_order: tuple[str, int] | None = None
-        for line_number, row in enumerate(iter_jsonl(normalized_path), start=1):
+        for line_number, row in enumerate(sorted_rows, start=1):
             symbol = str(row.get("symbol", "")).strip().upper()
             if not symbol:
                 raise ValueError(f"normalized row {line_number} has no symbol")

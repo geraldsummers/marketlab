@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v2",
+  "id": "cost-model-audit-2026-08-27",
+  "candidateIds": [
+    "binance-market-state-direction-v3",
+    "funding-basis-carry",
+    "funding-next-hour-return-diagnostic-v1",
+    "social-variance-defensive-exposure-v1"
+  ],
+  "classification": "COST_MODEL_AUDIT",
+  "decision": "COST_CONTRACT_REGISTERED",
+  "summarySource": "research/decision-log.md",
+  "summary": "Existing evaluators are classified as forecast-only, stressed historical replay, or reusable observed-book components; a shared fail-closed three-level cost contract is now registered.",
+  "candidateDecisions": [
+    {
+      "candidateId": "binance-market-state-direction-v3",
+      "stage": "REJECTED",
+      "decision": "UNCHANGED_FORECAST_ONLY",
+      "current": false
+    },
+    {
+      "candidateId": "funding-basis-carry",
+      "stage": "DATA_BLOCKED",
+      "decision": "UNCHANGED_EXECUTION_DATA_BLOCKED",
+      "current": false
+    },
+    {
+      "candidateId": "funding-next-hour-return-diagnostic-v1",
+      "stage": "INCONCLUSIVE",
+      "decision": "UNCHANGED_FORECAST_DIAGNOSTIC",
+      "current": false
+    },
+    {
+      "candidateId": "social-variance-defensive-exposure-v1",
+      "stage": "REJECTED",
+      "decision": "UNCHANGED_STRESSED_REPLAY_REJECTION",
+      "current": false
+    }
+  ],
+  "outcomesOpened": false,
+  "openedOutcomes": [],
+  "artifacts": [
+    {
+      "role": "cost-model-audit",
+      "sha256": "62c435fd77129e92db8f1a2307cdc9a31e9395266e4a7bca6330b16f73b1aea9",
+      "location": "/mnt/media/marketlab/artifacts/next-program-audits/cost-model-audit-20260827/audit.json",
+      "verification": "REMOTE_FILE"
+    }
+  ]
+}

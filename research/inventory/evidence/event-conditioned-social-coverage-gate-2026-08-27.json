@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v2",
+  "id": "event-conditioned-social-coverage-gate-2026-08-27",
+  "candidateIds": [
+    "event-conditioned-social-direction-v1"
+  ],
+  "classification": "AVAILABILITY_BIASED_RETROSPECTIVE_DISCOVERY",
+  "decision": "DATA_BLOCKED",
+  "summarySource": "research/decision-log.md",
+  "summary": "The eight-variant family stopped before fitting because disagreement-change failed the preregistered acted-row coverage gate; no model variant was fit and prospective activation remains false.",
+  "candidateDecisions": [
+    {
+      "candidateId": "event-conditioned-social-direction-v1",
+      "stage": "DATA_BLOCKED",
+      "decision": "DATA_BLOCKED",
+      "current": true
+    }
+  ],
+  "outcomesOpened": true,
+  "openedOutcomes": [
+    {
+      "id": "event-conditioned-social-v1-contaminated-development",
+      "candidateIds": [
+        "event-conditioned-social-direction-v1"
+      ],
+      "venue": "binance",
+      "target": "one-hour and four-hour outright log returns",
+      "periodStatus": "EXACT",
+      "startInclusive": "2025-11-03T00:00:00Z",
+      "endExclusive": "2026-07-01T00:00:00Z",
+      "reuseStatus": "OPENED_NOT_CONFIRMATION_ELIGIBLE"
+    }
+  ],
+  "artifacts": [
+    {
+      "role": "coverage-gate-report",
+      "sha256": "0f140ad4120b4bc6f1331c01009df89a6fa1bdc62e57708c48b718662899bf5b",
+      "location": "/mnt/media/marketlab/artifacts/event-conditioned-social-direction-v1-20260827-run1/report.json",
+      "verification": "REMOTE_FILE"
+    },
+    {
+      "role": "materialized-event-panel",
+      "sha256": "d4509e2541e46559f0685a416f141eaa595b9360cd15f4018f1837c2785d3bbb",
+      "location": "/mnt/media/marketlab/artifacts/event-conditioned-social-direction-v1-20260827-run1/panel.jsonl",
+      "verification": "REMOTE_FILE"
+    }
+  ]
+}

@@ -5,8 +5,21 @@
   "category": "market-and-cross-venue",
   "status": "PARTIAL",
   "pointInTimeUse": "Official historical USDT-M minute archives are used for retrospective social labels.",
-  "implementations": ["social-backfill"],
-  "alphaSpaces": ["directional-returns", "volatility", "cross-venue", "relative-value"],
-  "limitations": ["Cross-venue event capture with measured clock skew is not implemented", "Historical labels are cross-venue for Hyperliquid claims"],
-  "nextAction": "Implement synchronized event capture before registering lead-lag confirmation."
+  "implementations": [
+    "social-backfill"
+  ],
+  "alphaSpaces": [
+    "directional-returns",
+    "volatility",
+    "cross-venue",
+    "relative-value",
+    "derivatives-carry"
+  ],
+  "limitations": [
+    "Cross-venue event capture with measured clock skew is not implemented",
+    "Historical labels are cross-venue for Hyperliquid claims",
+    "Official monthly futures archives provide funding, mark, index, premium, perpetual prices, and futures bookTicker, but spot monthly archives provide no top-of-book or book snapshots",
+    "Historical exchange-rule versions, fee schedules, and borrow availability are not preserved in the official monthly prefixes"
+  ],
+  "nextAction": "Use official checksum-verified archives for basis research only; keep executable carry DATA_BLOCKED until historical spot quotes, rules, fees, and borrow vintages are available."
 }

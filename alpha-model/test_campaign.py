@@ -11,13 +11,23 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from marketlab_alpha.artifact_commands import freeze_candidate, register_archives, verify_frozen_inputs
-from marketlab_alpha.artifacts import iter_jsonl, read_json, sha256_file, write_once_json, write_once_records
+from marketlab_alpha.artifacts import (
+    iter_jsonl,
+    read_json,
+    sha256_file,
+    write_once_json,
+    write_once_records,
+)
 from marketlab_alpha.contracts import FAMILY_SCHEMA, RESULT_SCHEMA, canonical_sha256
 from marketlab_alpha.panel import materialize_panel, temporal_windows
 from marketlab_alpha.search import (
+    _AdaptiveTrialRunner,
+    _adaptive_trial_workers,
+    _cgroup_working_set_bytes,
     _clustered_hac_p_value,
     _breadth_cells,
     _confirmation_marker_root,
+    _checkpointed_trial,
     _rows_with_targets_inside_period,
     _stage_a_cells,
     chronological_folds,
@@ -187,6 +197,90 @@ class PanelTest(unittest.TestCase):
 
 
 class SearchPolicyTest(unittest.TestCase):
+    def test_disposable_step_checkpoints_once_and_replays_without_bundle_hashing(self):
+        from unittest.mock import patch
+        import marketlab_alpha.search as search_module
+
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary)
+            manifest = {
+                "campaignId": "step-v1", "candidateId": "candidate-v1",
+                "searchDimensions": {"basketSizes": [4]},
+            }
+            arguments = {
+                "output_directory": output, "manifest": manifest, "rows": [],
+                "features": ["flow"], "horizon": "1h", "target": "outright-return",
+                "factor": "none", "model_id": "ridge", "configuration": {"alpha": 1.0},
+                "seed": 7, "outer_folds": 2, "rung": "BREADTH",
+                "trial_id": "candidate-v1-ridge-0", "mechanism": "trade-flow",
+            }
+            metrics = {
+                "meanOuterImprovement": 0.1, "positiveOuterFolds": 2, "fitCount": 4,
+                "outerFoldImprovements": [0.1, 0.1], "trainingMetadata": {},
+            }
+            prior_active = search_module._SEARCH_STEP_ACTIVE
+            prior_remaining = search_module._SEARCH_STEP_REMAINING
+            try:
+                search_module._SEARCH_STEP_ACTIVE = True
+                search_module._SEARCH_STEP_REMAINING = 1
+                with patch.object(search_module, "validate_trial_ledger_entry"), patch.object(
+                    search_module, "_evaluate_with_market_baseline", return_value=(metrics, {"model": "test"})
+                ):
+                    trial, _ = search_module._checkpointed_trial(**arguments)
+                    self.assertEqual("COMPLETED", trial["status"])
+                    with patch.object(search_module, "sha256_file", side_effect=AssertionError("replay hashed bundle")):
+                        replay, bundle = search_module._checkpointed_trial(**arguments)
+                    self.assertEqual(trial["trialId"], replay["trialId"])
+                    self.assertIsNone(bundle)
+                    blocked = dict(arguments, trial_id="candidate-v1-ridge-1")
+                    with self.assertRaises(search_module._SearchStepBoundary):
+                        search_module._checkpointed_trial(**blocked)
+            finally:
+                search_module._SEARCH_STEP_ACTIVE = prior_active
+                search_module._SEARCH_STEP_REMAINING = prior_remaining
+
+    def test_trial_plans_are_deterministic_and_include_promotion_sources(self):
+        import marketlab_alpha.search as search_module
+
+        with tempfile.TemporaryDirectory() as temporary:
+            task = {
+                "output_directory": Path(temporary),
+                "manifest": {"campaignId": "plan-v1", "candidateId": "candidate-v1"},
+                "trial_id": "trial-v1", "configuration": {"alpha": 1.0}, "seed": 7,
+                "horizon": "1h", "target": "outright-return", "factor": "none",
+                "row_set": "full", "rung": "FULL_DEVELOPMENT",
+                "promotion_source_hashes": ["a" * 64],
+            }
+            first = search_module._write_trial_plan("ridge", [task])
+            second = search_module._write_trial_plan("ridge", [task])
+            self.assertEqual(first, second)
+            plan = read_json(first)
+            self.assertEqual(["a" * 64], plan["orderedTasks"][0]["promotionSourceTrialSha256s"])
+
+    def test_adaptive_workers_are_family_and_memory_bounded(self):
+        gib = 1024**3
+        self.assertEqual(
+            16 * gib,
+            _cgroup_working_set_bytes(39 * gib, f"anon {16 * gib}\ninactive_file {23 * gib}\n"),
+        )
+        roomy = (8 * gib, 49 * gib)
+        pressured = (32 * gib, 49 * gib)
+        self.assertEqual(2, _adaptive_trial_workers(
+            "elastic_net", 3, 2, memory_usage=roomy,
+        ))
+        self.assertEqual(1, _adaptive_trial_workers(
+            "elastic_net", 3, 2, memory_usage=pressured,
+        ))
+        self.assertEqual(2, _adaptive_trial_workers(
+            "extra_trees", 3, 2, memory_usage=roomy,
+        ))
+        self.assertEqual(1, _adaptive_trial_workers(
+            "extra_trees", 3, 2, memory_usage=pressured,
+        ))
+        self.assertEqual(1, _adaptive_trial_workers(
+            "gpu_xgboost", 3, 2, memory_usage=roomy,
+        ))
+
     def test_stage_a_breadth_covers_every_horizon_per_model_family(self):
         campaign = read_json(
             Path(__file__).parents[1] / "research/alpha/campaigns/archive-directional-gpu-v1.lock.json"
@@ -283,6 +377,101 @@ class SearchPolicyTest(unittest.TestCase):
     "development search requires the pinned model-worker dependencies",
 )
 class DevelopmentSearchTest(unittest.TestCase):
+    def test_adaptive_pool_matches_serial_trial_metrics_and_model_hashes(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            start = 1_577_836_800_000
+            rows = []
+            for step in range(120):
+                flow = math.sin(step * 0.31) * 0.02
+                for symbol_index, symbol in enumerate(("BTC", "ETH")):
+                    value = math.sin(step / 7.0) * 0.01 + symbol_index * 0.0001
+                    rows.append({
+                        "rowId": f"{symbol}:{start + step * 3_600_000}",
+                        "decisionTimeEpochMillis": start + step * 3_600_000,
+                        "symbol": symbol,
+                        "features": {
+                            "latest_return": value,
+                            "mean_return": value * 0.5,
+                            "realized_variance": value * value + 1e-8,
+                            "persistence_return_1h": value,
+                            "flow_signal": flow,
+                        },
+                        "targets": {"1h": flow * 0.8},
+                    })
+            dimensions = {
+                "assets": ["dynamic-basket"], "basketSizes": [2],
+                "factorRepresentations": ["none"], "horizons": ["1h"],
+                "targets": ["outright-return"], "informationSets": ["trade-flow"],
+                "modelFamilies": ["ridge"], "variants": ["unrestricted-sign"],
+            }
+            manifest = {
+                "schemaVersion": "marketlab.alpha-candidate-search-manifest.v1",
+                "campaignId": "adaptive-equivalence-v1", "candidateId": "flow-v1",
+                "mechanism": "trade-flow", "stage": "EXPLORATORY",
+                "createdAt": "2026-08-15T00:00:00Z",
+                "userConstraints": ["test"], "designConventions": ["test"],
+                "empiricalClaims": ["test"], "searchDimensions": dimensions,
+                "maximumTrials": 2, "trialTimeoutSeconds": 60,
+                "gpuIdentity": {"available": False, "unavailableReason": "test", "determinismNotes": []},
+                "openedOutcomePeriods": [],
+                "limitations": {"survivorship": "test", "sourceTransfer": "test"},
+                "artifacts": [],
+            }
+
+            def tasks(output: Path) -> list[dict[str, object]]:
+                return [{
+                    "row_set": "full", "output_directory": output,
+                    "manifest": manifest, "features": ["flow_signal"],
+                    "horizon": "1h", "target": "outright-return", "factor": "none",
+                    "model_id": "ridge", "configuration": {"alpha": 1.0},
+                    "seed": seed, "outer_folds": 2, "rung": "ROBUSTNESS",
+                    "trial_id": f"flow-v1-2-ridge-robust-0-seed-{seed}",
+                    "mechanism": "trade-flow", "load_bundle": True,
+                } for seed in (7, 11)]
+
+            adaptive = _AdaptiveTrialRunner(
+                rows, rows, worker_ceiling=2, memory_usage=(1 * 1024**3, 49 * 1024**3),
+            )
+            adaptive_results = list(adaptive.run("ridge", tasks(root / "adaptive")))
+            self.assertEqual(2, adaptive.last_worker_count)
+            adaptive.close()
+            serial = _AdaptiveTrialRunner(rows, rows, worker_ceiling=1)
+            serial_results = list(serial.run("ridge", tasks(root / "serial")))
+            serial.close()
+
+            for (serial_trial, serial_bundle), (adaptive_trial, adaptive_bundle) in zip(
+                serial_results, adaptive_results
+            ):
+                self.assertEqual("COMPLETED", serial_trial["status"])
+                self.assertEqual(serial_trial["status"], adaptive_trial["status"])
+                self.assertEqual(serial_trial["metrics"], adaptive_trial["metrics"])
+                self.assertEqual(
+                    serial_trial["outerFoldImprovements"],
+                    adaptive_trial["outerFoldImprovements"],
+                )
+                for serial_model_bundle, adaptive_model_bundle in (
+                    (serial_bundle, adaptive_bundle),
+                    (serial_bundle["marketBaseline"], adaptive_bundle["marketBaseline"]),
+                ):
+                    serial_metadata = {
+                        key: value for key, value in serial_model_bundle.items()
+                        if key not in {"estimator", "marketBaseline"}
+                    }
+                    adaptive_metadata = {
+                        key: value for key, value in adaptive_model_bundle.items()
+                        if key not in {"estimator", "marketBaseline"}
+                    }
+                    self.assertEqual(serial_metadata, adaptive_metadata)
+                    serial_estimator = serial_model_bundle["estimator"]
+                    adaptive_estimator = adaptive_model_bundle["estimator"]
+                    feature_count = int(serial_estimator.n_features_in_)
+                    probe = [[0.0] * feature_count, [0.25] * feature_count]
+                    self.assertEqual(
+                        serial_estimator.predict(probe).tolist(),
+                        adaptive_estimator.predict(probe).tolist(),
+                    )
+
     def test_nested_search_emits_ledger_and_frozen_model_candidate(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

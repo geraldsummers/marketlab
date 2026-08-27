@@ -290,6 +290,18 @@ def search(args: argparse.Namespace) -> None:
     }))
 
 
+def search_step(args: argparse.Namespace) -> None:
+    from marketlab_alpha.search import run_development_search_step
+
+    result = run_development_search_step(
+        panel_path=Path(args.panel),
+        lock_path=Path(args.lock),
+        output_directory=Path(args.output),
+        confirmation_ledger_root=Path(args.confirmation_ledger_root),
+    )
+    print(json.dumps(result, sort_keys=True))
+
+
 def freeze(args: argparse.Namespace) -> None:
     value = freeze_candidate(
         Path(args.search),
@@ -455,6 +467,13 @@ def parser() -> argparse.ArgumentParser:
     command.add_argument("--maximum-trials", type=int)
     command.add_argument("--test-mode", action="store_true")
     command.set_defaults(handler=search)
+
+    command = commands.add_parser("search-step", help="run at most one immutable iterative-search trial")
+    command.add_argument("--panel", required=True)
+    command.add_argument("--lock", required=True)
+    command.add_argument("--output", required=True)
+    command.add_argument("--confirmation-ledger-root", required=True)
+    command.set_defaults(handler=search_step)
 
     command = commands.add_parser("freeze", help="freeze one selected development candidate")
     command.add_argument("--search", required=True)

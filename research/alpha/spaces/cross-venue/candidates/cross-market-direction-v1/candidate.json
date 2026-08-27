@@ -8,10 +8,18 @@
   "mechanism": "Markets can lead in different states; venue leadership, sign, and persistence are not presumed.",
   "target": "Target-market outright or factor-residual log return.",
   "horizon": "Locked campaign horizon grid, limited by timestamp comparability.",
-  "informationSet": ["Synchronized point-in-time source and target market observations"],
+  "informationSet": [
+    "Synchronized point-in-time source and target market observations"
+  ],
   "primaryBaseline": "Strongest target-market-only model",
   "evidence": [],
   "frozenLocks": [],
-  "touchPoints": ["alpha-model", "research/alpha/campaigns/archive-directional-gpu-v1.lock.json"],
-  "nextAction": "Audit archive clocks and instrument semantics before permitting a lead-lag claim."
+  "touchPoints": [
+    "alpha-model",
+    "research/alpha/campaigns/archive-directional-gpu-v1.lock.json"
+  ],
+  "nextAction": "Audit archive clocks and instrument semantics before permitting a lead-lag claim.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
 }

@@ -8,17 +8,35 @@
   "mechanism": "Attention intensity proxies information arrival and heterogeneous reaction, increasing near-term price variation without determining direction.",
   "target": "Next one-hour realized variance from one-minute Binance returns",
   "horizon": "1 hour",
-  "informationSet": ["Attention-complete Bluesky panel", "Recent asset and BTC returns", "Recent realized variance", "Calendar controls"],
+  "informationSet": [
+    "Attention-complete Bluesky panel",
+    "Recent asset and BTC returns",
+    "Recent realized variance",
+    "Calendar controls"
+  ],
   "primaryBaseline": "Strongest registered market-only model",
   "evidence": [
     {
       "classification": "BLIND_RETROSPECTIVE_VALIDATION",
       "decision": "ENGINEERING_FUNCTIONAL",
       "summary": "Blind July QLIKE-loss improvement was 0.027668; all 10 assets improved and Holm-adjusted p=0.00001183.",
-      "sourcePath": "research/decision-log.md"
+      "sourcePath": "research/decision-log.md",
+      "evidenceId": "social-functional-blind-july-2026-08-04"
     }
   ],
-  "frozenLocks": ["research/social-functional-feature.lock.json", "research/social-functional-search.lock.json", "research/social-functional-blind-extension.lock.json", "research/social-functional-prospective.lock.json"],
-  "touchPoints": ["social-model/trainer.py", "social-backfill/src/main/kotlin/dev/marketlab/backfill/FunctionalFeatureMaterializer.kt"],
-  "nextAction": "Implement pre-outcome prospective shadow publication and sealed outcome evaluation without modifying the frozen artifact."
+  "frozenLocks": [
+    "research/social-functional-feature.lock.json",
+    "research/social-functional-search.lock.json",
+    "research/social-functional-blind-extension.lock.json",
+    "research/social-functional-prospective.lock.json"
+  ],
+  "touchPoints": [
+    "social-model/trainer.py",
+    "social-backfill/src/main/kotlin/dev/marketlab/backfill/FunctionalFeatureMaterializer.kt"
+  ],
+  "nextAction": "Implement pre-outcome prospective shadow publication and sealed outcome evaluation without modifying the frozen artifact.",
+  "researchModes": [
+    "HISTORICAL",
+    "PROSPECTIVE"
+  ]
 }

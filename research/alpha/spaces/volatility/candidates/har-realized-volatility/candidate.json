@@ -8,17 +8,26 @@
   "mechanism": "Heterogeneous trading horizons produce a persistent volatility cascade.",
   "target": "Next-day realized variance",
   "horizon": "1 day",
-  "informationSet": ["730 days of five-minute returns", "Point-in-time eligible universe"],
+  "informationSet": [
+    "730 days of five-minute returns",
+    "Point-in-time eligible universe"
+  ],
   "primaryBaseline": "Historical-mean and persistence variance controls",
   "evidence": [
     {
       "classification": "DATA_FEASIBILITY",
       "decision": "DATA_BLOCKED",
       "summary": "The rolling Hyperliquid REST window cannot supply 730 days of five-minute candles or historical universe membership.",
-      "sourcePath": "research/theory-exhaustion.md"
+      "sourcePath": "research/theory-exhaustion.md",
+      "evidenceId": "theory-data-blockers-2026-07-28"
     }
   ],
   "frozenLocks": [],
-  "touchPoints": ["theories/src/main/kotlin/dev/marketlab/theories/AcademicTheoryRegistry.kt"],
-  "nextAction": "Locate a provenance-preserving five-minute archive with historical universe membership; do not substitute coarse candles into this parent plan."
+  "touchPoints": [
+    "theories/src/main/kotlin/dev/marketlab/theories/AcademicTheoryRegistry.kt"
+  ],
+  "nextAction": "Locate a provenance-preserving five-minute archive with historical universe membership; do not substitute coarse candles into this parent plan.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
 }

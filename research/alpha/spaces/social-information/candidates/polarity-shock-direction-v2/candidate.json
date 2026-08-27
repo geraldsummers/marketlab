@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "polarity-shock-direction-v2",
+  "spaceId": "social-information",
+  "title": "Attention-gated polarity surprise direction V2",
+  "stage": "REJECTED",
+  "claim": "During asset-specific social-attention shocks, lagged polarity surprise improves one-hour or four-hour outright return forecasts over market-only, polarity-only, and attention-state-only baselines; outside the shock state the model abstains.",
+  "mechanism": "Abnormal attention identifies discrete public information arrival, while polarity relative to the asset's trailing social baseline supplies sign. Fragmented diffusion may leave a short-lived directional response even though unconditional fifteen-minute polarity failed.",
+  "target": "One-hour and four-hour outright log returns for the registered ten-asset Binance USDT perpetual discovery panel, followed only after a gated freeze by a separately sealed Hyperliquid-target prospective confirmation.",
+  "horizon": "1h and 4h from an hourly UTC decision clock.",
+  "informationSet": [
+    "Prior completed-hour Bluesky messages classified by the frozen sentiment model",
+    "Polarity surprise relative to the preceding 720 completed hours",
+    "Prior completed-hour attention shock relative to the preceding 720 completed hours",
+    "Point-in-time market returns, realized variance, calendar controls, and symbol effects"
+  ],
+  "primaryBaseline": "The strongest zero, historical-mean, market-only, polarity-only, or attention-state-only baseline.",
+  "evidence": [
+    {
+      "classification": "PROGRAM_REGISTRATION",
+      "decision": "DATA_FEASIBILITY",
+      "summary": "Registered a materially distinct polarity-only family after V1 disagreement coverage failed. No target-bearing row or outcome was read while writing this contract.",
+      "sourcePath": "research/decision-log.md",
+      "evidenceId": "polarity-shock-direction-v2-registration-2026-08-27"
+    },
+    {
+      "classification": "AVAILABILITY_BIASED_RETROSPECTIVE_DISCOVERY",
+      "decision": "REJECTED",
+      "summary": "All four registered variants worsened forecast loss in every chronological fold. Positive-fold count was zero for every variant; no freeze or prospective activation was earned.",
+      "artifactPath": "/mnt/media/marketlab/artifacts/polarity-shock-direction-v2-20260827-run1/report.json",
+      "artifactSha256": "67a5ce9d16f07661f210132cac4c26eb7a24677210ce56c3325c813154f55c51",
+      "sourcePath": "research/decision-log.md",
+      "evidenceId": "polarity-shock-direction-v2-development-2026-08-27"
+    }
+  ],
+  "frozenLocks": [],
+  "touchPoints": [
+    "social-model",
+    "research/source-policy.md"
+  ],
+  "nextAction": "Preserve this rejection. Do not tune polarity thresholds, horizons, estimators, or subgroups on the consumed period; return to a materially different information mechanism.",
+  "researchModes": [
+    "HISTORICAL"
+  ],
+  "dataBiases": [
+    "AVAILABILITY_TIMESTAMP_PROXY",
+    "OPENED_OUTCOMES",
+    "SURVIVOR_UNIVERSE"
+  ],
+  "promotionCeiling": "EXPLORATORY",
+  "openedOutcomeReuse": "DISCOVERY_ONLY",
+  "searchBudget": {
+    "primaryVariants": 4,
+    "horizons": [
+      "1h",
+      "4h"
+    ],
+    "signedFeatures": [
+      "polarity-surprise"
+    ],
+    "estimators": [
+      "regularized-linear-interaction",
+      "shallow-histogram-boosted-tree"
+    ],
+    "attentionGate": "90th percentile fit independently inside each training fold",
+    "chronology": "five expanding folds with a four-hour purge and embargo",
+    "gpu": false
+  },
+  "developmentGates": {
+    "minimumActedRowsPerFold": 100,
+    "minimumFoldCoverage": 0.03,
+    "minimumPositiveFolds": 4,
+    "minimumPositiveAssets": 7,
+    "maximumHolmAdjustedPValue": 0.05,
+    "requirePositiveNetMeanReturnAtBps": [
+      5,
+      10
+    ],
+    "strongestBaselineRequired": true,
+    "noSubgroupPromotion": true
+  },
+  "costModel": "STRESSED_HISTORICAL_REPLAY",
+  "prospectiveActivationGate": {
+    "developmentPassed": false,
+    "candidateFrozen": false,
+    "outcomeSealingReady": false,
+    "eligible": false
+  },
+  "prospectiveContract": {
+    "targetVenue": "Hyperliquid",
+    "minimumQualityValidDays": 30,
+    "minimumActedOnEvents": 1000,
+    "maximumCalendarDays": 90,
+    "interimOutcomeAccessAllowed": false,
+    "activation": "ONLY_AFTER_EXACT_CANDIDATE_FREEZE_AND_OUTCOME_SEALING"
+  },
+  "confirmationPolicy": "PROSPECTIVE_ONLY_AFTER_GATED_FREEZE"
+}

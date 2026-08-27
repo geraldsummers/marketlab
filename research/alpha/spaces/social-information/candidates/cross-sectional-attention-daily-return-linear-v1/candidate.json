@@ -8,17 +8,29 @@
   "mechanism": "Differential attention captures cross-asset information diffusion or crowded demand.",
   "target": "Next-day Binance perpetual return",
   "horizon": "1 day",
-  "informationSet": ["Cross-sectional Bluesky attention", "Registered market controls", "Fixed retrospective asset panel"],
+  "informationSet": [
+    "Cross-sectional Bluesky attention",
+    "Registered market controls",
+    "Fixed retrospective asset panel"
+  ],
   "primaryBaseline": "Registered cross-sectional market-only model",
   "evidence": [
     {
       "classification": "RETROSPECTIVE_DISCOVERY_ONLY",
       "decision": "DISCOVERY_SCREEN_NOT_PASSED",
       "summary": "The holdout candidate was worse than its control; Holm-adjusted p=0.7552 despite a positive gross top-minus-bottom diagnostic.",
-      "sourcePath": "research/social-backfill-results.md"
+      "sourcePath": "research/social-backfill-results.md",
+      "evidenceId": "social-backfill-discovery-2026-07-30"
     }
   ],
-  "frozenLocks": ["research/social-backfill-analysis.lock.json"],
-  "touchPoints": ["social-backfill/src/main/kotlin/dev/marketlab/backfill/RetrospectiveAnalysis.kt"],
-  "nextAction": "Keep the fixed-panel candidate rejected; a point-in-time universe and fresh confirmation are required for a new cross-sectional version."
+  "frozenLocks": [
+    "research/social-backfill-analysis.lock.json"
+  ],
+  "touchPoints": [
+    "social-backfill/src/main/kotlin/dev/marketlab/backfill/RetrospectiveAnalysis.kt"
+  ],
+  "nextAction": "Keep the fixed-panel candidate rejected; a point-in-time universe and fresh confirmation are required for a new cross-sectional version.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
 }

@@ -8,17 +8,27 @@
   "mechanism": "Recurring global trading-session participation produces an hour-of-day volatility clock.",
   "target": "Next-hour ETH squared log return",
   "horizon": "1 hour",
-  "informationSet": ["Latest squared return", "Trailing 24-hour mean variance", "UTC hour"],
+  "informationSet": [
+    "Latest squared return",
+    "Trailing 24-hour mean variance",
+    "UTC hour"
+  ],
   "primaryBaseline": "Stronger of clock-free dynamic variance and expanding mean variance",
   "evidence": [
     {
       "classification": "SEALED_HOLDOUT",
       "decision": "SEALED_HOLDOUT_HOURLY_VOLATILITY_PERIODICITY_NOT_SUPPORTED",
       "summary": "The clock increment was not significant and the candidate was materially worse than expanding mean variance under QLIKE.",
-      "sourcePath": "research/decision-log.md"
+      "sourcePath": "research/decision-log.md",
+      "evidenceId": "eth-hourly-periodicity-2026-07-28"
     }
   ],
   "frozenLocks": [],
-  "touchPoints": ["coordinator/src/main/kotlin/dev/marketlab/coordinator/HourlyVolatilityPeriodicityExperimentJobHandler.kt"],
-  "nextAction": "Keep this hourly ETH adaptation rejected; do not search alternate clock encodings on its opened holdout."
+  "touchPoints": [
+    "coordinator/src/main/kotlin/dev/marketlab/coordinator/HourlyVolatilityPeriodicityExperimentJobHandler.kt"
+  ],
+  "nextAction": "Keep this hourly ETH adaptation rejected; do not search alternate clock encodings on its opened holdout.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
 }

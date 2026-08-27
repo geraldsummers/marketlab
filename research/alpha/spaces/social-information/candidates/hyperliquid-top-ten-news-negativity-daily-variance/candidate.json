@@ -8,10 +8,25 @@
   "mechanism": "Adverse narratives increase uncertainty, disagreement, and risk-sensitive repositioning.",
   "target": "Next-day Hyperliquid realized variance",
   "horizon": "1 day",
-  "informationSet": ["Causal GDELT GKG", "Reviewed crypto RSS", "Locked FinBERT", "HAR-style market controls"],
+  "informationSet": [
+    "Causal GDELT GKG",
+    "Reviewed crypto RSS",
+    "Locked FinBERT",
+    "HAR-style market controls"
+  ],
   "primaryBaseline": "Identical 1/7/30-day log-HAR model without news negativity",
   "evidence": [],
-  "frozenLocks": ["research/social-program.lock.json", "research/sentiment-models.lock.json"],
-  "touchPoints": ["social-collector", "sentiment-worker", "theories/src/main/kotlin/dev/marketlab/theories/SocialInformationTheories.kt"],
-  "nextAction": "Complete prospective news source readiness and start only with the common social-program clock."
+  "frozenLocks": [
+    "research/social-program.lock.json",
+    "research/sentiment-models.lock.json"
+  ],
+  "touchPoints": [
+    "social-collector",
+    "sentiment-worker",
+    "theories/src/main/kotlin/dev/marketlab/theories/SocialInformationTheories.kt"
+  ],
+  "nextAction": "Complete prospective news source readiness and start only with the common social-program clock.",
+  "researchModes": [
+    "PROSPECTIVE"
+  ]
 }

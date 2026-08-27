@@ -13,7 +13,9 @@ The workspace is deliberately decentralized:
 - `templates/` defines the minimum record for a new candidate, result, and
   handoff;
 - `tools/workspace.py` discovers the tree, lists ready work, and validates its
-  contracts.
+  contracts;
+- `workspace-policy.json` defines the active research mode and conservative
+  compute defaults.
 
 There is no hand-maintained global candidate index. Agents can add candidates
 in separate directories without contending on one registry file. The workspace
@@ -24,6 +26,9 @@ tool builds the index from the filesystem.
 ```sh
 python3 research/alpha/tools/workspace.py list
 python3 research/alpha/tools/workspace.py ready
+python3 research/alpha/tools/workspace.py outcomes
+python3 research/alpha/tools/workspace.py compute
+python3 research/alpha/tools/workspace.py synthesis
 python3 research/alpha/tools/workspace.py validate
 ```
 
@@ -46,6 +51,18 @@ Then:
 Claims are ephemeral coordination state and do not belong in this directory.
 Candidate state and evidence are durable research state and do.
 
+## Knowledge views
+
+The active mode is historical. Bias-labeled historical discovery may reuse
+opened outcomes or imperfect availability semantics, but its promotion ceiling
+is `EXPLORATORY`. Default ready-work does not schedule future waiting. A
+prospective task becomes eligible only after an exact candidate passes its
+development gates and is frozen with outcome sealing, duration and sample
+gates, a deadline, and no interim outcome access. Use `ready --mode
+prospective` or `synthesis --mode all` to inspect those programs. Remote
+artifact hash checks are explicit and opt-in through `verify-artifacts
+--ssh-host HOST`; ordinary validation remains offline.
+
 ## Research surfaces
 
 - `directional-returns`: signed return and price-distribution forecasts
@@ -61,3 +78,21 @@ These are information/mechanism spaces, not model-family silos. Boosted trees,
 linear models, and neural networks are estimators that may serve several spaces.
 
 See [workflow.md](workflow.md) for lifecycle and parallel-work rules.
+
+## Successor task routing
+
+The default ready view returns only the highest-priority runnable tasks. A
+successor must inspect the complete contract before claiming work:
+
+    python3 research/alpha/tools/workspace.py ready
+    python3 research/alpha/tools/workspace.py task TASK_ID --json
+
+Use ready --all-priorities for planning only. Task contracts bind candidate
+IDs, deliverables, acceptance criteria, claim surfaces, resource limits, and
+outcome access. DONE tasks require completion evidence. Blocked tasks remain
+non-runnable even when their implementation appears straightforward.
+
+Historical single-use confirmation is autonomous only after a task explicitly
+permits it, the candidate is frozen, the ledger is empty, artifact hashes pass,
+and the exact period is absent from the opened-outcome inventory. This does not
+authorize paper or live trading.

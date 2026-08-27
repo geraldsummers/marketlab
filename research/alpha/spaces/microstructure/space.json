@@ -1,31 +1,115 @@
 {
-  "schemaVersion": "marketlab.alpha-space.v1",
+  "schemaVersion": "marketlab.alpha-space.v2",
   "id": "microstructure",
   "title": "Market microstructure",
   "purpose": "Study trade flow, books, liquidity, resilience, and short-horizon price formation with event-time causal data.",
   "state": "DATA_ACCUMULATING",
-  "dependencies": ["execution-portfolio"],
+  "dependencies": [
+    "execution-portfolio"
+  ],
   "readyWork": [
     {
       "id": "microstructure-continuity-audit",
       "status": "READY",
       "kind": "data",
       "summary": "Build a durable field, sequence, reconnect, receive-clock, and gap audit for the accumulating Hyperliquid event archive.",
-      "blockedBy": []
+      "blockedBy": [],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "externalBlockers": [],
+      "priority": "P2",
+      "candidateIds": [],
+      "deliverables": [
+        "Durable data artifact for microstructure-continuity-audit",
+        "Evidence-linked task handoff"
+      ],
+      "acceptanceCriteria": [
+        "Build a durable field, sequence, reconnect, receive-clock, and gap audit for the accumulating Hyperliquid event archive.",
+        "No epistemic stage is promoted without linked evidence"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/microstructure/"
+      ],
+      "resourceClass": "DATA_IO",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 1,
+        "maxTrials": 0,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": []
     },
     {
       "id": "order-flow-confirmation",
       "status": "BLOCKED",
       "kind": "evaluation",
       "summary": "Run order-flow or queue-imbalance confirmation with fee-aware replay.",
-      "blockedBy": ["90 continuous quality-valid days have not accumulated"]
+      "blockedBy": [],
+      "researchModes": [
+        "PROSPECTIVE"
+      ],
+      "externalBlockers": [
+        "90 continuous quality-valid days have not accumulated"
+      ],
+      "priority": "P2",
+      "candidateIds": [],
+      "deliverables": [
+        "Durable evaluation artifact for order-flow-confirmation",
+        "Evidence-linked task handoff"
+      ],
+      "acceptanceCriteria": [
+        "Run order-flow or queue-imbalance confirmation with fee-aware replay.",
+        "No epistemic stage is promoted without linked evidence"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/microstructure/"
+      ],
+      "resourceClass": "CPU_MODEL",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 2,
+        "maxTrials": 16,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": []
     },
     {
       "id": "liquidity-reversal-confirmation",
       "status": "BLOCKED",
       "kind": "evaluation",
       "summary": "Test liquidity-conditioned reversal with depth and observed execution.",
-      "blockedBy": ["180 continuous quality-valid days have not accumulated"]
+      "blockedBy": [],
+      "researchModes": [
+        "PROSPECTIVE"
+      ],
+      "externalBlockers": [
+        "180 continuous quality-valid days have not accumulated"
+      ],
+      "priority": "P2",
+      "candidateIds": [],
+      "deliverables": [
+        "Durable evaluation artifact for liquidity-reversal-confirmation",
+        "Evidence-linked task handoff"
+      ],
+      "acceptanceCriteria": [
+        "Test liquidity-conditioned reversal with depth and observed execution.",
+        "No epistemic stage is promoted without linked evidence"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/microstructure/"
+      ],
+      "resourceClass": "CPU_MODEL",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 2,
+        "maxTrials": 16,
+        "gpu": false
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": []
     }
   ]
 }

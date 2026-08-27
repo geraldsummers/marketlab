@@ -8,4 +8,5 @@ COPY alpha-model/requirements.lock /tmp/requirements.lock
 RUN pip install --no-cache-dir -r /tmp/requirements.lock
 COPY alpha-model/marketlab_alpha /opt/marketlab/marketlab_alpha
 COPY alpha-model/campaign.py /opt/marketlab/campaign.py
+RUN chmod -R a+rX /opt/marketlab/marketlab_alpha /opt/marketlab/campaign.py
 ENTRYPOINT ["python", "/opt/marketlab/campaign.py"]

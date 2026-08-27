@@ -8,17 +8,26 @@
   "mechanism": "Intermediate-horizon underreaction and trend-following flows produce own-return continuation.",
   "target": "Next 30-day BTC perpetual log return",
   "horizon": "30 days",
-  "informationSet": ["Trailing 365-day BTC log return", "Trailing 60 daily-return standard deviation"],
+  "informationSet": [
+    "Trailing 365-day BTC log return",
+    "Trailing 60 daily-return standard deviation"
+  ],
   "primaryBaseline": "Stronger of expanding historical mean and zero return",
   "evidence": [
     {
       "classification": "SEALED_HOLDOUT",
       "decision": "FORECAST_LOSS_SCREEN_NOT_SUPPORTED",
       "summary": "Development RMSE was materially worse than both controls. The attractive 90-origin holdout was statistically inconclusive and cannot rescue the failed development screen.",
-      "sourcePath": "research/theory-exhaustion.md"
+      "sourcePath": "research/theory-exhaustion.md",
+      "evidenceId": "btc-time-series-momentum-2026-07-28"
     }
   ],
   "frozenLocks": [],
-  "touchPoints": ["coordinator/src/main/kotlin/dev/marketlab/coordinator/MomentumExperimentJobHandler.kt"],
-  "nextAction": "Do not retune on the opened sample; only a new mechanism version and fresh preregistered confirmation period may reopen the question."
+  "touchPoints": [
+    "coordinator/src/main/kotlin/dev/marketlab/coordinator/MomentumExperimentJobHandler.kt"
+  ],
+  "nextAction": "Do not retune on the opened sample; only a new mechanism version and fresh preregistered confirmation period may reopen the question.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
 }

@@ -53,6 +53,7 @@ Type=simple
 EnvironmentFile=$environment_file
 ExecStart=$source_root/deploy/archive-alpha-controller.sh $environment_file
 Restart=on-failure
+RestartPreventExitStatus=75
 RestartSec=30
 TimeoutStopSec=90
 

@@ -8,10 +8,25 @@
   "mechanism": "Gradual diffusion of retail attention creates temporary cross-sectional demand pressure.",
   "target": "Next-day relative Hyperliquid return and top-minus-bottom costed portfolio",
   "horizon": "1 day",
-  "informationSet": ["Multi-source attention rank", "Weekly point-in-time top-ten universe", "Momentum and liquidity controls", "Observed execution"],
+  "informationSet": [
+    "Multi-source attention rank",
+    "Weekly point-in-time top-ten universe",
+    "Momentum and liquidity controls",
+    "Observed execution"
+  ],
   "primaryBaseline": "Registered market controls and flat relative-value portfolio",
   "evidence": [],
-  "frozenLocks": ["research/social-program.lock.json"],
-  "touchPoints": ["social-collector", "sentiment-worker", "engine", "theories/src/main/kotlin/dev/marketlab/theories/SocialInformationTheories.kt"],
-  "nextAction": "Complete universe and execution readiness before starting D0; do not treat the fixed-panel retrospective diagnostic as confirmation."
+  "frozenLocks": [
+    "research/social-program.lock.json"
+  ],
+  "touchPoints": [
+    "social-collector",
+    "sentiment-worker",
+    "engine",
+    "theories/src/main/kotlin/dev/marketlab/theories/SocialInformationTheories.kt"
+  ],
+  "nextAction": "Complete universe and execution readiness before starting D0; do not treat the fixed-panel retrospective diagnostic as confirmation.",
+  "researchModes": [
+    "PROSPECTIVE"
+  ]
 }

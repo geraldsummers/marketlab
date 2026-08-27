@@ -1,13 +1,48 @@
 {
-  "schemaVersion": "marketlab.evidence-inventory.v1",
+  "schemaVersion": "marketlab.evidence-inventory.v2",
   "id": "btc-log-har-2026-07-28",
-  "candidateIds": ["btc-log-har-variance-v1"],
+  "candidateIds": [
+    "btc-log-har-variance-v1"
+  ],
   "classification": "SEALED_HOLDOUT",
   "decision": "SEALED_HOLDOUT_QLIKE_SCREEN_NOT_SUPPORTED",
   "runId": "fbda33cb-bc46-49a4-90a2-34ad642321e4",
   "summarySource": "research/theory-exhaustion.md",
   "artifacts": [
-    {"role":"report","sha256":"19414bbc1c898fe79262d49b4cfe55f586785131ccd4942f530fa47431ade8db","location":"coordinator content-addressed artifact store"},
-    {"role":"predictions","sha256":"78b97e462f39a4c4c316817bd0550642b1ae2cdf7d6738bbce12cbbed4cf9d2b","location":"coordinator content-addressed artifact store"}
+    {
+      "role": "report",
+      "sha256": "19414bbc1c898fe79262d49b4cfe55f586785131ccd4942f530fa47431ade8db",
+      "location": "coordinator content-addressed artifact store",
+      "verification": "CONTENT_ADDRESS_ONLY"
+    },
+    {
+      "role": "predictions",
+      "sha256": "78b97e462f39a4c4c316817bd0550642b1ae2cdf7d6738bbce12cbbed4cf9d2b",
+      "location": "coordinator content-addressed artifact store",
+      "verification": "CONTENT_ADDRESS_ONLY"
+    }
+  ],
+  "summary": "The sealed coarse BTC log-HAR adaptation failed its required historical-mean QLIKE comparison.",
+  "candidateDecisions": [
+    {
+      "candidateId": "btc-log-har-variance-v1",
+      "stage": "REJECTED",
+      "decision": "SEALED_HOLDOUT_QLIKE_SCREEN_NOT_SUPPORTED",
+      "current": true
+    }
+  ],
+  "outcomesOpened": true,
+  "openedOutcomes": [
+    {
+      "id": "btc-log-har-2026-07-28-opened-outcomes",
+      "candidateIds": [
+        "btc-log-har-variance-v1"
+      ],
+      "venue": "hyperliquid",
+      "target": "BTC next-day realized variance",
+      "periodStatus": "UNKNOWN",
+      "unknownReason": "Exact boundaries remain in the immutable run report and have not yet been transcribed.",
+      "reuseStatus": "OPENED_NOT_CONFIRMATION_ELIGIBLE"
+    }
   ]
 }

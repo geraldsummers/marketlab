@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "marketlab.compute-run.v1",
+  "id": "social-variance-defensive-exposure-2026-08-26",
+  "campaignId": "social-variance-defensive-exposure-v1",
+  "candidateIds": [
+    "social-variance-defensive-exposure-v1"
+  ],
+  "evidenceIds": [
+    "social-variance-defensive-exposure-2026-08-26"
+  ],
+  "workload": "Deterministic ten-asset hourly portfolio replay using two frozen variance forecasts and official funding archives",
+  "sourcePath": "research/decision-log.md",
+  "observations": [
+    {
+      "id": "bounded-replay",
+      "processes": 1,
+      "blasThreads": 2,
+      "gpu": false,
+      "hourlyDecisions": 744,
+      "assetDecisionRows": 7440,
+      "strategyCostScenarios": 6,
+      "outcome": "The complete replay ran in seconds; evidence, not compute, terminated the program."
+    },
+    {
+      "id": "phase-two-futility",
+      "outcome": "The registered phase-two gate failed at both costs, so no signed-social model family or additional search was run."
+    }
+  ],
+  "recommendation": {
+    "maxConcurrentTrials": 1,
+    "blasThreads": 2,
+    "maxBlasThreads": 4,
+    "gpuPolicy": "No GPU for deterministic replay or small tabular controls.",
+    "dataPolicy": "Reuse registered feature rows and content-addressed official funding bytes; fail closed on identity or coverage changes."
+  }
+}

@@ -13,6 +13,28 @@ The objective is durable **net** alpha under point-in-time information,
 realistic execution, and prospective evidence. Producing an attractive chart or
 backtest is not the objective.
 
+## Discovery and future-data boundary
+
+Ordinary research must complete using data that already exists when the task
+begins. Do not wait for future outcomes to rescue feasibility work, weak
+development, or a failed candidate.
+
+Historical discovery may use previously opened outcomes, a current survivor
+universe, revised values, or an explicitly classified availability-clock proxy
+when cleaner data does not exist. Every such compromise must be recorded in a
+bias ledger. This evidence is capped at `EXPLORATORY` and cannot be described as
+blind, validated, tradable, paper-eligible, or live-eligible. Deliberate target
+leakage and features computed from information after the decision timestamp
+remain prohibited even for discovery.
+
+Waiting for new prospective outcomes is permitted only after a bounded
+historical discovery passes all preregistered predictive, stability, coverage,
+and economic gates; one exact candidate is frozen; feature publication and
+outcome sealing are operational; and the prospective duration, sample gate,
+deadline, and no-peeking rule are locked. Until all activation gates pass,
+future-data waiting is out of scope. Prospective activation never authorizes
+paper trading, live trading, or capital exposure.
+
 ## Mandatory orientation
 
 At the start of every research turn:
@@ -27,6 +49,21 @@ At the start of every research turn:
    locks, relevant decision-log entries, and source policy before acting.
 6. Claim the exact candidate directory and every shared code, data-schema,
    collector, or deployment surface before editing.
+
+The default ready view exposes only the highest-priority runnable work. Before
+claiming, run `python3 research/alpha/tools/workspace.py task TASK_ID --json`
+and treat its deliverables, acceptance criteria, claim surfaces, outcome-access
+boundary, and compute limits as mandatory. Use `ready --all-priorities` only for
+planning; do not bypass a runnable P0 task to start lower-priority research.
+
+Task state is durable research coordination. Mark a task `DONE` only with a
+linked evidence record. Unblock a dependent task only when its blocker is done
+and its acceptance criteria are satisfied. Historical confirmation may proceed
+without additional user approval only when the task explicitly permits
+`SINGLE_USE_HISTORICAL_CONFIRMATION`, the candidate is `FROZEN_CANDIDATE`, all
+artifact hashes and an empty ledger are verified, and the exact period does not
+overlap the opened-outcome inventory. This authority never extends to paper or
+live trading.
 
 Use separate candidate directories for parallel work. Coordinate before
 touching a surface named by another live claim. Claims are ephemeral soft locks;
@@ -158,7 +195,7 @@ and processing clocks; revisions; query parameters; historical universe
 membership; gaps; reconnects; and quality findings. Follow
 `research/source-policy.md`.
 
-Never:
+Never outside explicitly bias-labeled `EXPLORATORY` discovery:
 
 - join today's revised value to a historical decision without vintage data;
 - project today's survivor universe backward;
@@ -169,6 +206,10 @@ Never:
 
 When the required causal data is absent, mark the candidate `DATA_BLOCKED` and
 advance acquisition or audit work instead of weakening the claim.
+
+Inside bias-labeled discovery, the same defects must remain visible in the
+bias ledger and promotion ceiling. They may motivate a prospectively
+reproducible candidate, but they cannot support retrospective validation.
 
 ## Validation standard
 

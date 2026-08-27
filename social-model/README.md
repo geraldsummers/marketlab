@@ -36,3 +36,11 @@ label-independent shadow forecasts.
 Both `evaluate` and `score` require `--frozen-sha256`; obtain it when the model
 set is first published and pin it in the service configuration. Artifact hashes
 are checked before the trusted, locally generated model serialization is read.
+
+## Bias-labeled event-conditioned discovery
+
+`event_conditioned.py` verifies the preserved Bluesky and Binance objects,
+rematerializes hourly polarity surprise and disagreement change, evaluates the
+registered eight variants, and writes a panel, manifest, report, and optional
+freeze. Availability-proxy timestamps, opened outcomes, and a survivor universe
+cap this result at `EXPLORATORY` regardless of its metrics.

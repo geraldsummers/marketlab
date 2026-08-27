@@ -8,17 +8,30 @@
   "mechanism": "Unequal near-touch supply and aggressive flow reveal short-lived pressure before liquidity replenishes or price adjusts.",
   "target": "Next event-time or short-duration target-venue mid-price move",
   "horizon": "Milliseconds to seconds",
-  "informationSet": ["Event-time trades", "Causal BBO and L2 updates", "Receive clocks", "Fee and latency state"],
+  "informationSet": [
+    "Event-time trades",
+    "Causal BBO and L2 updates",
+    "Receive clocks",
+    "Fee and latency state"
+  ],
   "primaryBaseline": "No-move, persistence, and book-free market controls",
   "evidence": [
     {
       "classification": "DATA_FEASIBILITY",
       "decision": "DATA_BLOCKED",
       "summary": "The registered plan requires 90 continuous quality-valid days of event-time L2/BBO and fee-aware replay.",
-      "sourcePath": "research/theory-exhaustion.md"
+      "sourcePath": "research/theory-exhaustion.md",
+      "evidenceId": "theory-data-blockers-2026-07-28"
     }
   ],
   "frozenLocks": [],
-  "touchPoints": ["collector", "theories/src/main/kotlin/dev/marketlab/theories/AcademicTheoryRegistry.kt", "engine/src/main/kotlin/dev/marketlab/engine/ObservedBookExecutor.kt"],
-  "nextAction": "Complete and pass the continuity audit before opening an outcome-bearing order-flow test."
+  "touchPoints": [
+    "collector",
+    "theories/src/main/kotlin/dev/marketlab/theories/AcademicTheoryRegistry.kt",
+    "engine/src/main/kotlin/dev/marketlab/engine/ObservedBookExecutor.kt"
+  ],
+  "nextAction": "Complete and pass the continuity audit before opening an outcome-bearing order-flow test.",
+  "researchModes": [
+    "PROSPECTIVE"
+  ]
 }

@@ -1,13 +1,48 @@
 {
-  "schemaVersion": "marketlab.evidence-inventory.v1",
+  "schemaVersion": "marketlab.evidence-inventory.v2",
   "id": "btc-time-series-momentum-2026-07-28",
-  "candidateIds": ["btc-time-series-momentum-v1"],
+  "candidateIds": [
+    "btc-time-series-momentum-v1"
+  ],
   "classification": "SEALED_HOLDOUT",
   "decision": "FORECAST_LOSS_SCREEN_NOT_SUPPORTED",
   "runId": "5126acad-29e8-4653-b632-ebbe1f4bc228",
   "summarySource": "research/theory-exhaustion.md",
   "artifacts": [
-    {"role":"report","sha256":"f9a2566b638e960b23030043e3e4a470152173055fe5d7c2393cc1d5845f4c26","location":"coordinator content-addressed artifact store"},
-    {"role":"predictions","sha256":"6661f014ddc82cb6586d7a83c998d2833381bc1db2bc8ef04efdad16bc0d6629","location":"coordinator content-addressed artifact store"}
+    {
+      "role": "report",
+      "sha256": "f9a2566b638e960b23030043e3e4a470152173055fe5d7c2393cc1d5845f4c26",
+      "location": "coordinator content-addressed artifact store",
+      "verification": "CONTENT_ADDRESS_ONLY"
+    },
+    {
+      "role": "predictions",
+      "sha256": "6661f014ddc82cb6586d7a83c998d2833381bc1db2bc8ef04efdad16bc0d6629",
+      "location": "coordinator content-addressed artifact store",
+      "verification": "CONTENT_ADDRESS_ONLY"
+    }
+  ],
+  "summary": "The BTC momentum adaptation failed its development forecast-loss screen and was not rescued by the opened holdout.",
+  "candidateDecisions": [
+    {
+      "candidateId": "btc-time-series-momentum-v1",
+      "stage": "REJECTED",
+      "decision": "FORECAST_LOSS_SCREEN_NOT_SUPPORTED",
+      "current": true
+    }
+  ],
+  "outcomesOpened": true,
+  "openedOutcomes": [
+    {
+      "id": "btc-time-series-momentum-2026-07-28-opened-outcomes",
+      "candidateIds": [
+        "btc-time-series-momentum-v1"
+      ],
+      "venue": "hyperliquid",
+      "target": "BTC next-30-day return",
+      "periodStatus": "UNKNOWN",
+      "unknownReason": "Exact boundaries remain in the immutable run report and have not yet been transcribed.",
+      "reuseStatus": "OPENED_NOT_CONFIRMATION_ELIGIBLE"
+    }
   ]
 }

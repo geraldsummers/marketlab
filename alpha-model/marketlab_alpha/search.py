@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+import multiprocessing as mp
 import os
 import pickle
 import random
@@ -11,12 +12,13 @@ import signal
 import tempfile
 import time
 from collections import Counter, defaultdict
+from concurrent.futures import FIRST_COMPLETED, Future, ProcessPoolExecutor, wait
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Callable, Iterable, Iterator, Mapping, Sequence
 
-from .artifacts import iter_jsonl, read_json, sha256_file, write_once_bytes, write_once_json
+from .artifacts import iter_jsonl, read_json, sha256_bytes, sha256_file, write_once_bytes, write_once_json
 from .contracts import (
     FAMILY_SCHEMA,
     RESULT_SCHEMA,
@@ -44,6 +46,247 @@ class Fold:
     train_end_exclusive: int
     test_start_inclusive: int
     test_end_exclusive: int
+
+
+_PARALLEL_ROW_SETS: dict[str, Sequence[Mapping[str, Any]]] | None = None
+_PARALLEL_CPU_MODELS = frozenset(
+    {
+        "ridge",
+        "elastic_net",
+        "shallow_tree",
+        "random_forest",
+        "extra_trees",
+        "hist_gradient_boosting",
+    }
+)
+_GIB = 1024**3
+_SEARCH_STEP_ACTIVE = False
+_SEARCH_STEP_REMAINING: int | None = None
+
+
+class _SearchStepBoundary(RuntimeError):
+    """Stop a disposable search process at the next durable trial boundary."""
+
+
+def _write_trial_plan(model_id: str, tasks: Sequence[Mapping[str, Any]]) -> Path | None:
+    """Publish the exact ordered task batch before any task in it is executed."""
+    if not tasks:
+        return None
+    first = tasks[0]
+    summaries = [
+        {
+            "trialId": str(task["trial_id"]),
+            "configuration": dict(task["configuration"]),
+            "seed": int(task["seed"]),
+            "horizon": str(task["horizon"]),
+            "target": str(task["target"]),
+            "factor": str(task["factor"]),
+            "rowSet": str(task["row_set"]),
+            "promotionSourceTrialSha256s": list(task.get("promotion_source_hashes", [])),
+        }
+        for task in tasks
+    ]
+    payload = {
+        "schemaVersion": "marketlab.alpha-trial-plan.v1",
+        "campaignId": first["manifest"]["campaignId"],
+        "candidateId": first["manifest"]["candidateId"],
+        "epistemicStage": "EXPLORATORY",
+        "rung": str(first["rung"]),
+        "modelId": model_id,
+        "orderedTasks": summaries,
+    }
+    identity = canonical_sha256(payload)[:16]
+    filename = (
+        f"{payload['candidateId']}-{str(first['rung']).lower()}-{model_id}-{identity}.json"
+        .replace("_", "-")
+    )
+    path = Path(first["output_directory"]) / "checkpoints" / "plans" / filename
+    if path.exists():
+        if canonical_sha256(read_json(path)) != canonical_sha256(payload):
+            raise ValueError(f"immutable trial plan differs from replay: {path}")
+        return path
+    write_once_json(path, payload)
+    return path
+
+
+def _cgroup_working_set_bytes(current: int, memory_stat: str) -> int:
+    inactive_file = 0
+    for line in memory_stat.splitlines():
+        name, _, value = line.partition(" ")
+        if name == "inactive_file":
+            inactive_file = int(value)
+            break
+    return max(0, current - inactive_file)
+
+
+def _cgroup_memory_usage() -> tuple[int, int] | None:
+    try:
+        current = int(Path("/sys/fs/cgroup/memory.current").read_text().strip())
+        maximum_text = Path("/sys/fs/cgroup/memory.max").read_text().strip()
+        memory_stat = Path("/sys/fs/cgroup/memory.stat").read_text()
+        working_set = _cgroup_working_set_bytes(current, memory_stat)
+        return None if maximum_text == "max" else (working_set, int(maximum_text))
+    except (FileNotFoundError, OSError, ValueError):
+        return None
+
+
+def _adaptive_trial_workers(
+    model_id: str,
+    task_count: int,
+    worker_ceiling: int,
+    *,
+    memory_usage: tuple[int, int] | None = None,
+    reserve_bytes: int = 12 * _GIB,
+    worker_bytes: int = 8 * _GIB,
+) -> int:
+    """Bound exact-trial concurrency by family policy and cgroup headroom."""
+
+    if task_count < 2 or worker_ceiling < 2 or model_id not in _PARALLEL_CPU_MODELS:
+        return 1
+    usage = _cgroup_memory_usage() if memory_usage is None else memory_usage
+    if usage is None or worker_bytes < 1:
+        return 1
+    current, maximum = usage
+    affordable = max(1, (maximum - current - reserve_bytes) // worker_bytes)
+    return max(1, min(task_count, worker_ceiling, affordable))
+
+
+def _run_parallel_trial(task: Mapping[str, Any]) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    if _PARALLEL_ROW_SETS is None:
+        raise RuntimeError("parallel trial rows are not initialized")
+    arguments = dict(task)
+    row_set = str(arguments.pop("row_set"))
+    arguments.pop("promotion_source_hashes", None)
+    return _checkpointed_trial(rows=_PARALLEL_ROW_SETS[row_set], **arguments)
+
+
+def _parallel_worker_ready(_index: int) -> int:
+    time.sleep(0.05)
+    return os.getpid()
+
+
+class _AdaptiveTrialRunner:
+    """Persistent pre-CUDA CPU pool with deterministic ordered collection."""
+
+    def __init__(
+        self,
+        breadth_rows: Sequence[Mapping[str, Any]],
+        full_rows: Sequence[Mapping[str, Any]],
+        worker_ceiling: int | None = None,
+        memory_usage: tuple[int, int] | None = None,
+    ) -> None:
+        global _PARALLEL_ROW_SETS
+        _PARALLEL_ROW_SETS = {"breadth": breadth_rows, "full": full_rows}
+        configured = int(os.environ.get("MARKETLAB_SEARCH_WORKERS", "1"))
+        if _SEARCH_STEP_ACTIVE:
+            configured = 1
+        self.maximum_workers = max(1, worker_ceiling if worker_ceiling is not None else configured)
+        self._memory_usage = memory_usage
+        self.last_worker_count = 1
+        self.in_flight_trial_ids: tuple[str, ...] = ()
+        self._executor: ProcessPoolExecutor | None = None
+        if self.maximum_workers > 1 and "fork" in mp.get_all_start_methods():
+            self._executor = ProcessPoolExecutor(
+                max_workers=self.maximum_workers,
+                mp_context=mp.get_context("fork"),
+            )
+            list(self._executor.map(_parallel_worker_ready, range(self.maximum_workers)))
+
+    def run(
+        self,
+        model_id: str,
+        tasks: Sequence[Mapping[str, Any]],
+        on_checkpoint: Callable[[dict[str, Any]], None] | None = None,
+    ) -> Iterator[tuple[dict[str, Any], dict[str, Any] | None]]:
+        _write_trial_plan(model_id, tasks)
+        reserve = int(os.environ.get("MARKETLAB_SEARCH_MEMORY_RESERVE_GIB", "12")) * _GIB
+        per_worker = int(os.environ.get("MARKETLAB_SEARCH_WORKER_GIB", "8")) * _GIB
+        worker_count = _adaptive_trial_workers(
+            model_id,
+            len(tasks),
+            self.maximum_workers,
+            memory_usage=self._memory_usage,
+            reserve_bytes=reserve,
+            worker_bytes=per_worker,
+        )
+        if self._executor is None:
+            worker_count = 1
+        self.last_worker_count = worker_count
+        prepared = [dict(task) for task in tasks]
+        if worker_count == 1:
+            for task in prepared:
+                self.in_flight_trial_ids = (str(task["trial_id"]),)
+                result = _run_parallel_trial(dict(task, execution_workers=1))
+                self.in_flight_trial_ids = ()
+                if on_checkpoint is not None:
+                    on_checkpoint(result[0])
+                yield result
+            return
+
+        resolved: dict[int, tuple[dict[str, Any], dict[str, Any] | None]] = {}
+        missing: dict[int, dict[str, Any]] = {}
+        for index, task in enumerate(prepared):
+            trial_root = Path(task["output_directory"]) / "checkpoints" / "trials" / str(task["trial_id"])
+            if trial_root.exists():
+                result = _run_parallel_trial(dict(task, execution_workers=1))
+                resolved[index] = result
+                if on_checkpoint is not None:
+                    on_checkpoint(result[0])
+            else:
+                missing[index] = task
+
+        futures: dict[Future[tuple[dict[str, Any], dict[str, Any] | None]], int] = {}
+        undispatched = list(missing)
+        next_result = 0
+        while next_result < len(prepared):
+            while undispatched:
+                allowed = _adaptive_trial_workers(
+                    model_id,
+                    len(tasks),
+                    self.maximum_workers,
+                    memory_usage=self._memory_usage,
+                    reserve_bytes=reserve,
+                    worker_bytes=per_worker,
+                )
+                self.last_worker_count = allowed
+                if len(futures) >= allowed:
+                    break
+                index = undispatched.pop(0)
+                future = self._executor.submit(
+                    _run_parallel_trial,
+                    dict(missing[index], execution_workers=allowed),
+                )
+                futures[future] = index
+                self.in_flight_trial_ids = tuple(
+                    str(missing[pending]["trial_id"]) for pending in sorted(futures.values())
+                )
+
+            if next_result in resolved:
+                result = resolved.pop(next_result)
+                next_result += 1
+                yield result
+                continue
+            if not futures:
+                raise RuntimeError("adaptive scheduler has no runnable or resolved trial")
+
+            done, _ = wait(tuple(futures), return_when=FIRST_COMPLETED)
+            for future in done:
+                index = futures.pop(future)
+                result = future.result()
+                resolved[index] = result
+                self.in_flight_trial_ids = tuple(
+                    str(missing[pending]["trial_id"]) for pending in sorted(futures.values())
+                )
+                if on_checkpoint is not None:
+                    on_checkpoint(result[0])
+        self.in_flight_trial_ids = ()
+
+    def close(self) -> None:
+        global _PARALLEL_ROW_SETS
+        if self._executor is not None:
+            self._executor.shutdown(wait=True, cancel_futures=True)
+            self._executor = None
+        _PARALLEL_ROW_SETS = None
 
 
 def chronological_folds(
@@ -938,6 +1181,44 @@ def run_development_search(
     return result
 
 
+def run_development_search_step(
+    panel_path: Path,
+    lock_path: Path,
+    output_directory: Path,
+    confirmation_ledger_root: Path,
+) -> dict[str, Any]:
+    """Execute at most one missing iterative-search trial in this process."""
+    campaign = validate_campaign_lock(read_json(lock_path))
+    if not campaign.get("iterativeSearch"):
+        raise ValueError("search-step requires an iterative campaign lock")
+    global _SEARCH_STEP_ACTIVE, _SEARCH_STEP_REMAINING, _PARALLEL_ROW_SETS
+    if _SEARCH_STEP_ACTIVE:
+        raise RuntimeError("nested search-step execution is prohibited")
+    _SEARCH_STEP_ACTIVE = True
+    _SEARCH_STEP_REMAINING = 1
+    completed_result: dict[str, Any] | None = None
+    try:
+        completed_result = run_development_search(
+            panel_path, lock_path, output_directory, confirmation_ledger_root
+        )
+    except _SearchStepBoundary:
+        pass
+    finally:
+        _SEARCH_STEP_ACTIVE = False
+        _SEARCH_STEP_REMAINING = None
+        _PARALLEL_ROW_SETS = None
+    records = list((output_directory / "checkpoints" / "trials").glob("*/trial.json"))
+    active_path = output_directory / "operations" / "active.json"
+    active = read_json(active_path) if active_path.is_file() else None
+    return {
+        "state": "COMPLETE" if completed_result is not None else "PROGRESSED",
+        "epistemicStage": "EXPLORATORY",
+        "durableTrialCount": len(records),
+        "active": active,
+        "artifactSha256": completed_result.get("artifactSha256") if completed_result else None,
+    }
+
+
 def _time_stratified_panel_rows(panel_path: Path, manifest: Mapping[str, Any], maximum_rows: int) -> list[dict[str, Any]]:
     """Retain complete chronological blocks spread across the locked period."""
     total_rows = int(manifest.get("rows", 0))
@@ -1028,6 +1309,7 @@ def _checkpointed_trial(
     trial_id: str,
     mechanism: str,
     load_bundle: bool = False,
+    execution_workers: int = 1,
 ) -> tuple[dict[str, Any], dict[str, Any] | None]:
     trial_root = output_directory / "checkpoints" / "trials" / trial_id
     trial_path = trial_root / "trial.json"
@@ -1043,13 +1325,36 @@ def _checkpointed_trial(
                 raise ValueError(f"completed checkpoint has no model bundle: {trial_root}")
             artifacts = {item["path"]: item for item in trial["artifactHashes"]}
             relative = str(bundle_path.relative_to(output_directory))
-            expected = artifacts.get(relative, {}).get("sha256")
-            if expected != sha256_file(bundle_path):
+            artifact = artifacts.get(relative, {})
+            expected = artifact.get("sha256")
+            expected_size = artifact.get("sizeBytes")
+            if not expected or (expected_size is not None and bundle_path.stat().st_size != expected_size):
+                raise ValueError(f"trial checkpoint bundle identity mismatch: {trial_root}")
+            if (not _SEARCH_STEP_ACTIVE or load_bundle) and expected != sha256_file(bundle_path):
                 raise ValueError(f"trial checkpoint bundle hash mismatch: {trial_root}")
             if load_bundle:
                 with bundle_path.open("rb") as handle:
                     bundle = pickle.load(handle)
         return trial, bundle
+
+    active_path = output_directory / "operations" / "active.json"
+    if _SEARCH_STEP_ACTIVE:
+        global _SEARCH_STEP_REMAINING
+        active = {
+            "schemaVersion": "marketlab.alpha-active-trial.v1",
+            "campaignId": manifest["campaignId"],
+            "candidateId": manifest["candidateId"],
+            "trialId": trial_id,
+            "rung": rung,
+            "modelId": model_id,
+            "epistemicStage": "EXPLORATORY",
+            "memoryProfileGiB": int(os.environ.get("MARKETLAB_TRIAL_MEMORY_GIB", "0")),
+            "state": "PENDING" if (_SEARCH_STEP_REMAINING or 0) < 1 else "RUNNING",
+        }
+        _write_search_status(active_path, active)
+        if (_SEARCH_STEP_REMAINING or 0) < 1:
+            raise _SearchStepBoundary(trial_id)
+        _SEARCH_STEP_REMAINING -= 1
 
     started = _utc_now()
     selection = {
@@ -1077,6 +1382,11 @@ def _checkpointed_trial(
         "configuration": dict(configuration),
         "searchStage": rung,
         "mechanism": mechanism,
+        "execution": {
+            "scheduler": "disposable-trial-worker-v1" if _SEARCH_STEP_ACTIVE else "family-memory-adaptive-v1",
+            "parallelWorkers": int(execution_workers),
+            "workerImageDigest": os.environ.get("MARKETLAB_WORKER_IMAGE_DIGEST", "unrecorded"),
+        },
     }
     bundle = None
     try:
@@ -1128,7 +1438,45 @@ def _checkpointed_trial(
     finally:
         if temporary.exists():
             shutil.rmtree(temporary)
+    if _SEARCH_STEP_ACTIVE:
+        active_path.unlink(missing_ok=True)
     return entry, bundle if load_bundle else None
+
+
+def _load_checkpoint_bundle(output_directory: Path, trial_id: str) -> dict[str, Any]:
+    trial_root = output_directory / "checkpoints" / "trials" / trial_id
+    trial = read_json(trial_root / "trial.json")
+    if trial.get("status") != "COMPLETED":
+        raise ValueError(f"selected checkpoint is not completed: {trial_id}")
+    bundle_path = trial_root / "bundle.pickle"
+    relative = str(bundle_path.relative_to(output_directory))
+    artifacts = {item["path"]: item for item in trial.get("artifactHashes", [])}
+    artifact = artifacts.get(relative, {})
+    if not bundle_path.is_file() or artifact.get("sizeBytes") != bundle_path.stat().st_size:
+        raise ValueError(f"selected checkpoint bundle identity mismatch: {trial_id}")
+    if artifact.get("sha256") != sha256_file(bundle_path):
+        raise ValueError(f"selected checkpoint bundle hash mismatch: {trial_id}")
+    with bundle_path.open("rb") as handle:
+        return pickle.load(handle)
+
+
+def _audit_checkpoint_bundles(output_directory: Path, trials: Sequence[Mapping[str, Any]]) -> int:
+    audited = 0
+    for trial in trials:
+        if trial.get("status") != "COMPLETED":
+            continue
+        trial_id = str(trial["trialId"])
+        trial_root = output_directory / "checkpoints" / "trials" / trial_id
+        bundle_path = trial_root / "bundle.pickle"
+        relative = str(bundle_path.relative_to(output_directory))
+        artifacts = {item["path"]: item for item in trial.get("artifactHashes", [])}
+        artifact = artifacts.get(relative, {})
+        if not bundle_path.is_file() or artifact.get("sizeBytes") != bundle_path.stat().st_size:
+            raise ValueError(f"trial checkpoint bundle identity mismatch: {trial_id}")
+        if artifact.get("sha256") != sha256_file(bundle_path):
+            raise ValueError(f"trial checkpoint bundle hash mismatch: {trial_id}")
+        audited += 1
+    return audited
 
 
 def _run_iterative_development_search(
@@ -1160,6 +1508,7 @@ def _run_iterative_development_search(
     load_started = time.monotonic()
     full_rows = _time_stratified_panel_rows(panel_path, panel_manifest, full_maximum)
     breadth_rows = _time_stratified_panel_rows(panel_path, panel_manifest, breadth_maximum)
+    trial_runner = _AdaptiveTrialRunner(breadth_rows, full_rows)
     gpu_identity = _gpu_identity()
     engineering_path = output_directory / "checkpoints" / "engineering.json"
     if not engineering_path.exists():
@@ -1182,7 +1531,7 @@ def _run_iterative_development_search(
     all_feature_names = sorted(set.intersection(*(set(row["features"]) for row in full_rows)))
     feature_schema_hash = canonical_sha256(all_feature_names)
     trials: list[dict[str, Any]] = []
-    bundles: dict[str, dict[str, Any]] = {}
+    bundle_references: dict[str, str] = {}
     manifests: dict[str, dict[str, Any]] = {}
     blocked: list[dict[str, str]] = []
     started = _utc_now()
@@ -1198,30 +1547,80 @@ def _run_iterative_development_search(
     )
     declared_trial_ceiling = active_mechanism_count * maximum_trials
     completed_counter = 0
+    active_candidate_id: str | None = None
 
-    def publish_status(rung: str) -> None:
+    checkpoint_records: dict[str, dict[str, Any]] = {}
+    for path in (output_directory / "checkpoints" / "trials").glob("*/trial.json"):
+        try:
+            record = read_json(path)
+            checkpoint_records[str(record["trialId"])] = record
+        except (KeyError, OSError, ValueError):
+            continue
+    initial_checkpoint_count = len(checkpoint_records)
+
+    def checkpoint_health(updated_trial: dict[str, Any] | None = None) -> dict[str, Any]:
+        if updated_trial is not None:
+            checkpoint_records[str(updated_trial["trialId"])] = updated_trial
+        records = list(checkpoint_records.values())
+        latest = max(records, key=lambda value: value.get("completedAt", ""), default={})
+        latest_selection = latest.get("selection", {})
+        latest_execution = latest.get("execution", {})
+        return {
+            "durableTrialCount": len(records),
+            "successfulTrialCount": sum(value.get("status") == "COMPLETED" for value in records),
+            "failedTrialCount": sum(value.get("status") == "FAILED" for value in records),
+            "latestCheckpointAt": latest.get("completedAt"),
+            "latestCheckpointTrialId": latest.get("trialId"),
+            "latestCheckpointCandidateId": latest.get("candidateId"),
+            "latestCheckpointRung": latest.get("rung") or latest.get("searchStage"),
+            "latestCheckpointModelId": (
+                latest.get("modelId") or latest_selection.get("modelFamilies")
+            ),
+            "latestCheckpointWorkerCount": latest_execution.get("parallelWorkers"),
+        }
+
+    def publish_status(
+        rung: str,
+        model_id: str | None = None,
+        checkpoint: dict[str, Any] | None = None,
+    ) -> None:
         elapsed = max(0.001, time.monotonic() - load_started)
+        health = checkpoint_health(checkpoint)
+        durable = int(health["durableTrialCount"])
+        new_durable = max(0, durable - initial_checkpoint_count)
         _write_search_status(output_directory / "status.json", {
             "schemaVersion": "marketlab.alpha-search-operational-status.v1",
             "campaignId": campaign["campaignId"],
             "basketSize": basket_size,
             "rung": rung,
-            "completedTrials": completed_counter,
+            "completedTrials": durable,
             "declaredTrialCeiling": declared_trial_ceiling,
-            "remainingTrialCeiling": max(0, declared_trial_ceiling - completed_counter),
+            "remainingTrialCeiling": max(0, declared_trial_ceiling - durable),
             "elapsedSeconds": elapsed,
-            "meanSecondsPerTrial": elapsed / max(1, completed_counter),
+            "meanSecondsPerTrial": elapsed / new_durable if new_durable else None,
             "projectedUpperBoundSeconds": (
-                max(0, declared_trial_ceiling - completed_counter)
-                * elapsed / max(1, completed_counter)
+                max(0, declared_trial_ceiling - durable)
+                * elapsed / new_durable
+                if new_durable else None
             ),
+            **health,
+            "processedTrialsThisRun": new_durable,
+            "activeCandidateId": active_candidate_id,
+            "activeModelId": model_id,
+            "inFlightTrialIds": list(trial_runner.in_flight_trial_ids),
+            "inFlightTrialCount": len(trial_runner.in_flight_trial_ids),
             "confirmationOpened": False,
+            "scheduler": "disposable-trial-worker-v1" if _SEARCH_STEP_ACTIVE else "bounded-streaming-family-memory-adaptive-v2",
+            "configuredWorkerCeiling": trial_runner.maximum_workers,
+            "lastSelectedWorkerCount": trial_runner.last_worker_count,
+            "workerImageDigest": os.environ.get("MARKETLAB_WORKER_IMAGE_DIGEST", "unrecorded"),
             "updatedAt": _utc_now(),
         })
 
     for mechanism in campaign["mechanisms"]:
         features = _feature_names(full_rows, mechanism)
         candidate_id = f"{mechanism}-direction-v1"
+        active_candidate_id = candidate_id
         if not features:
             blocked.append({"mechanism": mechanism, "candidateId": candidate_id, "reason": "no mechanism-specific causal fields in panel"})
             continue
@@ -1266,21 +1665,25 @@ def _run_iterative_development_search(
                 int(iterative["breadth"]["trialsPerFamily"]),
                 campaign["searchBudget"]["stageASeeds"][0],
             )
+            tasks = []
             for index, (configuration, cell) in enumerate(zip(configurations, _breadth_cells(campaign, model_index))):
                 configuration = _low_fidelity_configuration(model_id, configuration)
                 trial_id = f"{candidate_id}-{basket_size}-{model_id}-breadth-{index}-seed-{campaign['searchBudget']['stageASeeds'][0]}".replace("_", "-")
-                trial, bundle = _checkpointed_trial(
-                    output_directory=output_directory, manifest=manifest, rows=breadth_rows,
-                    features=features, horizon=cell[0], target=cell[1], factor=cell[2],
-                    model_id=model_id, configuration=configuration,
-                    seed=campaign["searchBudget"]["stageASeeds"][0],
-                    outer_folds=int(iterative["breadth"]["outerFolds"]), rung="BREADTH",
-                    trial_id=trial_id, mechanism=mechanism,
-                )
+                tasks.append({
+                    "row_set": "breadth", "output_directory": output_directory,
+                    "manifest": manifest, "features": features, "horizon": cell[0],
+                    "target": cell[1], "factor": cell[2], "model_id": model_id,
+                    "configuration": configuration, "seed": campaign["searchBudget"]["stageASeeds"][0],
+                    "outer_folds": int(iterative["breadth"]["outerFolds"]), "rung": "BREADTH",
+                    "trial_id": trial_id, "mechanism": mechanism,
+                })
+            for trial, bundle in trial_runner.run(
+                model_id, tasks, on_checkpoint=lambda trial, rung="BREADTH", model=model_id: publish_status(rung, model, trial)
+            ):
                 trials.append(trial)
                 breadth_by_family[model_id].append(trial)
                 completed_counter += 1
-                publish_status("BREADTH")
+                publish_status("BREADTH", model_id)
 
         family_best = []
         for family, values in breadth_by_family.items():
@@ -1304,6 +1707,7 @@ def _run_iterative_development_search(
 
         full_best: list[dict[str, Any]] = []
         for model_id in promoted:
+            promotion_record = next(value for family, value in family_best if family == model_id)
             model_index = model_families.index(model_id)
             configurations = _model_configurations(
                 model_id,
@@ -1311,20 +1715,25 @@ def _run_iterative_development_search(
                 campaign["searchBudget"]["stageASeeds"][0],
             )
             values = []
+            tasks = []
             for index, (configuration, cell) in enumerate(zip(configurations, _stage_a_cells(campaign, model_index, len(configurations)))):
                 trial_id = f"{candidate_id}-{basket_size}-{model_id}-full-{index}-seed-{campaign['searchBudget']['stageASeeds'][0]}".replace("_", "-")
-                trial, bundle = _checkpointed_trial(
-                    output_directory=output_directory, manifest=manifest, rows=full_rows,
-                    features=features, horizon=cell[0], target=cell[1], factor=cell[2],
-                    model_id=model_id, configuration=configuration,
-                    seed=campaign["searchBudget"]["stageASeeds"][0],
-                    outer_folds=int(iterative["fullDevelopment"]["outerFolds"]), rung="FULL_DEVELOPMENT",
-                    trial_id=trial_id, mechanism=mechanism,
-                )
+                tasks.append({
+                    "row_set": "full", "output_directory": output_directory,
+                    "manifest": manifest, "features": features, "horizon": cell[0],
+                    "target": cell[1], "factor": cell[2], "model_id": model_id,
+                    "configuration": configuration, "seed": campaign["searchBudget"]["stageASeeds"][0],
+                    "outer_folds": int(iterative["fullDevelopment"]["outerFolds"]),
+                    "rung": "FULL_DEVELOPMENT", "trial_id": trial_id, "mechanism": mechanism,
+                    "promotion_source_hashes": [canonical_sha256(promotion_record)],
+                })
+            for trial, bundle in trial_runner.run(
+                model_id, tasks, on_checkpoint=lambda trial, rung="FULL_DEVELOPMENT", model=model_id: publish_status(rung, model, trial)
+            ):
                 trials.append(trial)
                 values.append(trial)
                 completed_counter += 1
-                publish_status("FULL_DEVELOPMENT")
+                publish_status("FULL_DEVELOPMENT", model_id)
             completed = [value for value in values if value["status"] == "COMPLETED"]
             if completed:
                 full_best.append(max(completed, key=lambda value: (value["positiveOuterFolds"], value["meanOuterImprovement"], value["trialId"])))
@@ -1350,25 +1759,33 @@ def _run_iterative_development_search(
             )
             for config_index, configuration in enumerate(configurations):
                 seed_results = []
-                canonical_bundle = None
-                for seed in iterative["robustness"]["seeds"]:
-                    trial_id = f"{candidate_id}-{basket_size}-{model_id}-robust-{config_index}-seed-{seed}".replace("_", "-")
-                    trial, bundle = _checkpointed_trial(
-                        output_directory=output_directory, manifest=manifest, rows=full_rows,
-                        features=features, horizon=selection["horizons"], target=selection["targets"],
-                        factor=selection["factorRepresentations"], model_id=model_id,
-                        configuration=configuration, seed=int(seed),
-                        outer_folds=int(iterative["robustness"]["outerFolds"]), rung="ROBUSTNESS",
-                        trial_id=trial_id, mechanism=mechanism,
-                        load_bundle=int(seed) == int(iterative["robustness"]["seeds"][0]),
-                    )
+                seeds = [int(seed) for seed in iterative["robustness"]["seeds"]]
+                tasks = [
+                    {
+                        "row_set": "full", "output_directory": output_directory,
+                        "manifest": manifest, "features": features,
+                        "horizon": selection["horizons"], "target": selection["targets"],
+                        "factor": selection["factorRepresentations"], "model_id": model_id,
+                        "configuration": configuration, "seed": seed,
+                        "outer_folds": int(iterative["robustness"]["outerFolds"]),
+                        "rung": "ROBUSTNESS",
+                        "trial_id": f"{candidate_id}-{basket_size}-{model_id}-robust-{config_index}-seed-{seed}".replace("_", "-"),
+                        "mechanism": mechanism, "load_bundle": False,
+                        "promotion_source_hashes": [canonical_sha256(survivor)],
+                    }
+                    for seed in seeds
+                ]
+                for (trial, bundle), seed in zip(
+                    trial_runner.run(
+                        model_id, tasks, on_checkpoint=lambda trial, rung="ROBUSTNESS", model=model_id: publish_status(rung, model, trial)
+                    ),
+                    seeds,
+                ):
                     trials.append(trial)
                     if trial["status"] == "COMPLETED":
                         seed_results.append(trial)
-                        if int(seed) == int(iterative["robustness"]["seeds"][0]):
-                            canonical_bundle = bundle
                     completed_counter += 1
-                    publish_status("ROBUSTNESS")
+                    publish_status("ROBUSTNESS", model_id)
                 if len(seed_results) == len(iterative["robustness"]["seeds"]):
                     improvements = [value for trial in seed_results for value in trial["outerFoldImprovements"]]
                     group_id = f"{candidate_id}-{basket_size}-{model_id}-robust-{config_index}-group".replace("_", "-")
@@ -1382,12 +1799,23 @@ def _run_iterative_development_search(
                         "status": "COMPLETED",
                     }
                     robustness_groups.append(group)
-                    if canonical_bundle is not None:
-                        bundles[group_id] = canonical_bundle
+                    bundle_references[group_id] = str(tasks[0]["trial_id"])
 
         winners = select_development_winners(robustness_groups, maximum_total=1)
         for winner in winners:
-            bundle = bundles[winner["trialId"]]
+            if _SEARCH_STEP_ACTIVE:
+                _write_search_status(output_directory / "operations" / "active.json", {
+                    "schemaVersion": "marketlab.alpha-active-trial.v1",
+                    "campaignId": campaign["campaignId"],
+                    "candidateId": candidate_id,
+                    "trialId": f"finalize-{winner['trialId']}",
+                    "rung": "FINALIZATION",
+                    "modelId": winner["selection"]["modelFamilies"],
+                    "epistemicStage": "EXPLORATORY",
+                    "memoryProfileGiB": int(os.environ.get("MARKETLAB_TRIAL_MEMORY_GIB", "0")),
+                    "state": "RUNNING",
+                })
+            bundle = _load_checkpoint_bundle(output_directory, bundle_references[winner["trialId"]])
             winner_rows = _rows_with_targets_inside_period(
                 full_rows,
                 _instant_ms(development["startInclusive"]),
@@ -1414,7 +1842,26 @@ def _run_iterative_development_search(
                 blocked.append({"mechanism": mechanism, "candidateId": candidate_id, "reason": "time-shift integrity audit failed or retained predictive structure"})
                 continue
             model_path = output_directory / "models" / f"{winner['trialId']}.pickle"
-            model_hash = write_once_bytes(model_path, pickle.dumps(bundle, protocol=5))
+            model_payload = pickle.dumps(bundle, protocol=5)
+            expected_model_hash = sha256_bytes(model_payload)
+            if model_path.exists():
+                model_hash = sha256_file(model_path)
+                if model_hash != expected_model_hash:
+                    try:
+                        existing_bundle = pickle.loads(model_path.read_bytes())
+                    except (OSError, EOFError, pickle.UnpicklingError) as error:
+                        raise ValueError(f"existing model artifact hash mismatch: {model_path}") from error
+                    compatible = all(
+                        existing_bundle.get(key) == bundle.get(key)
+                        for key in ("configuration", "featureNames", "symbols", "unknownSymbolPolicy")
+                    ) and (
+                        existing_bundle.get("marketBaseline", {}).get("featureNames")
+                        == bundle.get("marketBaseline", {}).get("featureNames")
+                    )
+                    if not compatible:
+                        raise ValueError(f"existing model artifact hash mismatch: {model_path}")
+            else:
+                model_hash = write_once_bytes(model_path, model_payload)
             exact_schema = canonical_sha256({
                 "featureNames": bundle["featureNames"],
                 "marketBaselineFeatureNames": bundle["marketBaseline"]["featureNames"],
@@ -1463,8 +1910,26 @@ def _run_iterative_development_search(
         "openedOutcomePeriods": [],
         "completionState": "AWAITING_CONFIRMATION_REVIEW",
     }
+    if _SEARCH_STEP_ACTIVE:
+        _write_search_status(output_directory / "operations" / "active.json", {
+            "schemaVersion": "marketlab.alpha-active-trial.v1",
+            "campaignId": campaign["campaignId"],
+            "candidateId": active_candidate_id,
+            "trialId": f"audit-search-{basket_size}",
+            "rung": "ARTIFACT_AUDIT",
+            "modelId": None,
+            "epistemicStage": "EXPLORATORY",
+            "memoryProfileGiB": int(os.environ.get("MARKETLAB_TRIAL_MEMORY_GIB", "0")),
+            "state": "RUNNING",
+        })
+    result["checkpointArtifactAudit"] = {
+        "completedBundlesVerified": _audit_checkpoint_bundles(output_directory, trials)
+    }
     result["artifactSha256"] = write_once_json(result_path, result)
+    if _SEARCH_STEP_ACTIVE:
+        (output_directory / "operations" / "active.json").unlink(missing_ok=True)
     publish_status("AWAITING_CONFIRMATION_REVIEW")
+    trial_runner.close()
     return result
 
 

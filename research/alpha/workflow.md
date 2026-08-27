@@ -62,6 +62,12 @@ a new candidate ID and fresh confirmation period.
   registered content-addressed stores; candidate manifests link to them.
 - Development results may guide exploration but never become confirmation by
   relabeling.
+- Availability-biased or previously opened historical data may be used only
+  with a machine-readable bias ledger and an `EXPLORATORY` promotion ceiling.
+  Intentional target leakage remains prohibited.
+- Future observations may be evaluated only after every registered development
+  gate passes and one exact candidate is frozen with a fixed quality-duration
+  gate, event-count gate, deadline, and no-interim-outcome-access rule.
 - A candidate that requires unavailable point-in-time data becomes
   `DATA_BLOCKED`; its space may still contain independent ready work.
 - No workspace stage authorizes live orders. Trading authority will be governed

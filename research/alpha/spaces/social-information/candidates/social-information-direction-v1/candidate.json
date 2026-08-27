@@ -8,10 +8,18 @@
   "mechanism": "Public information diffusion may be gradual or contemporaneous; no unconditional sign is presumed.",
   "target": "Outright or factor-residual basket-member log return on outcomes not consumed by prior social tests.",
   "horizon": "Locked campaign horizon grid, subject to an untouched eligible period.",
-  "informationSet": ["Causal social features, frozen volatility state, and market controls"],
+  "informationSet": [
+    "Causal social features, frozen volatility state, and market controls"
+  ],
   "primaryBaseline": "Strongest market-only and frozen prior social control",
   "evidence": [],
   "frozenLocks": [],
-  "touchPoints": ["alpha-model", "research/alpha/campaigns/archive-directional-gpu-v1.lock.json"],
-  "nextAction": "Identify an unconsumed historical outcome period; otherwise remain DATA_BLOCKED without waiting."
+  "touchPoints": [
+    "alpha-model",
+    "research/alpha/campaigns/archive-directional-gpu-v1.lock.json"
+  ],
+  "nextAction": "Identify an unconsumed historical outcome period; otherwise remain DATA_BLOCKED without waiting.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
 }

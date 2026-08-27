@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v2",
+  "id": "event-conditioned-social-direction-registration-2026-08-26",
+  "candidateIds": [
+    "event-conditioned-social-direction-v1"
+  ],
+  "classification": "PROGRAM_REGISTRATION",
+  "decision": "DATA_FEASIBILITY",
+  "summarySource": "research/decision-log.md",
+  "summary": "Registered an eight-variant event-conditioned signed-social candidate and a no-outcome data-feasibility gate; no directional result is claimed.",
+  "candidateDecisions": [
+    {
+      "candidateId": "event-conditioned-social-direction-v1",
+      "stage": "DATA_FEASIBILITY",
+      "decision": "DATA_FEASIBILITY",
+      "current": false
+    }
+  ],
+  "outcomesOpened": false,
+  "openedOutcomes": [],
+  "artifacts": []
+}

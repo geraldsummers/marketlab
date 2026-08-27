@@ -8,10 +8,18 @@
   "mechanism": "Flows or public releases may change demand or risk appetite, but no sign or lag is presumed.",
   "target": "Outright or factor-residual basket-member log return.",
   "horizon": "Locked campaign horizon grid, subject to publication-frequency eligibility.",
-  "informationSet": ["Native-chain observations and vintage public releases with causal availability clocks"],
+  "informationSet": [
+    "Native-chain observations and vintage public releases with causal availability clocks"
+  ],
   "primaryBaseline": "Strongest frozen market-only model",
   "evidence": [],
   "frozenLocks": [],
-  "touchPoints": ["alpha-model", "research/alpha/campaigns/archive-directional-gpu-v1.lock.json"],
-  "nextAction": "Audit vintage availability; run no model when revised or point-in-time values cannot be reconstructed."
+  "touchPoints": [
+    "alpha-model",
+    "research/alpha/campaigns/archive-directional-gpu-v1.lock.json"
+  ],
+  "nextAction": "Audit vintage availability; run no model when revised or point-in-time values cannot be reconstructed.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
 }

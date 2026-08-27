@@ -8,10 +8,18 @@
   "mechanism": "Options prices can reflect hedging demand or information, but their directional relationship is empirical.",
   "target": "Outright or factor-residual basket-member log return.",
   "horizon": "Locked campaign horizon grid, limited by surface observation cadence.",
-  "informationSet": ["Point-in-time option surface summaries and market controls"],
+  "informationSet": [
+    "Point-in-time option surface summaries and market controls"
+  ],
   "primaryBaseline": "Strongest frozen market-only model",
   "evidence": [],
   "frozenLocks": [],
-  "touchPoints": ["alpha-model", "research/alpha/campaigns/archive-directional-gpu-v1.lock.json"],
-  "nextAction": "Audit free historical surface completeness; become DATA_BLOCKED rather than backfill with current contracts."
+  "touchPoints": [
+    "alpha-model",
+    "research/alpha/campaigns/archive-directional-gpu-v1.lock.json"
+  ],
+  "nextAction": "Audit free historical surface completeness; become DATA_BLOCKED rather than backfill with current contracts.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
 }

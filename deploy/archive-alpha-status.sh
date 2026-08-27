@@ -34,3 +34,64 @@ for search_status in "$artifact_root"/search-*/status.json; do
     [[ -f "$search_status" ]] || continue
     cat "$search_status"
 done
+python3 - "$artifact_root" <<'PY'
+import json, sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+now = datetime.now(timezone.utc)
+for search in sorted(Path(sys.argv[1]).glob("search-*")):
+    records = []
+    for path in (search / "checkpoints/trials").glob("*/trial.json"):
+        try:
+            records.append(json.loads(path.read_text(encoding="utf-8")))
+        except (OSError, ValueError):
+            continue
+    if not records:
+        continue
+    latest = max(records, key=lambda value: value.get("completedAt", ""))
+    latest_selection = latest.get("selection", {})
+    latest_execution = latest.get("execution", {})
+    completed_at = latest.get("completedAt")
+    age = None
+    if completed_at:
+        age = max(0.0, (now - datetime.fromisoformat(completed_at.replace("Z", "+00:00"))).total_seconds())
+    process_status = {}
+    try:
+        process_status = json.loads((search / "status.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        pass
+    active = {}
+    try:
+        active = json.loads((search / "operations/active.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        pass
+    attempts = list((search / "operations/attempts").glob("*/*.json"))
+    plans = list((search / "checkpoints/plans").glob("*.json"))
+    print(json.dumps({
+        "schemaVersion": "marketlab.alpha-checkpoint-health.v1",
+        "search": search.name,
+        "durableTrialCount": len(records),
+        "successfulTrialCount": sum(value.get("status") == "COMPLETED" for value in records),
+        "failedTrialCount": sum(value.get("status") == "FAILED" for value in records),
+        "inFlightTrialCount": process_status.get("inFlightTrialCount"),
+        "inFlightTrialIds": process_status.get("inFlightTrialIds", []),
+        "activeCandidateId": process_status.get("activeCandidateId"),
+        "activeRung": process_status.get("rung"),
+        "activeModelId": process_status.get("activeModelId"),
+        "observedWorkerCount": process_status.get("lastSelectedWorkerCount"),
+        "activeTrial": active or None,
+        "immutablePlanCount": len(plans),
+        "operationalAttemptCount": len(attempts),
+        "oomAttemptCount": len(attempts),
+        "latestCheckpointAt": completed_at,
+        "latestCheckpointAgeSeconds": age,
+        "latestCheckpointTrialId": latest.get("trialId"),
+        "latestCheckpointCandidateId": latest.get("candidateId"),
+        "latestCheckpointRung": latest.get("rung") or latest.get("searchStage"),
+        "latestCheckpointModelId": latest.get("modelId") or latest_selection.get("modelFamilies"),
+        "latestCheckpointWorkerCount": latest_execution.get("parallelWorkers"),
+        "epistemicStage": "EXPLORATORY",
+        "confirmationOpened": False,
+    }, sort_keys=True, separators=(",", ":")))
+PY

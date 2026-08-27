@@ -50,6 +50,22 @@ the exact frozen unit after a transient interruption. It must escalate checksum,
 checkpoint, determinism, mandatory-asset, repeated OOM, and repeated timeout
 failures, and it must never run `freeze` or `confirm`.
 
+Production development search uses a disposable process for each exact trial.
+`search-step` replays durable ledger metadata, runs at most one missing trial,
+publishes its immutable checkpoint, and exits so panel, estimator, and file-cache
+memory are reclaimed by the kernel. Ordered rung plans are immutable and include
+the hashes of trial records used for automatic promotion. Checkpoint replay checks
+recorded paths and sizes without repeatedly hashing every model bundle; the selected
+winner is hash-verified before deserialization and all completed bundles receive a
+single streamed hash audit before the final search result is published.
+
+Production is intentionally serial with one BLAS/OpenMP thread and one trial in
+flight. Each trial starts with 8 CPUs, 36 GiB RAM, and no swap. Exit 137 records an
+immutable operational attempt and retries the same missing trial once at 40 GiB.
+A second exit 137 marks the campaign `OPERATIONALLY_BLOCKED` and exits with systemd
+restart prevention. Stop and resume through the user unit; the interrupted
+in-memory fit is recomputed while durable successes and failures are preserved.
+
 ## Manual component commands
 
 ```sh
@@ -83,3 +99,47 @@ families, then 32 configurations across three seeds for at most two survivors.
 Every attempt and model bundle is checkpointed before the next trial. Search
 results remain `EXPLORATORY`; only the exact merged basket family may later be
 frozen for confirmation after explicit review.
+## Suspend for a development evidence audit
+
+The multi-basket search can be stopped at the current durable trial boundary without opening confirmation:
+
+```sh
+deploy/archive-alpha-suspend.sh /mnt/stack/marketlab/config/archive-alpha-v2.env \
+  /mnt/media/marketlab/artifacts/archive-alpha-v2
+```
+
+Audit only the immutable JSON ledgers, plans, and completed search reports. Model bundles are deliberately excluded:
+
+```sh
+PYTHONPATH=alpha-model python3 -m marketlab_alpha.audit audit-development \
+  --lock research/alpha/campaigns/archive-directional-gpu-v2.lock.json \
+  --search 4=/mnt/media/marketlab/artifacts/archive-alpha-v2/search-4 \
+  --search 6=/mnt/media/marketlab/artifacts/archive-alpha-v2/search-6 \
+  --confirmation-ledger-root /mnt/media/marketlab/artifacts/archive-alpha-v2/confirmation-ledger \
+  --suspension-record /mnt/media/marketlab/artifacts/archive-alpha-v2/suspensions/evidence-audit-TIMESTAMP.json \
+  --output /mnt/media/marketlab/artifacts/archive-alpha-v2/evidence-audit
+```
+
+The output is write-once and contains `ledger-manifest.json`, `audit.json`, and `audit.md`. The command fails closed on campaign or basket mismatches, duplicate trials, changed promotion sources, a nonempty confirmation ledger, or an existing output directory.
+## Focused historical V3
+
+`marketlab_alpha.focused_v3` freezes one audited 15-minute market-state candidate, performs a single-use historical confirmation only after explicit authorization, and produces a separate non-promotable Hyperliquid transfer diagnostic from an already-ended period. It never waits for future observations.
+
+```sh
+PYTHONPATH=alpha-model python3 -m marketlab_alpha.focused_v3 freeze-focused-v3 --help
+PYTHONPATH=alpha-model python3 -m marketlab_alpha.focused_v3 confirm-focused-v3 --help
+PYTHONPATH=alpha-model python3 -m marketlab_alpha.focused_v3 acquire-hyperliquid-transfer --help
+PYTHONPATH=alpha-model python3 -m marketlab_alpha.focused_v3 diagnose-hyperliquid-transfer --help
+```
+
+The confirmation command writes its single-use marker before reading any panel row. The transfer result is always `INCONCLUSIVE` and cannot authorize predictive, paper, or live promotion.
+
+## Social-variance defensive exposure replay
+
+marketlab_alpha.variance_exposure freezes and evaluates a historical, de-risk-only portfolio mapping from the frozen social-attention one-hour variance forecast. It verifies model and feature identities, acquires official Binance funding archives with publisher checksums, applies fixed 5 and 10 bps turnover stresses, and writes immutable portfolio rows and a dependence-aware result. The July 2026 period is already open, so this workflow cannot produce blind validation, paper eligibility, or live authority.
+
+Commands:
+
+    PYTHONPATH=alpha-model python3 -m marketlab_alpha.variance_exposure freeze --help
+    PYTHONPATH=alpha-model python3 -m marketlab_alpha.variance_exposure acquire-funding --help
+    PYTHONPATH=alpha-model python3 -m marketlab_alpha.variance_exposure evaluate --help

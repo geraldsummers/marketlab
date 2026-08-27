@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v2",
+  "id": "funding-basis-data-feasibility-2026-08-27",
+  "candidateIds": [
+    "funding-basis-carry"
+  ],
+  "classification": "DATA_FEASIBILITY",
+  "decision": "DATA_BLOCKED",
+  "summarySource": "research/decision-log.md",
+  "summary": "Official checksum-verified archives can reconstruct funding and basis, but cannot reconstruct both observed execution legs or historical rule, fee, and borrow state.",
+  "candidateDecisions": [
+    {
+      "candidateId": "funding-basis-carry",
+      "stage": "DATA_BLOCKED",
+      "decision": "DATA_BLOCKED",
+      "current": true
+    }
+  ],
+  "outcomesOpened": false,
+  "openedOutcomes": [],
+  "artifacts": [
+    {
+      "role": "combined-data-feasibility-audit",
+      "sha256": "6764b2afc00345bf2d09161e8f01b07ecd326fccd0f1a721f411c059e4d2410a",
+      "location": "/mnt/media/marketlab/artifacts/next-program-audits/data-feasibility-20260827/audit.json",
+      "verification": "REMOTE_FILE"
+    }
+  ]
+}

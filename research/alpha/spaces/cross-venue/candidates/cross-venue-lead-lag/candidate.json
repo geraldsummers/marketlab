@@ -8,17 +8,28 @@
   "mechanism": "Liquidity and information fragment across venues, causing temporary leadership and delayed adjustment.",
   "target": "Subsequent Hyperliquid mid-price or executable return",
   "horizon": "Event time to seconds",
-  "informationSet": ["Synchronized Binance and Hyperliquid events", "Measured clock skew", "Contract-normalized prices and books"],
+  "informationSet": [
+    "Synchronized Binance and Hyperliquid events",
+    "Measured clock skew",
+    "Contract-normalized prices and books"
+  ],
   "primaryBaseline": "Contemporaneous no-lead model and target-venue-only dynamics",
   "evidence": [
     {
       "classification": "DATA_FEASIBILITY",
       "decision": "DATA_BLOCKED",
       "summary": "Synchronized cross-venue capture has not started and therefore has no eligibility date.",
-      "sourcePath": "research/theory-exhaustion.md"
+      "sourcePath": "research/theory-exhaustion.md",
+      "evidenceId": "theory-data-blockers-2026-07-28"
     }
   ],
   "frozenLocks": [],
-  "touchPoints": ["collector", "theories/src/main/kotlin/dev/marketlab/theories/AcademicTheoryRegistry.kt"],
-  "nextAction": "Implement synchronized event capture and accumulate 90 quality-valid days before evaluation."
+  "touchPoints": [
+    "collector",
+    "theories/src/main/kotlin/dev/marketlab/theories/AcademicTheoryRegistry.kt"
+  ],
+  "nextAction": "Implement synchronized event capture and accumulate 90 quality-valid days before evaluation.",
+  "researchModes": [
+    "PROSPECTIVE"
+  ]
 }

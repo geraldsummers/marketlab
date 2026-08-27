@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "marketlab.compute-run.v1",
+  "id": "archive-directional-v2-resource-profile-2026-08-25",
+  "campaignId": "archive-directional-gpu-v2",
+  "candidateIds": [
+    "market-state-direction-v1",
+    "market-transmission-direction-v1",
+    "trade-flow-direction-v1",
+    "cross-asset-divergence-direction-v1"
+  ],
+  "evidenceIds": [
+    "archive-directional-v2-audit-2026-08-25"
+  ],
+  "workload": "Memory-heavy chronological sklearn tabular model-family search",
+  "sourcePath": "research/decision-log.md",
+  "observations": [
+    {
+      "id": "basket-four-durable-ledger",
+      "completedTrials": 1184,
+      "failedTrials": 197,
+      "elapsedSeconds": 34896.81913079694,
+      "meanSecondsPerTrial": 29.473664806416334,
+      "outcome": "Search reached a durable boundary but consumed substantially more compute than the final evidence justified."
+    },
+    {
+      "id": "basket-six-disposable-worker",
+      "completedTrials": 743,
+      "failedTrials": 1,
+      "configuredWorkerCeiling": 1,
+      "outcome": "Single-worker execution was operationally stable; the search family remained incomplete."
+    },
+    {
+      "id": "openmp-oversubscription",
+      "outcome": "Multi-process plus internally threaded numerical libraries caused libgomp failures and memory-bandwidth contention."
+    },
+    {
+      "id": "gpu-applicability",
+      "outcome": "The selected sklearn tree workload did not justify GPU execution; evidence and data quality were limiting."
+    }
+  ],
+  "recommendation": {
+    "maxConcurrentTrials": 1,
+    "blasThreads": 2,
+    "maxBlasThreads": 4,
+    "defaultCandidateTrialBudget": 24,
+    "gpuPolicy": "Require explicit estimator support and an evidence-based need.",
+    "dataPolicy": "Materialize reusable folds once and avoid per-process copies of memory-heavy panels."
+  }
+}

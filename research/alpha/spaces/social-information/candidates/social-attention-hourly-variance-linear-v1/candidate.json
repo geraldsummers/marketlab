@@ -8,17 +8,28 @@
   "mechanism": "Higher public-information arrival intensity increases near-term price variation.",
   "target": "Next-hour Binance perpetual realized variance",
   "horizon": "1 hour",
-  "informationSet": ["Historically indexed Bluesky attention", "Registered market controls"],
+  "informationSet": [
+    "Historically indexed Bluesky attention",
+    "Registered market controls"
+  ],
   "primaryBaseline": "Registered market-only hourly-variance model",
   "evidence": [
     {
       "classification": "RETROSPECTIVE_DISCOVERY_ONLY",
       "decision": "DISCOVERY_SCREEN_NOT_PASSED",
       "summary": "The linear increment was positive but negligible and insignificant: improvement 0.00007282, Holm-adjusted p=1.0.",
-      "sourcePath": "research/social-backfill-results.md"
+      "sourcePath": "research/social-backfill-results.md",
+      "evidenceId": "social-backfill-discovery-2026-07-30"
     }
   ],
-  "frozenLocks": ["research/social-backfill-analysis.lock.json"],
-  "touchPoints": ["social-backfill/src/main/kotlin/dev/marketlab/backfill/RetrospectiveAnalysis.kt"],
-  "nextAction": "Keep the linear candidate rejected; the separately registered nonlinear functional model supersedes it as a distinct candidate."
+  "frozenLocks": [
+    "research/social-backfill-analysis.lock.json"
+  ],
+  "touchPoints": [
+    "social-backfill/src/main/kotlin/dev/marketlab/backfill/RetrospectiveAnalysis.kt"
+  ],
+  "nextAction": "Keep the linear candidate rejected; the separately registered nonlinear functional model supersedes it as a distinct candidate.",
+  "researchModes": [
+    "HISTORICAL"
+  ]
 }
