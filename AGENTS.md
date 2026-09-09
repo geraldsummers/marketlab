@@ -289,3 +289,25 @@ python3 -m unittest research/alpha/tools/test_workspace.py
 Also run any narrower data, model, deployment, or live-contract validation
 required by the touched surface. Do not push while a required local check
 fails.
+
+## Authorized midnight exploration
+
+The user authorized the workflow in `research/automation/README.md`: start at
+midnight Australia/Hobart when the main Codex bucket has more than 50% remaining,
+then pursue sequential bounded historical exploration until the reserve is
+reached. Use gpt-6-astra with medium reasoning. Optimize evidence per token and
+experiment; do not spend allowance merely because it exists.
+
+The trusted dispatcher may manage systemd user worker units and commit/push
+validated research to `origin/automation/market-exploration` from its isolated
+worktree. This is the specific exception to the foreground-only rule above;
+research agents still cannot detach independent jobs, alter the automation,
+consume credits/resets, or change live services. No automatic main-branch merge.
+Registration is pushed before data access. Preserve failed results and publish
+validated evidence checkpoints; retain failing code locally without pushing it.
+Keep raw artifacts on the server with committed hashes and explicit locations.
+
+Unattended authority stops at historical exploration. It does not include sealed
+confirmation or prospective activation, even where general task policy could
+otherwise permit confirmation. Do not revisit consumed outcomes or reset an
+experiment budget. Consult live claims; defer overlapping interactive work.

@@ -13,6 +13,7 @@
     {"id":"archive-alpha-campaign","kind":"research-run","path":"alpha-model/README.md","purpose":"Register historical archives, reconstruct baskets, run the bounded GPU model search, and consume frozen confirmation outcomes once.","mutatesExternalState":true},
     {"id":"social-blind-extension","kind":"research-run","path":"research/social-functional-blind-extension-runbook.md","purpose":"Acquire, materialize, and evaluate the single-use July blind extension.","mutatesExternalState":true},
     {"id":"social-prospective-shadow","kind":"research-run","path":"research/social-functional-prospective.lock.json","purpose":"Registered 90-day prospective shadow stage for the frozen one-hour variance model; orchestration is not yet implemented.","mutatesExternalState":true},
-    {"id":"bounded-experiment","kind":"research-run","path":"research/alpha/tools/experiment.py","purpose":"Start, supervise, inspect and finalize a local historical experiment with a persistent sub-12-hour deadline.","mutatesExternalState":true}
+    {"id":"bounded-experiment","kind":"research-run","path":"research/alpha/tools/experiment.py","purpose":"Start, supervise, inspect and finalize a local historical experiment with a persistent sub-12-hour deadline.","mutatesExternalState":true},
+    {"id":"midnight-market-exploration","kind":"research-run","path":"research/automation/README.md","purpose":"Inspect and operate the authorized Hobart-midnight research queue, main allowance reserve and validated Git history.","mutatesExternalState":true}
   ]
 }

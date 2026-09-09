@@ -203,7 +203,7 @@ def load_state(path):
     return s
 
 
-def start(root, contract_path):
+def start(root, contract_path, *, launch_watcher=True, systemd_unit=None):
     c = validate_contract(read(contract_path))
     root.mkdir(parents=True, exist_ok=True)
     with lock(root / '.registry.lock'):
@@ -231,11 +231,12 @@ def start(root, contract_path):
             s = {'schemaVersion': 'marketlab.experiment-state.v1', 'contract': c,
                  'contractSha256': digest(c), 'startClock': now, 'lastClock': now,
                  'deadlineUtc': now['utc'] + c['budgetSeconds'], 'attempts': [],
-                 'child': None, 'runner': None, 'result': None}
+                 'child': None, 'runner': None, 'result': None,
+                 'supervision': {'kind':'SYSTEMD' if systemd_unit else 'PROCESS_GROUP', 'unit':systemd_unit}}
             path.parent.mkdir()
             atomic(path, s)
         # The watcher lives independently of the invoking terminal and also expires idle experiments.
-        if not s.get('result'):
+        if not s.get('result') and launch_watcher:
             with (path.parent / 'watcher.log').open('a') as log:
                 watcher = subprocess.Popen([sys.executable, str(Path(__file__).resolve()), '--root', str(root), '_watch', c['experimentId']],
                                  stdin=subprocess.DEVNULL, stdout=log, stderr=log, start_new_session=True)

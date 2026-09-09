@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "marketlab.automation.v1",
+  "timezone": "Australia/Hobart",
+  "model": "gpt-6-astra",
+  "effort": "medium",
+  "bucket": "codex",
+  "reservePercent": 50,
+  "pollSeconds": 30,
+  "staleSeconds": 60,
+  "turnMaxSeconds": 1200,
+  "maxNoProgressTurns": 3,
+  "remote": "origin",
+  "branch": "automation/market-exploration",
+  "stateRoot": "$HOME/.local/state/marketlab/automation",
+  "experimentRoot": "$HOME/.local/share/marketlab/experiments",
+  "artifactRoot": "$HOME/artifacts/marketlab-automation",
+  "herdrSession": "crypto_trading",
+  "python": "$HOME/.venv-social-model/bin/python",
+  "javaHome": "$HOME/.sdkman/candidates/java/current",
+  "codex": "/usr/local/bin/codex",
+  "domains": ["conventional", "onchain", "prediction-markets", "usd-stablecoins"]
+}

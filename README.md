@@ -148,3 +148,5 @@ Binance market acquisition, two deterministic Bluesky shards, and a
 network-isolated analyzer. Their single source of study configuration is
 [`research/social-backfill-program.lock.json`](research/social-backfill-program.lock.json);
 the v2 program explicitly contains no Farcaster source.
+
+See [midnight research automation](research/automation/README.md) for the Hobart schedule, allowance reserve, published research branch and operator controls.

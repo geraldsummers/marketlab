@@ -1,0 +1,17 @@
+[Unit]
+Description=Marketlab bounded research worker %i
+
+[Service]
+Type=exec
+WorkingDirectory=%h/.local/share/marketlab/automation-worktree
+ExecStart=%h/.local/bin/marketlab-explore worker %i
+ExecStopPost=%h/.local/bin/marketlab-explore reconcile %i
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=TMPDIR=%h/.tmp
+KillMode=control-group
+TimeoutStopSec=10s
+RuntimeMaxSec=11h30m
+MemoryHigh=5500M
+MemoryMax=6G
+TasksMax=512
+Restart=no

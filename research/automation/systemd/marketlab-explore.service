@@ -1,0 +1,15 @@
+[Unit]
+Description=Marketlab allowance-aware research dispatcher
+
+[Service]
+Type=exec
+WorkingDirectory=%h/.local/share/marketlab/automation-worktree
+ExecStart=%h/.local/bin/marketlab-explore dispatch
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=TMPDIR=%h/.tmp
+KillMode=control-group
+TimeoutStopSec=30s
+MemoryHigh=2G
+MemoryMax=3G
+TasksMax=512
+Restart=no

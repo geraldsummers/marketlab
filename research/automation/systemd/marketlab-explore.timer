@@ -1,0 +1,11 @@
+[Unit]
+Description=Start authorized market exploration at Hobart midnight
+
+[Timer]
+OnCalendar=*-*-* 00:00:00 Australia/Hobart
+Persistent=false
+AccuracySec=1s
+Unit=marketlab-explore.service
+
+[Install]
+WantedBy=timers.target

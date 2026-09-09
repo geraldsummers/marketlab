@@ -106,3 +106,5 @@ Historical single-use confirmation is autonomous only after a task explicitly
 permits it, the candidate is frozen, the ledger is empty, artifact hashes pass,
 and the exact period is absent from the opened-outcome inventory. This does not
 authorize paper or live trading.
+
+See [midnight research automation](../automation/README.md) for the Hobart schedule, allowance reserve, published research branch and operator controls.
