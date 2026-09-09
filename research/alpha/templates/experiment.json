@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "marketlab.experiment.v1",
+  "experimentId": "replace-experiment-id",
+  "candidateId": "replace-candidate-id",
+  "searchFamilyId": "replace-family-id",
+  "predecessorExperimentIds": [],
+  "hypothesis": "Replace with one falsifiable economic claim before starting.",
+  "domains": [
+    "conventional"
+  ],
+  "targetMarket": "Declare exact instrument universe",
+  "targetVenue": "Declare target-native venue or official publication source",
+  "decisionClock": "Declare timezone and causal availability semantics",
+  "outcomeAccess": "NONE",
+  "budgetSeconds": 42300,
+  "reportReserveSeconds": 900,
+  "maxTrials": 0,
+  "familyTrialBudget": 16,
+  "resourceClass": "DATA_IO",
+  "blasThreads": 2,
+  "memoryMiB": 4096,
+  "gpu": false,
+  "gpuJustification": ""
+}

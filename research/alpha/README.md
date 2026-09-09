@@ -21,6 +21,13 @@ There is no hand-maintained global candidate index. Agents can add candidates
 in separate directories without contending on one registry file. The workspace
 tool builds the index from the filesystem.
 
+## Bounded cross-market exploration
+
+Current expanded agenda: `DATA_FEASIBILITY`, with equal-priority conventional,
+onchain, prediction-market and dollar-stablecoin source audits. Follow
+[experiments.md](experiments.md) for mandatory persistent experiment budgets.
+Domain tags provide coverage; alpha spaces continue to represent mechanisms.
+
 ## Start here
 
 ```sh
@@ -73,6 +80,9 @@ artifact hash checks are explicit and opt-in through `verify-artifacts
 - `social-information`: attention, sentiment, disagreement, and news diffusion
 - `relative-value`: cross-sectional factors, pairs, and related-instrument value
 - `execution-portfolio`: costs, capacity, sizing, risk, and portfolio combination
+- `settlement-liquidity`: onchain settlement, flows and fragmented liquidity
+- `event-resolution`: event probabilities, contract rules and settlement
+- `monetary-policy-transmission`: stablecoin policy, issuance and reserve effects
 
 These are information/mechanism spaces, not model-family silos. Boosted trees,
 linear models, and neural networks are estimators that may serve several spaces.

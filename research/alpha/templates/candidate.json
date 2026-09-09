@@ -15,5 +15,15 @@
   "evidence": [],
   "frozenLocks": [],
   "touchPoints": [],
-  "nextAction": "Smallest safe action that advances or falsifies the candidate."
+  "nextAction": "Smallest safe action that advances or falsifies the candidate.",
+  "researchModes": [
+    "HISTORICAL"
+  ],
+  "domains": [
+    "conventional"
+  ],
+  "targetMarket": "Exact market and universe",
+  "targetVenue": "Exact target venue",
+  "experimentContract": "experiment.json",
+  "searchFamilyId": "replace-family-id"
 }

@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "marketlab.alpha-space.v2",
+  "id": "monetary-policy-transmission",
+  "title": "Dollar stablecoin policy transmission",
+  "purpose": "Investigate whether expanding US support for dollar stablecoins creates overlooked effects in issuance, reserves, payments and market liquidity.",
+  "state": "OPEN",
+  "dependencies": [
+    "execution-portfolio"
+  ],
+  "readyWork": [
+    {
+      "id": "stablecoin-policy-feasibility",
+      "status": "READY",
+      "kind": "data",
+      "summary": "Investigate whether expanding US support for dollar stablecoins creates overlooked effects in issuance, reserves, payments and market liquidity.",
+      "blockedBy": [],
+      "externalBlockers": [],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "priority": "P1",
+      "candidateIds": [
+        "stablecoin-policy-feasibility"
+      ],
+      "deliverables": [
+        "Source readiness inventory with provenance, availability, cost and gaps",
+        "At most three distinct mechanisms and one preregisterable experiment or blocker",
+        "Evidence-linked candidate result and handoff within the experiment budget"
+      ],
+      "acceptanceCriteria": [
+        "Verify the policy premise with dated primary sources; separate private issuance, policy, Treasury backing and tokenized Treasuries; audit redemption and reserve publication clocks.",
+        "Use existing data only; do not open sealed outcomes",
+        "Record biases and remain DATA_FEASIBILITY or DATA_BLOCKED; no predictive promotion",
+        "Compare overlapping prior candidates and preserve their locked outcomes"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/monetary-policy-transmission/candidates/stablecoin-policy-feasibility",
+        "research/alpha/spaces/monetary-policy-transmission/space.json",
+        "research/inventory/data-sources/"
+      ],
+      "resourceClass": "DATA_IO",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 2,
+        "maxTrials": 0,
+        "gpu": false,
+        "budgetSeconds": 42300,
+        "reportReserveSeconds": 900,
+        "memoryMiB": 4096
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": [],
+      "domains": [
+        "usd-stablecoins"
+      ],
+      "experimentContract": "research/alpha/spaces/monetary-policy-transmission/candidates/stablecoin-policy-feasibility/experiment.json"
+    }
+  ]
+}

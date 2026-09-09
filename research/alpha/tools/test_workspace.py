@@ -87,6 +87,36 @@ class AlphaWorkspaceTest(unittest.TestCase):
             return CompletedProcess([], 0, stdout=f"{'b' * 64}  /remote/report.json\n", stderr="")
         results, exit_code = workspace.verify_artifacts(rows, "host", runner=mismatch_runner)
         self.assertEqual((1, "MISMATCH"), (exit_code, results[0]["status"]))
+    def test_new_agenda_has_four_equal_priority_feasibility_contracts(self):
+        ready = workspace.ready_work()
+        self.assertEqual(4, len(ready))
+        self.assertEqual({"P1"}, {task["priority"] for task in ready})
+        self.assertEqual({"conventional", "onchain", "prediction-markets", "usd-stablecoins"},
+                         {domain for task in ready for domain in task["domains"]})
+        for task in ready:
+            contract = workspace.load_json(workspace.REPO_ROOT / task["experimentContract"])
+            self.assertEqual("NONE", contract["outcomeAccess"])
+            self.assertLess(contract["budgetSeconds"], 43200)
+            self.assertEqual(0, contract["maxTrials"])
+
+    def test_invalid_new_contract_is_rejected_by_workspace(self):
+        from unittest.mock import patch
+        original = workspace.load_json
+        def changed(path):
+            value = original(path)
+            if path.name == "experiment.json":
+                value["budgetSeconds"] = 43200
+            return value
+        with patch.object(workspace, "load_json", side_effect=changed):
+            self.assertTrue(any("invalid experiment contract" in error for error in workspace.validate()))
+
+    def test_historical_locks_and_legacy_candidates_remain_readable(self):
+        spaces, candidates = workspace.discover()
+        legacy = [c for _, c in candidates if not c.get("experimentContract")]
+        self.assertEqual(38, len(legacy))
+        for path in workspace.REPO_ROOT.glob("research/**/*.lock.json"):
+            self.assertIsInstance(workspace.load_json(path), dict)
+
 
 if __name__ == "__main__":
     unittest.main()

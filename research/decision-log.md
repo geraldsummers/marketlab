@@ -945,3 +945,33 @@ Only a materially different mechanism or information set with a new candidate ca
 
 ### Next permitted action
 Preserve rejection and return workspace routing to independent mechanisms. Do not freeze or start prospective waiting.
+
+
+## 2026-09-08 — Bounded cross-market exploration infrastructure
+
+Current expanded research stage: `DATA_FEASIBILITY`. User-directed scope now
+includes balanced conventional-market, onchain, prediction-market and dollar
+stablecoin feasibility work. Long tail refers to underexamined mechanisms.
+The proposed US stablecoin-policy expansion is a thesis for dated primary-source
+verification, not an established predictive result.
+
+The new local experiment supervisor fixes the maximum total budget at 11h45m,
+including a reporting reserve, and preserves deadline and family trial accounting
+across interruptions. New dispatch of the incompatible persistent archive V2
+campaign is disabled; its frozen locks, prior outcomes and failures are unchanged.
+This is an operational change, not a reclassification of any prior candidate.
+
+What was tested: local driver access and software contracts for deadlines,
+resource admission, interruption, evidence finalization and workspace routing.
+What is known: the RTX 3060 permits local CUDA driver allocation; the existing
+social-model environment contains CPU-only Torch. No GPU model performance claim
+has been tested. No new market or sealed confirmation outcomes were opened.
+Next permitted action: claim and start one of the four equally prioritized
+bounded historical source-feasibility tasks, after the implementation checks pass.
+
+Implementation verification: workspace validation, 35 workspace/supervisor tests,
+91 alpha-model tests, 8 social-model tests, shell checks, and `./gradlew check`
+passed. Parent-process line coverage measured 73% for the new supervisor and
+63% for the workspace tool; subprocess paths are tested but not included in that
+coverage measurement. The registration evidence inventory links the immutable
+software-validation artifact. The four source audits remain READY and unexecuted.

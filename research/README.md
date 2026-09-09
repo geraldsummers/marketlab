@@ -4,8 +4,9 @@ This directory is the human-readable side of the compiled theory registry.
 Every experiment begins with a frozen research card and remains visible even
 when it fails, is abandoned, or cannot acquire sufficiently complete real data.
 
+- [Bounded cross-market experiment workflow](alpha/experiments.md)
 - [Parallel alpha workspace](alpha/README.md)
-- [Active archive directional GPU campaign](alpha/campaigns/archive-directional-gpu-v2.lock.json)
+- [Historical archive directional GPU campaign](alpha/campaigns/archive-directional-gpu-v2.lock.json)
 - [Repository inventory](inventory/README.md)
 - [Review protocol](review-protocol.md)
 - [Theory landscape](theory-landscape.md)

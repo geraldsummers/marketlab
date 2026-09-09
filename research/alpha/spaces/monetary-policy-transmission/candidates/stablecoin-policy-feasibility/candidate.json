@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "stablecoin-policy-feasibility",
+  "spaceId": "monetary-policy-transmission",
+  "title": "Dollar stablecoin policy transmission",
+  "stage": "DATA_FEASIBILITY",
+  "claim": "Investigate whether expanding US support for dollar stablecoins creates overlooked effects in issuance, reserves, payments and market liquidity.",
+  "mechanism": "Source feasibility only; predicted sign, target and search family must be specified before a predictive experiment.",
+  "target": "Source readiness and one proposed falsifiable experiment, or documented blocker",
+  "horizon": "Historical data available when the feasibility experiment begins",
+  "informationSet": [
+    "Verify the policy premise with dated primary sources; separate private issuance, policy, Treasury backing and tokenized Treasuries; audit redemption and reserve publication clocks."
+  ],
+  "primaryBaseline": "No predictive claim in this feasibility task",
+  "evidence": [
+    {
+      "evidenceId": "bounded-cross-market-registration-2026-09-08",
+      "classification": "DATA_FEASIBILITY",
+      "decision": "DATA_FEASIBILITY",
+      "summary": "Bounded source task registered; source coverage and predictive value remain untested.",
+      "sourcePath": "research/decision-log.md"
+    }
+  ],
+  "frozenLocks": [],
+  "touchPoints": [
+    "research/alpha/spaces/monetary-policy-transmission/candidates/stablecoin-policy-feasibility",
+    "research/source-policy.md",
+    "research/alpha/experiments.md"
+  ],
+  "nextAction": "Start the bounded source audit and record evidence before any model execution.",
+  "researchModes": [
+    "HISTORICAL"
+  ],
+  "domains": [
+    "usd-stablecoins"
+  ],
+  "targetMarket": "Domain source coverage; exact instrument selection is a deliverable",
+  "targetVenue": "Official sources; exact source/venue selection is a deliverable",
+  "experimentContract": "experiment.json",
+  "searchFamilyId": "stablecoin-policy-feasibility"
+}

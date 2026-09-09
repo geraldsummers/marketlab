@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "marketlab.compute-run.v1",
+  "id": "local-lab-gpu-access-2026-09-08",
+  "campaignId": "bounded-cross-market-exploration",
+  "candidateIds": [],
+  "evidenceIds": [],
+  "workload": "Local environment feasibility only; no model or market outcome evaluation",
+  "sourcePath": "research/decision-log.md",
+  "observations": [
+    {
+      "id": "cuda-driver-access",
+      "gpu": "NVIDIA GeForce RTX 3060",
+      "vramMiB": 12288,
+      "driver": "550.163.01",
+      "contextCreation": "PASS",
+      "deviceAllocation": "PASS"
+    },
+    {
+      "id": "existing-model-environment",
+      "path": "/home/dev/.venv-social-model",
+      "torch": "2.7.1+cpu",
+      "cudaAvailable": false,
+      "numpy": "2.3.2",
+      "scikitLearn": "1.7.1",
+      "xgboost": "3.4.0",
+      "duckdb": "1.5.5"
+    }
+  ],
+  "recommendation": {
+    "maxConcurrentTrials": 1,
+    "blasThreads": 2,
+    "maxBlasThreads": 4,
+    "gpuPolicy": "Prepare a pinned CUDA-capable user-space model environment only when justified model work begins; driver access alone is not model readiness.",
+    "memoryPolicy": "Inspect shared free memory before starting; default source audits use 4096 MiB."
+  }
+}

@@ -110,6 +110,8 @@ def holm(values):
     return output
 
 def evaluate_variant(rows,signed,horizon,estimator,seed):
+    from budget import record_trial
+    record_trial()
     eligible=[row for row in rows if row[signed] is not None]; times=sorted({row["decisionTimeEpochMillis"] for row in eligible}); initial=int(len(times)*.4); remaining=len(times)-initial; boundaries=[initial+round(remaining*i/5) for i in range(6)]; target=f"target_{horizon}h"; all_rows=[]; folds=[]
     for fold in range(5):
         test_start=times[boundaries[fold]]; test_end=times[boundaries[fold+1]-1]+1; train_all=[row for row in eligible if row["decisionTimeEpochMillis"]<test_start-4*HOUR]; test_all=[row for row in eligible if test_start<=row["decisionTimeEpochMillis"]<test_end]; threshold=float(np.quantile([row["attention_shock"] for row in train_all],.9)); train=[row for row in train_all if row["attention_shock"]>=threshold]; test=[row for row in test_all if row["attention_shock"]>=threshold]
@@ -141,5 +143,8 @@ def run(args):
     print(json.dumps({"stage":report["stage"],"winner":report["winner"],"reportSha256":sha256(report_path),"panelRows":len(rows)}))
 
 def main():
-    parser=argparse.ArgumentParser(description=__doc__); sub=parser.add_subparsers(dest="command",required=True); command=sub.add_parser("run"); command.add_argument("--input-root",required=True); command.add_argument("--program-lock",required=True); command.add_argument("--output",required=True); command.add_argument("--seed",type=int,default=20260827); run(parser.parse_args())
+    parser=argparse.ArgumentParser(description=__doc__); sub=parser.add_subparsers(dest="command",required=True); command=sub.add_parser("run"); command.add_argument("--input-root",required=True); command.add_argument("--program-lock",required=True); command.add_argument("--output",required=True); command.add_argument("--seed",type=int,default=20260827); args = parser.parse_args()
+    from budget import require_budget
+    require_budget(model=True, outcome_access="DEVELOPMENT_ONLY")
+    run(args)
 if __name__=="__main__": main()

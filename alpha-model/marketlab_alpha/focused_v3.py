@@ -543,6 +543,8 @@ def main(argv: list[str] | None = None) -> int:
     transfer = commands.add_parser("diagnose-hyperliquid-transfer")
     transfer.add_argument("--lock", type=Path, required=True); transfer.add_argument("--frozen", type=Path, required=True); transfer.add_argument("--frozen-sha256", required=True); transfer.add_argument("--acquisition", type=Path, required=True); transfer.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
+    from .budget import require_budget
+    require_budget(outcome_access="SINGLE_USE_HISTORICAL_CONFIRMATION" if args.command == "confirm-focused-v3" else None)
     if args.command == "freeze-focused-v3":
         result = freeze_focused_v3(args.lock, args.audit, args.search, args.model, args.development_panel, args.confirmation_panel, args.confirmation_manifest, args.confirmation_ledger_root, args.output)
     elif args.command == "confirm-focused-v3":

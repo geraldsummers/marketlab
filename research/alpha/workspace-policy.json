@@ -4,7 +4,12 @@
   "futureOutcomeWaitingAllowed": false,
   "discoveryPolicy": {
     "availabilityBiasedHistoricalDiscoveryAllowed": true,
-    "allowedBiases": ["AVAILABILITY_TIMESTAMP_PROXY", "OPENED_OUTCOMES", "REVISED_VALUES", "SURVIVOR_UNIVERSE"],
+    "allowedBiases": [
+      "AVAILABILITY_TIMESTAMP_PROXY",
+      "OPENED_OUTCOMES",
+      "REVISED_VALUES",
+      "SURVIVOR_UNIVERSE"
+    ],
     "targetLeakageAllowed": false,
     "promotionCeiling": "EXPLORATORY",
     "requireBiasLedger": true
@@ -36,5 +41,28 @@
     "requireEmptyLedger": true,
     "requireNoOpenedOutcomeOverlap": true,
     "requireExactArtifactHashes": true
+  },
+  "experimentPolicy": {
+    "schemaVersion": "marketlab.experiment.v1",
+    "defaultBudgetSeconds": 42300,
+    "maximumBudgetSeconds": 42300,
+    "defaultReportReserveSeconds": 900,
+    "clockStartsBeforeAcquisition": true,
+    "restartResetsDeadline": false,
+    "registryRoot": "$HOME/.local/share/marketlab/experiments",
+    "supervisor": "research/alpha/tools/experiment.py",
+    "maximumFamilyTrialBudget": 256
+  },
+  "researchAgenda": {
+    "stage": "DATA_FEASIBILITY",
+    "focus": "Underexplored economic mechanisms with realistic cost and capacity checks",
+    "initialDomains": [
+      "conventional",
+      "onchain",
+      "prediction-markets",
+      "usd-stablecoins"
+    ],
+    "initialPriority": "P1",
+    "coverage": "BALANCED"
   }
 }

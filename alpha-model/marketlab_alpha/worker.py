@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import os
 import pickle
 import re
 import sys
@@ -62,6 +63,9 @@ def execute(
     if request.get("runtime") != "PYTHON":
         raise ValueError("Python worker refuses a non-PYTHON task")
     deadline = int(request["deadline"]["epochMillis"] if isinstance(request["deadline"], dict) else request["deadline"])
+    experiment_deadline = os.environ.get("MARKETLAB_EXPERIMENT_WORK_DEADLINE")
+    if experiment_deadline is not None:
+        deadline = min(deadline, int(float(experiment_deadline) * 1000))
     if int(datetime.now(timezone.utc).timestamp() * 1000) >= deadline:
         raise ValueError("worker invocation deadline has expired")
     if request.get("randomSeed") != manifest.get("seed"):

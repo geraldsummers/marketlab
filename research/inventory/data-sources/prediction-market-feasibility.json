@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "marketlab.data-source-inventory.v1",
+  "id": "prediction-market-feasibility",
+  "title": "Event probability and resolution sources",
+  "category": "prediction-markets",
+  "status": "MISSING",
+  "pointInTimeUse": "Versioned contract rules, cancellations, disputed outcomes, settlement delays, executable prices and correlated events.",
+  "implementations": [],
+  "alphaSpaces": [
+    "event-resolution"
+  ],
+  "limitations": [
+    "No source availability, entitlement or point-in-time coverage has been verified for this new task."
+  ],
+  "nextAction": "Audit event-contract histories for overlooked information diffusion and resolution relationships."
+}

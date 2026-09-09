@@ -1,4 +1,12 @@
-# Alpha campaigns
+# Campaign execution status
+
+As of 2026-09-08, new historical execution uses the bounded
+[experiment supervisor](../experiments.md). The legacy persistent archive
+campaign is disabled for new dispatch. Its locks remain historical records;
+register a bounded successor before new work. Consult the evidence inventory
+for actual completed results rather than the original registration prose below.
+
+# Historical campaign registration
 
 Campaign locks bound shared search dimensions, compute, development periods,
 and single-use confirmation families. They do not replace per-mechanism

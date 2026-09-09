@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "marketlab.experiment.v1",
+  "experimentId": "prediction-market-feasibility-v1",
+  "candidateId": "prediction-market-feasibility",
+  "searchFamilyId": "prediction-market-feasibility",
+  "predecessorExperimentIds": [],
+  "hypothesis": "Audit event-contract histories for overlooked information diffusion and resolution relationships.",
+  "domains": [
+    "prediction-markets"
+  ],
+  "targetMarket": "Domain source coverage; exact instrument selection is a deliverable",
+  "targetVenue": "Official sources; exact source/venue selection is a deliverable",
+  "decisionClock": "Declare timezone and causal availability semantics",
+  "outcomeAccess": "NONE",
+  "budgetSeconds": 42300,
+  "reportReserveSeconds": 900,
+  "maxTrials": 0,
+  "familyTrialBudget": 16,
+  "resourceClass": "DATA_IO",
+  "blasThreads": 2,
+  "memoryMiB": 4096,
+  "gpu": false,
+  "gpuJustification": ""
+}

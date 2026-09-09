@@ -43,7 +43,10 @@
         "maxProcesses": 1,
         "blasThreads": 1,
         "maxTrials": 0,
-        "gpu": false
+        "gpu": false,
+        "budgetSeconds": 42300,
+        "reportReserveSeconds": 900,
+        "memoryMiB": 4096
       },
       "outcomeAccess": "NONE",
       "completionEvidenceIds": []
@@ -79,7 +82,10 @@
         "maxProcesses": 1,
         "blasThreads": 2,
         "maxTrials": 16,
-        "gpu": false
+        "gpu": false,
+        "budgetSeconds": 42300,
+        "reportReserveSeconds": 900,
+        "memoryMiB": 4096
       },
       "outcomeAccess": "NONE",
       "completionEvidenceIds": []

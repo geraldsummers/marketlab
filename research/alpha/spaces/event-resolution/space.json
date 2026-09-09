@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "marketlab.alpha-space.v2",
+  "id": "event-resolution",
+  "title": "Event probability and resolution",
+  "purpose": "Audit event-contract histories for overlooked information diffusion and resolution relationships.",
+  "state": "OPEN",
+  "dependencies": [
+    "execution-portfolio"
+  ],
+  "readyWork": [
+    {
+      "id": "prediction-market-feasibility",
+      "status": "READY",
+      "kind": "data",
+      "summary": "Audit event-contract histories for overlooked information diffusion and resolution relationships.",
+      "blockedBy": [],
+      "externalBlockers": [],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "priority": "P1",
+      "candidateIds": [
+        "prediction-market-feasibility"
+      ],
+      "deliverables": [
+        "Source readiness inventory with provenance, availability, cost and gaps",
+        "At most three distinct mechanisms and one preregisterable experiment or blocker",
+        "Evidence-linked candidate result and handoff within the experiment budget"
+      ],
+      "acceptanceCriteria": [
+        "Versioned contract rules, cancellations, disputed outcomes, settlement delays, executable prices and correlated events.",
+        "Use existing data only; do not open sealed outcomes",
+        "Record biases and remain DATA_FEASIBILITY or DATA_BLOCKED; no predictive promotion",
+        "Compare overlapping prior candidates and preserve their locked outcomes"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/event-resolution/candidates/prediction-market-feasibility",
+        "research/alpha/spaces/event-resolution/space.json",
+        "research/inventory/data-sources/"
+      ],
+      "resourceClass": "DATA_IO",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 2,
+        "maxTrials": 0,
+        "gpu": false,
+        "budgetSeconds": 42300,
+        "reportReserveSeconds": 900,
+        "memoryMiB": 4096
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": [],
+      "domains": [
+        "prediction-markets"
+      ],
+      "experimentContract": "research/alpha/spaces/event-resolution/candidates/prediction-market-feasibility/experiment.json"
+    }
+  ]
+}

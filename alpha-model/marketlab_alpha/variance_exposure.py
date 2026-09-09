@@ -283,5 +283,8 @@ def main(argv=None):
     fz=sub.add_parser("freeze"); fz.add_argument("--lock",required=True); fz.add_argument("--development-features",required=True); fz.add_argument("--evaluation-features",required=True); fz.add_argument("--frozen-models",required=True); fz.add_argument("--output",required=True); fz.set_defaults(fn=freeze)
     ac=sub.add_parser("acquire-funding"); ac.add_argument("--frozen",required=True); ac.add_argument("--frozen-sha256",required=True); ac.add_argument("--output",required=True); ac.set_defaults(fn=lambda a: print(json.dumps(acquire_funding(Path(a.frozen),a.frozen_sha256,Path(a.output)),sort_keys=True)))
     ev=sub.add_parser("evaluate"); ev.add_argument("--frozen",required=True); ev.add_argument("--frozen-sha256",required=True); ev.add_argument("--funding-manifest",required=True); ev.add_argument("--output",required=True); ev.set_defaults(fn=evaluate)
-    args=p.parse_args(argv); args.fn(args)
+    args=p.parse_args(argv)
+    from .budget import require_budget
+    require_budget()
+    args.fn(args)
 if __name__=="__main__":main()

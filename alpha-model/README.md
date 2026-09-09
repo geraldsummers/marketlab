@@ -1,9 +1,25 @@
+# Local bounded research execution
+
+New local historical work must use the [experiment supervisor](../research/alpha/experiments.md).
+Start its clock before acquisition or preparation and run the component commands
+below through `experiment.py run`. Search commands need `--trials N` before the
+experiment ID. Existing persistent V2 dispatch is disabled; its original instructions
+below are retained as historical context, not authorization to restart it.
+
+The local RTX 3060 (12 GB) was verified through CUDA driver context creation and
+allocation on 2026-09-08. Create a user-space model environment only when model work
+requires it, install `requirements.lock`, and record resolved versions and the
+`probe-gpu` artifact. Set `TMPDIR` under `/home/dev/.tmp` during installation.
+The system Python does not provide Torch. Use `$HOME/.local/bin` for any persistent
+launcher, following the lane tool-installation policy. Recheck shared RAM and VRAM
+before choosing the contract memory limit. No new SDK was installed for this update.
+
 # Archive alpha campaign runner
 
 This worker runs assumption-neutral, multi-asset directional research from
 immutable historical inputs. It does not place, modify, or cancel orders.
 
-The active contract is
+The historical archive contract is
 `research/alpha/campaigns/archive-directional-gpu-v2.lock.json`. V1 was
 superseded before any data or outcome was opened. V2 discovers symbols from
 historical archive prefixes, reconstructs membership from native daily bars,
