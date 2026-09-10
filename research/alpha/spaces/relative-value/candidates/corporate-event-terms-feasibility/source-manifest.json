@@ -1,0 +1,333 @@
+{
+  "sources": [
+    {
+      "id": "sec-api",
+      "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces",
+      "finalUrl": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces",
+      "retrievedAt": "2026-09-10T01:52:08.978285+00:00",
+      "completedAt": "2026-09-10T01:52:09.296492+00:00",
+      "status": 403,
+      "bytes": 1924,
+      "sha256": "4d3309e37000308aec9d4e7bd248326be6f9158ff55aa2aa994c14a4debac1f1",
+      "path": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/4d3309e37000308aec9d4e7bd248326be6f9158ff55aa2aa994c14a4debac1f1",
+      "headers": {
+        "Date": "Thu, 10 Sep 2026 01:52:09 GMT",
+        "Last-Modified": null,
+        "ETag": null,
+        "Content-Type": "text/html"
+      },
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "id": "sec-access",
+      "url": "https://www.sec.gov/about/developer-resources",
+      "finalUrl": "https://www.sec.gov/about/developer-resources",
+      "retrievedAt": "2026-09-10T01:52:09.596652+00:00",
+      "completedAt": "2026-09-10T01:52:09.649522+00:00",
+      "status": 403,
+      "bytes": 1924,
+      "sha256": "851404e168f616c0293bb7dafc4a7c9e699b5ee18b451dd3d9fb04cac627fe2b",
+      "path": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/851404e168f616c0293bb7dafc4a7c9e699b5ee18b451dd3d9fb04cac627fe2b",
+      "headers": {
+        "Date": "Thu, 10 Sep 2026 01:52:09 GMT",
+        "Last-Modified": null,
+        "ETag": null,
+        "Content-Type": "text/html"
+      },
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "id": "sec-form-index",
+      "url": "https://www.sec.gov/Archives/edgar/full-index/2024/QTR2/form.idx",
+      "finalUrl": "https://www.sec.gov/Archives/edgar/full-index/2024/QTR2/form.idx",
+      "retrievedAt": "2026-09-10T01:52:09.949676+00:00",
+      "completedAt": "2026-09-10T01:52:10.006167+00:00",
+      "status": 403,
+      "bytes": 4818,
+      "sha256": "97e8164d39a2371f8d64ccdf2b662cab5df70d5a9ddcc1a8aa453fa089cee834",
+      "path": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/97e8164d39a2371f8d64ccdf2b662cab5df70d5a9ddcc1a8aa453fa089cee834",
+      "headers": {
+        "Date": "Thu, 10 Sep 2026 01:52:10 GMT",
+        "Last-Modified": null,
+        "ETag": null,
+        "Content-Type": "text/html"
+      },
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "id": "sec-submissions",
+      "url": "https://data.sec.gov/submissions/CIK0000865752.json",
+      "finalUrl": "https://data.sec.gov/submissions/CIK0000865752.json",
+      "retrievedAt": "2026-09-10T01:52:10.306309+00:00",
+      "completedAt": "2026-09-10T01:52:10.410586+00:00",
+      "status": 403,
+      "bytes": 4818,
+      "sha256": "e2b27b39fdf6159761c805ce504970af1db6468d2084e99fd688d55e8715cb64",
+      "path": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/e2b27b39fdf6159761c805ce504970af1db6468d2084e99fd688d55e8715cb64",
+      "headers": {
+        "Date": "Thu, 10 Sep 2026 01:52:10 GMT",
+        "Last-Modified": null,
+        "ETag": null,
+        "Content-Type": "text/html"
+      },
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "id": "offer-2024",
+      "url": "https://www.sec.gov/Archives/edgar/data/865752/000110465924058430/tm2413707d1_exa1a.htm",
+      "finalUrl": "https://www.sec.gov/Archives/edgar/data/865752/000110465924058430/tm2413707d1_exa1a.htm",
+      "retrievedAt": "2026-09-10T01:52:10.710727+00:00",
+      "completedAt": "2026-09-10T01:52:10.764463+00:00",
+      "status": 403,
+      "bytes": 4818,
+      "sha256": "7ace994761e6904511353bcc2b4d4581fb763019b3dfd14e2207eca42115dd21",
+      "path": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/7ace994761e6904511353bcc2b4d4581fb763019b3dfd14e2207eca42115dd21",
+      "headers": {
+        "Date": "Thu, 10 Sep 2026 01:52:10 GMT",
+        "Last-Modified": null,
+        "ETag": null,
+        "Content-Type": "text/html"
+      },
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "id": "offer-rumble",
+      "url": "https://www.sec.gov/Archives/edgar/data/1830081/000121390025000757/sctoi_ex99a1arumble.htm",
+      "finalUrl": "https://www.sec.gov/Archives/edgar/data/1830081/000121390025000757/sctoi_ex99a1arumble.htm",
+      "retrievedAt": "2026-09-10T01:52:11.064619+00:00",
+      "completedAt": "2026-09-10T01:52:11.120694+00:00",
+      "status": 403,
+      "bytes": 4818,
+      "sha256": "7086fcfc779b927c22bf2ce626da56e20543b90eacabf36a96a567f3d95ac1c0",
+      "path": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/7086fcfc779b927c22bf2ce626da56e20543b90eacabf36a96a567f3d95ac1c0",
+      "headers": {
+        "Date": "Thu, 10 Sep 2026 01:52:11 GMT",
+        "Last-Modified": null,
+        "ETag": null,
+        "Content-Type": "text/html"
+      },
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "id": "frontera-amendment",
+      "url": "https://fronteraenergy.mediaroom.com/2024-09-25-Frontera-to-Amend-Substantial-Issuer-Bid-to-Remove-the-Preferential-Acceptance-of-Odd-Lots",
+      "finalUrl": "https://fronteraenergy.mediaroom.com/2024-09-25-Frontera-to-Amend-Substantial-Issuer-Bid-to-Remove-the-Preferential-Acceptance-of-Odd-Lots",
+      "retrievedAt": "2026-09-10T01:52:11.420864+00:00",
+      "completedAt": "2026-09-10T01:52:11.550666+00:00",
+      "status": 200,
+      "bytes": 165139,
+      "sha256": "40f8c229a4454d7b8559c036ac225fbaadf14e7f8c06cd70f7e4765f04d5d915",
+      "path": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/40f8c229a4454d7b8559c036ac225fbaadf14e7f8c06cd70f7e4765f04d5d915",
+      "headers": {
+        "Date": "Thu, 10 Sep 2026 01:52:11 GMT",
+        "Last-Modified": "Thu, 10 Sep 2026 01:31:32 GMT",
+        "ETag": null,
+        "Content-Type": "text/html; charset=UTF-8"
+      },
+      "error": null
+    },
+    {
+      "id": "ibkr-instructions",
+      "url": "https://investors.interactivebrokers.com/en/trading/corp-action-instructions.php",
+      "finalUrl": "https://investors.interactivebrokers.com/en/trading/corp-action-instructions.php",
+      "retrievedAt": "2026-09-10T01:52:11.850809+00:00",
+      "completedAt": "2026-09-10T01:52:12.764368+00:00",
+      "status": 200,
+      "bytes": 86135,
+      "sha256": "1d8a9852100552bdc3512eda557e166170c4b64476d29a270351550a643d6549",
+      "path": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/1d8a9852100552bdc3512eda557e166170c4b64476d29a270351550a643d6549",
+      "headers": {
+        "Date": "Thu, 10 Sep 2026 01:52:12 GMT",
+        "Last-Modified": null,
+        "ETag": null,
+        "Content-Type": "text/html; charset=UTF-8"
+      },
+      "error": null
+    },
+    {
+      "id": "ibkr-fees",
+      "url": "https://www.interactivebrokers.com/en/accounts/fees/otherFees.php?p=e",
+      "finalUrl": "https://www.interactivebrokers.com/en/accounts/fees/otherFees.php?p=e",
+      "retrievedAt": "2026-09-10T01:52:13.064518+00:00",
+      "completedAt": "2026-09-10T01:52:13.754857+00:00",
+      "status": 410,
+      "bytes": 282,
+      "sha256": "ee72a4b38447822a3a5f7a38bcfb2e3fc65f04ad397d013225280cf624cae61d",
+      "path": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/ee72a4b38447822a3a5f7a38bcfb2e3fc65f04ad397d013225280cf624cae61d",
+      "headers": {
+        "Date": "Thu, 10 Sep 2026 01:52:13 GMT",
+        "Last-Modified": null,
+        "ETag": null,
+        "Content-Type": "text/html; charset=iso-8859-1"
+      },
+      "error": "HTTP Error 410: Gone"
+    },
+    {
+      "id": "fidelity-instructions",
+      "url": "https://www.fidelity.com/customer-service/corporate-actions-learn-more-faqs",
+      "finalUrl": "https://www.fidelity.com/customer-service/corporate-actions-learn-more-faqs",
+      "retrievedAt": "2026-09-10T01:52:14.055002+00:00",
+      "completedAt": "2026-09-10T01:52:15.115949+00:00",
+      "status": 200,
+      "bytes": 259922,
+      "sha256": "df1084c82f2d21e43ae3df0417e3ad1c81f992de8edee490b0e4cc490ed3a9f2",
+      "path": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/df1084c82f2d21e43ae3df0417e3ad1c81f992de8edee490b0e4cc490ed3a9f2",
+      "headers": {
+        "Date": "Thu, 10 Sep 2026 01:52:15 GMT",
+        "Last-Modified": null,
+        "ETag": null,
+        "Content-Type": "text/html; charset=utf-8"
+      },
+      "error": null
+    },
+    {
+      "id": "nyse-taq",
+      "url": "https://www.nyse.com/data-products/catalog/daily-taq",
+      "finalUrl": "https://www.nyse.com/data-products/catalog/daily-taq",
+      "retrievedAt": "2026-09-10T01:52:15.416106+00:00",
+      "completedAt": "2026-09-10T01:52:16.459058+00:00",
+      "status": 200,
+      "bytes": 71864,
+      "sha256": "ad447fa4ed35d0872f0aae8c5656ac2c20b983a17ab5f9cce2a05fe9dbfd5956",
+      "path": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/ad447fa4ed35d0872f0aae8c5656ac2c20b983a17ab5f9cce2a05fe9dbfd5956",
+      "headers": {
+        "Date": "Thu, 10 Sep 2026 01:52:16 GMT",
+        "Last-Modified": null,
+        "ETag": null,
+        "Content-Type": "text/html; charset=utf-8"
+      },
+      "error": null
+    },
+    {
+      "id": "nyse-pricing",
+      "url": "https://www.nyse.com/publicdocs/nyse/data/NYSE_Historical_Market_Data_Pricing.pdf",
+      "finalUrl": "https://www.nyse.com/publicdocs/nyse/data/NYSE_Historical_Market_Data_Pricing.pdf",
+      "retrievedAt": "2026-09-10T01:52:16.759228+00:00",
+      "completedAt": "2026-09-10T01:52:20.379289+00:00",
+      "status": 200,
+      "bytes": 668599,
+      "sha256": "00deeb53c41e1eb19d583529b6db5aaa4c5891832b65c0e4769cfa01951907df",
+      "path": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/00deeb53c41e1eb19d583529b6db5aaa4c5891832b65c0e4769cfa01951907df",
+      "headers": {
+        "Date": "Thu, 10 Sep 2026 01:52:17 GMT",
+        "Last-Modified": "Mon, 31 Mar 2025 11:43:57 GMT",
+        "ETag": "\"a33b7-631a1ef76f338\"",
+        "Content-Type": "application/pdf"
+      },
+      "error": null
+    },
+    {
+      "id": "monster-issuer-offer",
+      "url": "https://investors.monsterbevcorp.com/static-files/3cce6f0b-bb34-4f4b-84eb-efe0df174c85",
+      "finalUrl": "https://investors.monsterbevcorp.com/static-files/3cce6f0b-bb34-4f4b-84eb-efe0df174c85",
+      "retrievedAt": "2026-09-10T01:53:33.601292+00:00",
+      "completedAt": "2026-09-10T01:53:36.869816+00:00",
+      "status": 200,
+      "bytes": 10246905,
+      "sha256": "d76b639aa659e899c45bd82aa186e459dd94be06181317bb3bf80c7ac5ab1294",
+      "path": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/d76b639aa659e899c45bd82aa186e459dd94be06181317bb3bf80c7ac5ab1294",
+      "headers": {
+        "Date": "Thu, 10 Sep 2026 01:53:35 GMT",
+        "Last-Modified": "Wed, 01 Jul 2026 06:34:01 GMT",
+        "ETag": "\"d2ed4e49c95df5c811609c80095174693a68099c37eae35704509289580f7ead\"",
+        "Content-Type": "application/pdf"
+      },
+      "error": null
+    },
+    {
+      "id": "monster-issuer-filing-index",
+      "url": "https://investors.monsterbevcorp.com/sec-filings/sec-filing/sc-i/0001104659-24-058430",
+      "finalUrl": "https://investors.monsterbevcorp.com/sec-filings/sec-filing/sc-i/0001104659-24-058430",
+      "retrievedAt": "2026-09-10T01:53:37.170007+00:00",
+      "completedAt": "2026-09-10T01:53:37.871778+00:00",
+      "status": 200,
+      "bytes": 33766,
+      "sha256": "fe52743be3e04121709f5e8d20b33ae5caf27efbccc3d82474dbe1585d233d3a",
+      "path": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/fe52743be3e04121709f5e8d20b33ae5caf27efbccc3d82474dbe1585d233d3a",
+      "headers": {
+        "Date": "Thu, 10 Sep 2026 01:53:37 GMT",
+        "Last-Modified": "Thu, 10 Sep 2026 01:53:37 GMT",
+        "ETag": "\"1789005217\"",
+        "Content-Type": "text/html; charset=UTF-8"
+      },
+      "error": null
+    },
+    {
+      "id": "ibkr-current-fees",
+      "url": "https://www.interactivebrokers.com/en/pricing/other-fees.php",
+      "finalUrl": "https://www.interactivebrokers.com/en/pricing/other-fees.php",
+      "retrievedAt": "2026-09-10T01:53:38.171936+00:00",
+      "completedAt": "2026-09-10T01:53:39.630261+00:00",
+      "status": 200,
+      "bytes": 328229,
+      "sha256": "66e8a0ddcd7549e2edd791fbd6ea41bc84cdbc8d58a31134ff663144d79cb4c9",
+      "path": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/66e8a0ddcd7549e2edd791fbd6ea41bc84cdbc8d58a31134ff663144d79cb4c9",
+      "headers": {
+        "Date": "Thu, 10 Sep 2026 01:53:39 GMT",
+        "Last-Modified": null,
+        "ETag": null,
+        "Content-Type": "text/html; charset=UTF-8"
+      },
+      "error": null
+    },
+    {
+      "id": "monster-issuer-html",
+      "url": "https://investors.monsterbevcorp.com/node/16891/html",
+      "finalUrl": "https://investors.monsterbevcorp.com/node/16891/html",
+      "retrievedAt": "2026-09-10T01:54:37.464365+00:00",
+      "completedAt": "2026-09-10T01:54:37.808227+00:00",
+      "status": 200,
+      "bytes": 1304377,
+      "sha256": "80ae758750121163f7e3482c68132779fe35954a16f60165cce9dcb316d6d827",
+      "path": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/80ae758750121163f7e3482c68132779fe35954a16f60165cce9dcb316d6d827",
+      "headers": {
+        "Date": "Thu, 10 Sep 2026 01:54:37 GMT",
+        "Last-Modified": "Thu, 10 Sep 2026 01:54:16 GMT",
+        "ETag": "\"1789005256\"",
+        "Content-Type": "text/html; charset=UTF-8"
+      },
+      "error": null
+    }
+  ],
+  "verification": {
+    "hashesVerified": 16,
+    "httpStatusCounts": {
+      "200": 9,
+      "403": 6,
+      "410": 1
+    },
+    "documentChecks": [
+      {
+        "id": "monster-issuer-html",
+        "requiredTermsPresent": true,
+        "missing": []
+      },
+      {
+        "id": "ibkr-instructions",
+        "requiredTermsPresent": true,
+        "missing": []
+      },
+      {
+        "id": "fidelity-instructions",
+        "requiredTermsPresent": true,
+        "missing": []
+      },
+      {
+        "id": "frontera-amendment",
+        "requiredTermsPresent": true,
+        "missing": []
+      },
+      {
+        "id": "ibkr-current-fees",
+        "requiredTermsPresent": true,
+        "missing": []
+      },
+      {
+        "id": "nyse-taq",
+        "requiredTermsPresent": true,
+        "missing": []
+      }
+    ],
+    "scope": "Source integrity and presence checks only; not a legal interpretation, extraction accuracy benchmark, historical coverage test or return evaluation."
+  }
+}

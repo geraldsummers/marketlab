@@ -88,9 +88,10 @@ class AlphaWorkspaceTest(unittest.TestCase):
         results, exit_code = workspace.verify_artifacts(rows, "host", runner=mismatch_runner)
         self.assertEqual((1, "MISMATCH"), (exit_code, results[0]["status"]))
     def test_broad_agenda_remains_available_after_focused_audits(self):
-        ready = workspace.ready_work()
-        ready = [t for t in ready if t["selectionRank"] == 100]
-        self.assertEqual(4, len(ready))
+        ready = [workspace.task_inventory(cid) for cid in (
+            "conventional-market-feasibility", "onchain-settlement-feasibility",
+            "prediction-market-feasibility", "stablecoin-policy-feasibility")]
+        self.assertEqual({100}, {t["selectionRank"] for t in ready})
         self.assertEqual({"P1"}, {task["priority"] for task in ready})
         self.assertEqual({"conventional", "onchain", "prediction-markets", "usd-stablecoins"},
                          {domain for task in ready for domain in task["domains"]})
@@ -120,7 +121,7 @@ class AlphaWorkspaceTest(unittest.TestCase):
 
 
     def test_focused_audits_have_bounded_budgets_and_failure_sampling(self):
-        tasks = workspace.ready_work()[:3]
+        tasks = [workspace.task_inventory(cid) for cid in ("corporate-event-terms-feasibility", "prediction-resolution-terms-feasibility", "stablecoin-redemption-constraints-feasibility")]
         self.assertEqual([10, 20, 30], [t["selectionRank"] for t in tasks])
         for task in tasks:
             contract = workspace.validate_contract(workspace.load_json(workspace.REPO_ROOT / task["experimentContract"]))
@@ -130,7 +131,7 @@ class AlphaWorkspaceTest(unittest.TestCase):
         new = [c for _, c in candidates if c["id"] in {t["candidateIds"][0] for t in tasks}]
         self.assertTrue(all("years" in c["horizon"] and c["inspirationRefs"] for c in new))
         # Horizon does not participate in wall-clock accounting or expand the contract.
-        self.assertTrue(all(c["stage"] == "DATA_FEASIBILITY" for c in new))
+        self.assertTrue(all(c["stage"] in workspace.CANDIDATE_STAGES for c in new))
 
     def test_task_inspection_exposes_rank_and_inspiration(self):
         value = workspace.task_inventory("corporate-event-terms-feasibility")

@@ -3,7 +3,7 @@
   "id": "corporate-event-terms-feasibility",
   "spaceId": "relative-value",
   "title": "Corporate event terms feasibility",
-  "stage": "DATA_FEASIBILITY",
+  "stage": "DATA_BLOCKED",
   "claim": "Audit whether eligibility, proration, deadlines, amendments, cancellation and broker processing requirements can be reconstructed from existing public historical sources.",
   "mechanism": "Source feasibility only; contractual and institutional constraints are IDEA leads, not predictive evidence.",
   "target": "Historical source readiness and one preregisterable successor or blocker",
@@ -19,6 +19,13 @@
       "decision": "DATA_FEASIBILITY",
       "summary": "Registered but unexecuted; literature supplies inspiration only.",
       "sourcePath": "research/inspiration/README.md"
+    },
+    {
+      "evidenceId": "corporate-event-terms-feasibility-2026-09-10",
+      "classification": "DATA_BLOCKED",
+      "decision": "DATA_BLOCKED",
+      "summary": "Source audit complete: issuer mirror works, direct SEC fetches blocked, representative population and execution data unverified.",
+      "sourcePath": "research/alpha/spaces/relative-value/candidates/corporate-event-terms-feasibility/audit.md"
     }
   ],
   "frozenLocks": [],
@@ -26,7 +33,7 @@
     "research/alpha/spaces/relative-value/candidates/corporate-event-terms-feasibility",
     "research/source-policy.md"
   ],
-  "nextAction": "Start the registered bounded audit before acquisition; inspect source metadata and terms without opening experimental market outcomes.",
+  "nextAction": "Do not run a return test. Recover complete event enumeration, historical version clocks, permitted executable quotes and broker cutoff/cost evidence in a separately bounded task; proceed to the next ranked source audit meanwhile.",
   "researchModes": [
     "HISTORICAL"
   ],
@@ -42,5 +49,36 @@
     "research/inspiration/cases/frontera-tender-amendment.json",
     "research/inspiration/cases/alluvial-special-situations.json"
   ],
-  "transferAssessment": "Audit point-in-time information, counterparty constraints, financing/access, costs, capacity and competition before specifying any economic test."
+  "transferAssessment": "Individual contractual terms are recoverable; odd-lot acceptance is small-capacity and not a return guarantee. Representative event/quote coverage and historical broker constraints remain missing. See audit.md.",
+  "experimentResult": {
+    "experimentId": "corporate-event-terms-feasibility-v1",
+    "reason": "EVIDENCE_RECORDED",
+    "stage": "DATA_BLOCKED",
+    "artifacts": [
+      {
+        "role": "audit-report",
+        "sha256": "fc0ce8a15ab08b7a4e4212df7780564367789ff60f44c4ddca9fa0070f79157e",
+        "location": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/fc0ce8a15ab08b7a4e4212df7780564367789ff60f44c4ddca9fa0070f79157e",
+        "verification": "LOCAL_FILE"
+      },
+      {
+        "role": "supervisor-final-state",
+        "sha256": "5ad83e6e7b453553207da6752c825cc3690fcf1b1af9c44f5fdbcde8a6e00a9c",
+        "location": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/5ad83e6e7b453553207da6752c825cc3690fcf1b1af9c44f5fdbcde8a6e00a9c",
+        "verification": "LOCAL_FILE"
+      },
+      {
+        "role": "acquisition-manifest",
+        "sha256": "5209d0cd85a02c3ebf78b72e45fb42caceefebd45a04db0fffacb24695ff3cd4",
+        "location": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/5209d0cd85a02c3ebf78b72e45fb42caceefebd45a04db0fffacb24695ff3cd4",
+        "verification": "LOCAL_FILE"
+      },
+      {
+        "role": "source-integrity-check",
+        "sha256": "d876b1b8482a6003f52d917d0795fc261289ded9045b8e25e9fe6e2642519b1b",
+        "location": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/d876b1b8482a6003f52d917d0795fc261289ded9045b8e25e9fe6e2642519b1b",
+        "verification": "LOCAL_FILE"
+      }
+    ]
+  }
 }

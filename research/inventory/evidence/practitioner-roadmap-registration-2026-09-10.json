@@ -15,7 +15,7 @@
       "candidateId": "corporate-event-terms-feasibility",
       "stage": "DATA_FEASIBILITY",
       "decision": "DATA_FEASIBILITY",
-      "current": true
+      "current": false
     },
     {
       "candidateId": "prediction-resolution-terms-feasibility",

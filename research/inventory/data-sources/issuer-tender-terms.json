@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "marketlab.data-source-inventory.v1",
+  "id": "issuer-tender-terms",
+  "title": "US issuer tender terms and execution-source feasibility",
+  "category": "conventional",
+  "status": "PARTIAL",
+  "pointInTimeUse": "Individual offer terms available from issuer mirror; historical event/version completeness and broker availability clocks not established.",
+  "implementations": [],
+  "alphaSpaces": [
+    "relative-value"
+  ],
+  "limitations": [
+    "Direct SEC metadata/index/filing requests returned HTTP 403; root cause unestablished.",
+    "Issuer mirror success for one bundle does not establish survivorship-free historical coverage.",
+    "NYSE quote product documented but relevant entitlement, historical coverage and license rights unverified; no quote data acquired.",
+    "Current broker cutoff/fee documentation is not historical event-specific evidence.",
+    "Illustrative examples and incidental search outcomes are not blind or representative."
+  ],
+  "nextAction": "Do not run a return test. Recover complete event enumeration, historical version clocks, permitted executable quotes and broker cutoff/cost evidence in a separately bounded task; proceed to the next ranked source audit meanwhile.",
+  "auditScripts": [
+    "research/alpha/spaces/relative-value/candidates/corporate-event-terms-feasibility/audit_sources.py",
+    "research/alpha/spaces/relative-value/candidates/corporate-event-terms-feasibility/inspect_sources.py"
+  ]
+}

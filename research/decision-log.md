@@ -998,3 +998,20 @@ Implementation verification: 18 workspace, 22 supervisor and 29 automation tests
 passed, along with workspace validation and `./gradlew check`. The registration
 evidence links the immutable software-validation artifact. These checks establish
 software behavior, not source coverage or strategy performance.
+
+## 2026-09-10 — Corporate-event source audit completed: DATA_BLOCKED
+
+Decision: terms audit DONE with evidence `corporate-event-terms-feasibility-2026-09-10`; predictive successor not
+justified. Six direct SEC requests failed with 403, but issuer-hosted Monster
+filing HTML/PDF worked. All 16 response bodies were preserved and hashed.
+Known: contract/ownership/proration, financing and broker cutoffs matter.
+Suspected: small-capacity event advantages may merit screening after data recovery.
+Untested: representative counts, point-in-time quote access, historical broker
+constraints and net economic value. No model trials or market outcome dataset
+evaluation occurred. Incidental Monster/Rumble result snippets and embedded
+reference prices are recorded as exposed, with UNKNOWN full disclosure intervals;
+no future blind claim may reuse those examples. No sealed outcomes were opened.
+See candidate audit.md for field design, sampling of failed/ordinary offers,
+blocker criteria and immutable report/supervisor artifacts. The first import-path
+failure remains in the original experiment history; the deadline was never reset.
+Next permitted queue action: prediction-resolution-terms-feasibility.

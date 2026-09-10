@@ -131,7 +131,7 @@
     },
     {
       "id": "corporate-event-terms-feasibility",
-      "status": "READY",
+      "status": "DONE",
       "kind": "data",
       "summary": "Audit whether eligibility, proration, deadlines, amendments, cancellation and broker processing requirements can be reconstructed from existing public historical sources.",
       "priority": "P1",
@@ -166,7 +166,9 @@
       ],
       "resourceClass": "DATA_IO",
       "outcomeAccess": "NONE",
-      "completionEvidenceIds": [],
+      "completionEvidenceIds": [
+        "corporate-event-terms-feasibility-2026-09-10"
+      ],
       "computeLimits": {
         "maxProcesses": 1,
         "blasThreads": 2,

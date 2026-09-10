@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v2",
+  "id": "corporate-event-terms-feasibility-2026-09-10",
+  "candidateIds": [
+    "corporate-event-terms-feasibility"
+  ],
+  "classification": "DATA_BLOCKED",
+  "decision": "DATA_BLOCKED",
+  "summarySource": "research/alpha/spaces/relative-value/candidates/corporate-event-terms-feasibility/audit.md",
+  "summary": "Completed terms/source audit: 16 preserved responses, 9 HTTP 200, 6 SEC 403, 1 obsolete URL 410. Issuer mirror succeeded. No market outcome dataset evaluated; incidental narrative and embedded-price exposures explicitly recorded. Predictive successor blocked by population, clocks, quotes and broker-history gaps.",
+  "candidateDecisions": [
+    {
+      "candidateId": "corporate-event-terms-feasibility",
+      "stage": "DATA_BLOCKED",
+      "decision": "DATA_BLOCKED",
+      "current": true
+    }
+  ],
+  "outcomesOpened": true,
+  "openedOutcomes": [
+    {
+      "id": "corporate-audit-monster-2024",
+      "venue": "NASDAQ",
+      "target": "Monster 2024 issuer tender and embedded historical price disclosures",
+      "periodStatus": "UNKNOWN",
+      "unknownReason": "May\u2013June 2024 offer episode; final result appeared incidentally in search snippets; complete embedded price-disclosure range was not enumerated.",
+      "reuseStatus": "OPENED_NOT_CONFIRMATION_ELIGIBLE",
+      "candidateIds": [
+        "corporate-event-terms-feasibility"
+      ]
+    },
+    {
+      "id": "corporate-audit-rumble-2025",
+      "venue": "NASDAQ",
+      "target": "Rumble January\u2013February 2025 tender completion and acceptance",
+      "periodStatus": "UNKNOWN",
+      "unknownReason": "Completion/acceptance reported incidentally in search snippets; original offer includes reference prices. Complete disclosure span not enumerated.",
+      "reuseStatus": "OPENED_NOT_CONFIRMATION_ELIGIBLE",
+      "candidateIds": [
+        "corporate-event-terms-feasibility"
+      ]
+    },
+    {
+      "id": "corporate-audit-frontera-2024",
+      "venue": "TSX",
+      "target": "Frontera September 2024 tender preference amendment",
+      "periodStatus": "UNKNOWN",
+      "unknownReason": "Known policy-change case, previously inspected and revisited; complete offer exposure interval not established.",
+      "reuseStatus": "OPENED_NOT_CONFIRMATION_ELIGIBLE",
+      "candidateIds": [
+        "corporate-event-terms-feasibility"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "role": "audit-report",
+      "sha256": "fc0ce8a15ab08b7a4e4212df7780564367789ff60f44c4ddca9fa0070f79157e",
+      "location": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/fc0ce8a15ab08b7a4e4212df7780564367789ff60f44c4ddca9fa0070f79157e",
+      "verification": "LOCAL_FILE"
+    },
+    {
+      "role": "supervisor-final-state",
+      "sha256": "5ad83e6e7b453553207da6752c825cc3690fcf1b1af9c44f5fdbcde8a6e00a9c",
+      "location": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/5ad83e6e7b453553207da6752c825cc3690fcf1b1af9c44f5fdbcde8a6e00a9c",
+      "verification": "LOCAL_FILE"
+    },
+    {
+      "role": "acquisition-manifest",
+      "sha256": "5209d0cd85a02c3ebf78b72e45fb42caceefebd45a04db0fffacb24695ff3cd4",
+      "location": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/5209d0cd85a02c3ebf78b72e45fb42caceefebd45a04db0fffacb24695ff3cd4",
+      "verification": "LOCAL_FILE"
+    },
+    {
+      "role": "source-integrity-check",
+      "sha256": "d876b1b8482a6003f52d917d0795fc261289ded9045b8e25e9fe6e2642519b1b",
+      "location": "/home/dev/artifacts/corporate-event-terms-feasibility-v1/d876b1b8482a6003f52d917d0795fc261289ded9045b8e25e9fe6e2642519b1b",
+      "verification": "LOCAL_FILE"
+    }
+  ]
+}

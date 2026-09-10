@@ -138,7 +138,11 @@ class RankedSelectionTest(unittest.TestCase):
 
     def test_rank_precedes_domain_balance_and_priority_precedes_rank(self):
         from copy import deepcopy
-        tasks=deepcopy(c.workspace.ready_work())
+        tasks=deepcopy([c.workspace.task_inventory(cid) for cid in (
+            'corporate-event-terms-feasibility','prediction-resolution-terms-feasibility',
+            'stablecoin-redemption-constraints-feasibility','conventional-market-feasibility')])
+        # Selection fixture is independent of live research completion.
+        for task in tasks:task['status']='READY'
         selected=self.choose(tasks,{'conventional':999})
         self.assertEqual('corporate-event-terms-feasibility',selected['id'])
         broad=next(t for t in tasks if t['id']=='conventional-market-feasibility')
