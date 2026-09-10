@@ -1,0 +1,2 @@
+{"allowance": {"observedAt": "2026-09-10T14:00:03.637541+00:00", "remaining": 18, "windows": [{"durationMinutes": 10080, "name": "primary", "remaining": 18, "resetsAt": 1789527590}]}, "event": "CYCLE_CHECK", "summary": "Main allowance checked; no other bucket may substitute", "time": "2026-09-10T14:00:03.653500+00:00"}
+{"event": "SKIPPED", "reason": "ALLOWANCE_RESERVE", "time": "2026-09-10T14:00:03.655440+00:00"}
