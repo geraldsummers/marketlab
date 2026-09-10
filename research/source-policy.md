@@ -77,3 +77,21 @@ sources or licenses. Use existing historical data, preserve source bytes and
 bias ledgers, and record a blocker when required coverage is absent. Paid data
 still requires case-specific authorization. A source audit may inspect coverage
 metadata without opening sealed confirmation outcomes.
+
+## Practitioner narratives and event universes
+
+Use dated primary documents and versioned rules, not retrospective winner lists.
+For each cited case record authorship, publication date or its uncertainty,
+inspection date, documented statement, inference, performance support and a
+counterexample or failure mode. A manager letter can document a thesis without
+independently verifying returns. Public holdings and wallet activity omit cash,
+hedges, financing and selection history; do not infer a complete strategy from them.
+
+Read [the practitioner roadmap](inspiration/README.md). Preserve cancelled deals,
+failed tenders, rule amendments, disputed resolutions, nonrecovering disruptions
+and ordinary comparison periods in registered sampling rules. Select examples by
+information available before the outcome. Modern SEC aggregates, current oracle
+rules and current keeper code are not historical vintages. Acquisition of return
+or settlement outcome datasets belongs to the separately registered successor;
+NONE source audits inspect terms and coverage only. Documented historical endings
+already read as literature cannot later be called untouched confirmation.

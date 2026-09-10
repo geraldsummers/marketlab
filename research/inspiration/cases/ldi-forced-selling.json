@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "marketlab.inspiration.v1",
+  "id": "ldi-forced-selling",
+  "title": "LDI: forced flows and liquidity provision",
+  "stage": "IDEA",
+  "operator": "Bank of England / Gabor Pinter",
+  "performanceSupport": "NOT_ASSESSED",
+  "historicalSetting": "September\u2013October 2022",
+  "sources": [
+    {
+      "url": "https://www.bankofengland.co.uk/working-paper/2023/an-anatomy-of-the-2022-gilt-market-crisis",
+      "published": "2023-03-31",
+      "inspectedOn": "2026-09-10",
+      "sourceRole": "Primary publication; account may be retrospective or interested-party"
+    }
+  ],
+  "documentedClaim": "Transaction-level research attributes gilt selling pressure to repo and derivative exposures and describes compensation for liquidity provision.",
+  "inferredMechanism": "Collateral constraints can force price-insensitive sales when intermediary capacity is scarce.",
+  "counterevidence": "A crisis study is retrospective; access to its transaction-level dataset is not established for this lab.",
+  "transferRequirements": "Require pre-event exposure proxies, financing survival and executable prices; one crisis cannot establish repeatable net returns.",
+  "outcomeBoundary": "Public narrative already inspected; described cases are discovery examples, never untouched confirmation. No experimental market outcome dataset opened."
+}

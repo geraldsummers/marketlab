@@ -975,3 +975,26 @@ passed. Parent-process line coverage measured 73% for the new supervisor and
 63% for the workspace tool; subprocess paths are tested but not included in that
 coverage measurement. The registration evidence inventory links the immutable
 software-validation artifact. The four source audits remain READY and unexecuted.
+
+## 2026-09-10 — Practitioner-informed roadmap registration
+
+Decision: prioritize corporate-event terms (rank 10), prediction resolution
+(rank 20), and stablecoin redemption constraints (rank 30) within P1. Broad
+source audits remain rank 100. Mechanisms are IDEA; three new, unexecuted
+candidates are DATA_FEASIBILITY. See research/inspiration/README.md and the
+practitioner-roadmap-registration-2026-09-10 evidence record.
+
+What we tested: literature and operator-document orientation only. We know the
+sources describe contractual, financing and operational constraints. We suspect
+these are useful search directions; data coverage and net economics remain
+untested. Historical stories are already exposed discovery examples, not blind
+confirmation. No experimental outcome dataset or sealed period was opened.
+Next permitted action: a two-hour source audit, with a 15-minute reporting reserve,
+then a separately registered successor or blocker. Long holding/data horizons
+do not extend the original sub-12-hour experiment deadline. No research was
+launched by this registration.
+
+Implementation verification: 18 workspace, 22 supervisor and 29 automation tests
+passed, along with workspace validation and `./gradlew check`. The registration
+evidence links the immutable software-validation artifact. These checks establish
+software behavior, not source coverage or strategy performance.

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "marketlab.inspiration.v1",
+  "id": "wti-delivery-constraints",
+  "title": "WTI: delivery and scarce storage",
+  "stage": "IDEA",
+  "operator": "US Energy Information Administration",
+  "performanceSupport": "NOT_ASSESSED",
+  "historicalSetting": "April 2020 expiry",
+  "sources": [
+    {
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=43495",
+      "published": "2020-04-27",
+      "inspectedOn": "2026-09-10",
+      "sourceRole": "Primary publication; account may be retrospective or interested-party"
+    }
+  ],
+  "documentedClaim": "The EIA links negative near-expiry prices to low liquidity and scarce available storage.",
+  "inferredMechanism": "Physical delivery obligations and capacity constraints can dominate usual price relationships.",
+  "counterevidence": "A price that looks cheap may be expensive for a holder unable to take delivery.",
+  "transferRequirements": "Do not assume storage, transport or delivery access. Preserve contract-specific expiry and roll semantics; retain as an access-dependent lead.",
+  "outcomeBoundary": "Public narrative already inspected; described cases are discovery examples, never untouched confirmation. No experimental market outcome dataset opened."
+}

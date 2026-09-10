@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v2",
+  "id": "practitioner-roadmap-registration-2026-09-10",
+  "candidateIds": [
+    "corporate-event-terms-feasibility",
+    "prediction-resolution-terms-feasibility",
+    "stablecoin-redemption-constraints-feasibility"
+  ],
+  "classification": "DATA_FEASIBILITY",
+  "decision": "DATA_FEASIBILITY",
+  "summarySource": "research/inspiration/README.md",
+  "summary": "Primary-source orientation recorded; three two-hour source audits registered but not executed. Manager performance and strategy economics remain unverified.",
+  "candidateDecisions": [
+    {
+      "candidateId": "corporate-event-terms-feasibility",
+      "stage": "DATA_FEASIBILITY",
+      "decision": "DATA_FEASIBILITY",
+      "current": true
+    },
+    {
+      "candidateId": "prediction-resolution-terms-feasibility",
+      "stage": "DATA_FEASIBILITY",
+      "decision": "DATA_FEASIBILITY",
+      "current": true
+    },
+    {
+      "candidateId": "stablecoin-redemption-constraints-feasibility",
+      "stage": "DATA_FEASIBILITY",
+      "decision": "DATA_FEASIBILITY",
+      "current": true
+    }
+  ],
+  "outcomesOpened": false,
+  "openedOutcomes": [],
+  "artifacts": [
+    {
+      "role": "software-validation",
+      "sha256": "0677ce811dd046271c31e8a212fb57b0dafbb5eaeaf52140c15e3eac06df97ba",
+      "location": "/home/dev/artifacts/practitioner-roadmap/0677ce811dd046271c31e8a212fb57b0dafbb5eaeaf52140c15e3eac06df97ba.json",
+      "verification": "LOCAL_FILE"
+    }
+  ]
+}

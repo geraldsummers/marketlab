@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "marketlab.experiment.v1",
+  "experimentId": "prediction-resolution-terms-feasibility-v1",
+  "candidateId": "prediction-resolution-terms-feasibility",
+  "searchFamilyId": "prediction-resolution-terms-feasibility",
+  "predecessorExperimentIds": [],
+  "hypothesis": "Audit whether historical question and rule versions, dispute status, settlement delay, fees and executable-quote coverage can be reconstructed from existing public historical sources.",
+  "domains": [
+    "prediction-markets"
+  ],
+  "targetMarket": "Polymarket event contracts, including disputed, cancelled and ordinary settled contracts",
+  "targetVenue": "Polymarket historical question and quote sources; UMA resolution records",
+  "decisionClock": "Existing documents available at audit start; preserve historical publication and amendment clocks separately from present retrieval.",
+  "outcomeAccess": "NONE",
+  "budgetSeconds": 7200,
+  "reportReserveSeconds": 900,
+  "maxTrials": 0,
+  "familyTrialBudget": 16,
+  "resourceClass": "DATA_IO",
+  "blasThreads": 2,
+  "memoryMiB": 4096,
+  "gpu": false,
+  "gpuJustification": ""
+}

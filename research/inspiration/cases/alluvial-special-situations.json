@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "marketlab.inspiration.v1",
+  "id": "alluvial-special-situations",
+  "title": "Alluvial: overlooked businesses and special situations",
+  "stage": "IDEA",
+  "operator": "David Waters / Alluvial Capital",
+  "performanceSupport": "PRACTITIONER_REPORTED",
+  "historicalSetting": "Q1 2023",
+  "sources": [
+    {
+      "url": "https://alluvialcapital.com/wp-content/uploads/2023/04/Alluvial-Capital-Management-Q1-2023-Letter-to-Partners.pdf",
+      "published": "2023-Q1",
+      "inspectedOn": "2026-09-10",
+      "sourceRole": "Primary publication; account may be retrospective or interested-party"
+    }
+  ],
+  "documentedClaim": "The letter reports returns, specific business and ECIP theses, and an abandoned GEE Group thesis after management failed to deliver.",
+  "inferredMechanism": "Specialist document work may expose a concrete catalyst, financing advantage or constraint missed by broad screens.",
+  "counterevidence": "Reported performance was not independently audited in this survey; management behavior and illiquidity can prevent realization of apparent value.",
+  "transferRequirements": "Verify issuer filings and program terms, include failed theses, and separate publicly reproducible information from management access.",
+  "outcomeBoundary": "Public narrative already inspected; described cases are discovery examples, never untouched confirmation. No experimental market outcome dataset opened."
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "marketlab.experiment.v1",
+  "experimentId": "corporate-event-terms-feasibility-v1",
+  "candidateId": "corporate-event-terms-feasibility",
+  "searchFamilyId": "corporate-event-terms-feasibility",
+  "predecessorExperimentIds": [],
+  "hypothesis": "Audit whether eligibility, proration, deadlines, amendments, cancellation and broker processing requirements can be reconstructed from existing public historical sources.",
+  "domains": [
+    "conventional"
+  ],
+  "targetMarket": "US issuer tender offers, including amended and cancelled offers",
+  "targetVenue": "SEC EDGAR SC TO-I, SC TO-I/A and issuer offer documents; target exchange price coverage is an audit deliverable",
+  "decisionClock": "Existing documents available at audit start; preserve historical publication and amendment clocks separately from present retrieval.",
+  "outcomeAccess": "NONE",
+  "budgetSeconds": 7200,
+  "reportReserveSeconds": 900,
+  "maxTrials": 0,
+  "familyTrialBudget": 16,
+  "resourceClass": "DATA_IO",
+  "blasThreads": 2,
+  "memoryMiB": 4096,
+  "gpu": false,
+  "gpuJustification": ""
+}

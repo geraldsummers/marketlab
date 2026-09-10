@@ -54,6 +54,55 @@
         "prediction-markets"
       ],
       "experimentContract": "research/alpha/spaces/event-resolution/candidates/prediction-market-feasibility/experiment.json"
+    },
+    {
+      "id": "prediction-resolution-terms-feasibility",
+      "status": "READY",
+      "kind": "data",
+      "summary": "Audit whether historical question and rule versions, dispute status, settlement delay, fees and executable-quote coverage can be reconstructed from existing public historical sources.",
+      "priority": "P1",
+      "selectionRank": 20,
+      "blockedBy": [],
+      "externalBlockers": [],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "candidateIds": [
+        "prediction-resolution-terms-feasibility"
+      ],
+      "domains": [
+        "prediction-markets"
+      ],
+      "deliverables": [
+        "Candidate-owned source audit and transfer assessment with citations",
+        "One preregisterable bounded successor or documented blocker"
+      ],
+      "acceptanceCriteria": [
+        "Source coverage and provenance document Historical question and rule versions, dispute status, settlement delay, fees and executable-quote coverage.",
+        "Define a historical event universe including failed/cancelled or nonrecovering cases and ordinary comparison periods; avoid selecting only famous winners.",
+        "Assess point-in-time prices/quotes, licensing, access, financing, execution costs, capacity and independent sample availability without opening outcome data.",
+        "Separate documented facts, practitioner performance claims and inferred mechanisms; include counterevidence and overlapping failed Marketlab candidates.",
+        "Register one successor with causal sources, sign, target/horizon, baseline, sample/exposure boundary, trial family and economic rejection threshold, or document a specific blocker.",
+        "Remain DATA_FEASIBILITY or DATA_BLOCKED; no sealed outcomes, predictive evaluation or successor acquisition in this audit."
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/event-resolution/candidates/prediction-resolution-terms-feasibility",
+        "research/alpha/spaces/event-resolution/space.json",
+        "research/inventory/data-sources/"
+      ],
+      "resourceClass": "DATA_IO",
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": [],
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 2,
+        "maxTrials": 0,
+        "gpu": false,
+        "budgetSeconds": 7200,
+        "reportReserveSeconds": 900,
+        "memoryMiB": 4096
+      },
+      "experimentContract": "research/alpha/spaces/event-resolution/candidates/prediction-resolution-terms-feasibility/experiment.json"
     }
   ]
 }

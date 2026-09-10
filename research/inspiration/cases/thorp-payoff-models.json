@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "marketlab.inspiration.v1",
+  "id": "thorp-payoff-models",
+  "title": "Thorp: payoff decomposition and hedged mispricing",
+  "stage": "IDEA",
+  "operator": "Edward O. Thorp",
+  "performanceSupport": "PRACTITIONER_REPORTED",
+  "historicalSetting": "1960s onward, retrospective account",
+  "sources": [
+    {
+      "url": "https://www.edwardothorp.com/wp-content/uploads/2016/11/thorpwilmottqfinrev2003.pdf",
+      "published": "2003",
+      "inspectedOn": "2026-09-10",
+      "sourceRole": "Primary publication; account may be retrospective or interested-party"
+    }
+  ],
+  "documentedClaim": "The author describes convertible-bond and warrant models, hedges and staged risk-taking.",
+  "inferredMechanism": "Contractual payoff decomposition can identify a mispricing separately from an unhedged directional bet.",
+  "counterevidence": "Historical modeling advantages can disappear; borrow, financing and changing terms can defeat the apparent hedge.",
+  "transferRequirements": "Require historical terms, credit exposure, borrow availability, financing and hedge costs; no replication claim based on a modern price model alone.",
+  "outcomeBoundary": "Public narrative already inspected; described cases are discovery examples, never untouched confirmation. No experimental market outcome dataset opened."
+}

@@ -125,4 +125,34 @@ class CycleTest(unittest.TestCase):
         self.assertFalse((self.state/'active.json').exists())
 
 
+
+
+
+class RankedSelectionTest(unittest.TestCase):
+    def choose(self, tasks, counts=None):
+        import tempfile
+        with tempfile.TemporaryDirectory(dir=Path.home()/'.tmp') as temp:
+            cfg=c.config();cfg['experimentRoot']=temp
+            with patch.object(c.workspace,'ready_work',return_value=tasks):
+                return c.choose_task(cfg,{'domainCounts':counts or {}})
+
+    def test_rank_precedes_domain_balance_and_priority_precedes_rank(self):
+        from copy import deepcopy
+        tasks=deepcopy(c.workspace.ready_work())
+        selected=self.choose(tasks,{'conventional':999})
+        self.assertEqual('corporate-event-terms-feasibility',selected['id'])
+        broad=next(t for t in tasks if t['id']=='conventional-market-feasibility')
+        broad['priority']='P0';broad.pop('selectionRank',None)
+        self.assertEqual(broad['id'],self.choose(tasks)['id'])
+        broad['outcomeAccess']='SINGLE_USE_HISTORICAL_CONFIRMATION'
+        self.assertIsNone(self.choose(tasks),'ineligible P0 must not permit bypass to P1')
+
+    def test_equal_ranks_preserve_domain_balance_and_legacy_defaults(self):
+        from copy import deepcopy
+        tasks=[deepcopy(t) for t in c.workspace.ready_work() if t['selectionRank']==100]
+        for t in tasks:t.pop('selectionRank',None)
+        selected=self.choose(tasks,{'conventional':20,'prediction-markets':20,'usd-stablecoins':20,'onchain':0})
+        self.assertEqual('onchain-settlement-feasibility',selected['id'])
+
+
 if __name__=='__main__':unittest.main()

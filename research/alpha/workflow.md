@@ -85,3 +85,14 @@ agents.
 Follow [experiments.md](experiments.md) before acquisition or preparation. Register
 one durable sub-12-hour experiment per candidate, preserve family trial accounting
 and predecessor links, and attach both supervisor and research evidence to the handoff.
+
+## Practitioner and operator provenance
+
+Read [the source-grounded roadmap](../inspiration/README.md) when choosing a new
+mechanism. Candidate inspirationRefs are optional repo-relative JSON paths using
+`marketlab.inspiration.v1`; linked candidates require a transferAssessment.
+Shared cases are inspected with `workspace.py inspirations --json`; new cases
+can live in a claimed candidate directory. They are IDEA records, not validation.
+Task selectionRank is an optional non-negative integer, default 100; priority
+precedes rank, then unattended domain balancing resolves ties. It expresses
+research sequencing, not expected returns or statistical confidence.

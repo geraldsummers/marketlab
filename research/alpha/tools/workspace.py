@@ -111,6 +111,39 @@ def parse_timestamp(value: str) -> datetime:
     return datetime.fromisoformat(value.replace("Z", "+00:00"))
 
 
+def inspiration_records(repo_root: Path = REPO_ROOT) -> list[dict[str, Any]]:
+    return [dict(load_json(path), path=str(path.relative_to(repo_root)))
+            for path in sorted((repo_root / "research/inspiration/cases").glob("*.json"))]
+
+
+def validate_inspiration(path: Path, repo_root: Path, errors: list[str]) -> None:
+    try:
+        path = path.resolve()
+        if not path.is_relative_to(repo_root.resolve()):
+            raise ValueError("inspiration reference escapes repository")
+        value = load_json(path)
+        if value.get("schemaVersion") != "marketlab.inspiration.v1" or value.get("stage") != "IDEA":
+            raise ValueError("inspiration must use v1 schema and IDEA stage")
+        for key in ("id", "title", "operator", "historicalSetting", "documentedClaim",
+                    "inferredMechanism", "counterevidence", "transferRequirements", "outcomeBoundary"):
+            require_string(value, key, str(path), errors)
+        if value.get("performanceSupport") not in {"INDEPENDENT_ANALYSIS", "PRACTITIONER_REPORTED", "NOT_ASSESSED", "UNVERIFIED"}:
+            raise ValueError("invalid performanceSupport")
+        sources = value.get("sources")
+        if not isinstance(sources, list) or not sources:
+            raise ValueError("inspiration requires primary source references")
+        for source in sources:
+            if not isinstance(source, dict):
+                raise ValueError("source must be an object")
+            for key in ("url", "published", "inspectedOn", "sourceRole"):
+                require_string(source, key, str(path), errors)
+            if not isinstance(source.get("url"), str) or not source["url"].startswith("https://"):
+                raise ValueError("source requires HTTPS URL")
+            datetime.strptime(source.get("inspectedOn", ""), "%Y-%m-%d")
+    except (OSError, ValueError, TypeError) as error:
+        errors.append(f"{path}: invalid inspiration: {error}")
+
+
 def validate_modes(value: dict[str, Any], location: str, errors: list[str]) -> None:
     modes = value.get("researchModes")
     if not isinstance(modes, list) or not modes or any(mode not in RESEARCH_MODES for mode in modes):
@@ -256,6 +289,8 @@ def validate(alpha_root: Path = ALPHA_ROOT, repo_root: Path = REPO_ROOT) -> list
                 errors.append(f"{task_location}: invalid kind {task.get('kind')!r}")
             if task.get("priority") not in TASK_PRIORITIES:
                 errors.append(f"{task_location}: invalid priority {task.get('priority')!r}")
+            if type(task.get("selectionRank", 100)) is not int or task.get("selectionRank", 100) < 0:
+                errors.append(f"{task_location}: selectionRank must be a non-negative integer")
             if task.get("resourceClass") not in RESOURCE_CLASSES:
                 errors.append(f"{task_location}: invalid resourceClass {task.get('resourceClass')!r}")
             if task.get("outcomeAccess") not in OUTCOME_ACCESS:
@@ -349,6 +384,8 @@ def validate(alpha_root: Path = ALPHA_ROOT, repo_root: Path = REPO_ROOT) -> list
             elif dependency not in space_ids:
                 errors.append(f"{location}: unknown dependency {dependency!r}")
 
+    for inspiration in sorted((repo_root / "research/inspiration/cases").glob("*.json")):
+        validate_inspiration(inspiration, repo_root, errors)
     candidate_ids: set[str] = set()
     candidates_by_id: dict[str, dict[str, Any]] = {}
     candidate_evidence_links: dict[str, list[str]] = {}
@@ -389,6 +426,17 @@ def validate(alpha_root: Path = ALPHA_ROOT, repo_root: Path = REPO_ROOT) -> list
         if candidate.get("stage") not in CANDIDATE_STAGES:
             errors.append(f"{location}: invalid stage {candidate.get('stage')!r}")
         validate_modes(candidate, location, errors)
+        if "inspirationRefs" in candidate:
+            require_string_list(candidate, "inspirationRefs", location, errors)
+            refs = candidate.get("inspirationRefs")
+            if isinstance(refs, list):
+                for ref in refs:
+                    if not isinstance(ref, str) or Path(ref).is_absolute():
+                        errors.append(f"{location}: inspirationRefs must be repo-relative paths")
+                    else:
+                        validate_inspiration(repo_root / ref, repo_root, errors)
+            if refs:
+                require_string(candidate, "transferAssessment", location, errors)
         if candidate.get("experimentContract"):
             try:
                 contract = validate_contract(load_json(path.parent / candidate["experimentContract"]))
@@ -798,11 +846,11 @@ def ready_work(alpha_root: Path = ALPHA_ROOT, mode: str | None = None, all_prior
     for _, space in spaces:
         for task in space["readyWork"]:
             if task["status"] == "READY" and mode_matches(task["researchModes"], selected_mode):
-                result.append({"spaceId": space["id"], **task})
+                result.append({"spaceId": space["id"], "selectionRank": 100, **task})
     if result and not all_priorities:
         highest = min(TASK_PRIORITIES[item["priority"]] for item in result)
         result = [item for item in result if TASK_PRIORITIES[item["priority"]] == highest]
-    return sorted(result, key=lambda item: (TASK_PRIORITIES[item["priority"]], item["spaceId"], item["id"]))
+    return sorted(result, key=lambda item: (TASK_PRIORITIES[item["priority"]], item.get("selectionRank", 100), item["spaceId"], item["id"]))
 
 
 def task_inventory(task_id: str, alpha_root: Path = ALPHA_ROOT) -> dict[str, Any]:
@@ -814,7 +862,11 @@ def task_inventory(task_id: str, alpha_root: Path = ALPHA_ROOT) -> dict[str, Any
     ]
     if len(matches) != 1:
         raise ValueError(f"unknown task id {task_id!r}")
-    return matches[0]
+    value = matches[0]
+    value.setdefault("selectionRank", 100)
+    _, candidates = discover(alpha_root)
+    value["inspirationRefs"] = sorted({ref for _, c in candidates if c["id"] in value["candidateIds"] for ref in c.get("inspirationRefs", [])})
+    return value
 
 
 def inventory_rows(kind: str, inventory_root: Path = INVENTORY_ROOT) -> list[dict[str, Any]]:
@@ -987,8 +1039,18 @@ def main(argv: list[str] | None = None) -> int:
     verify_parser.add_argument("--evidence")
     verify_parser.add_argument("--json", action="store_true", help="emit machine-readable JSON")
     subparsers.add_parser("validate", help="validate workspace manifests and references")
+    inspirations_parser = subparsers.add_parser("inspirations", help="list practitioner and operator case records (IDEA only)")
+    inspirations_parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
 
+    if args.command == "inspirations":
+        value = inspiration_records()
+        if args.json:
+            print(json.dumps(value, indent=2, sort_keys=True))
+        else:
+            for row in value:
+                print(f"{row['id']:<32} {row['stage']:<8} {row['performanceSupport']:<23} {row['title']}")
+        return 0
     if args.command == "validate":
         errors = validate()
         if errors:
@@ -1012,7 +1074,7 @@ def main(argv: list[str] | None = None) -> int:
         else:
             for item in value:
                 candidates = ",".join(item["candidateIds"]) or "none"
-                print(f"{item['priority']:<3} {item['spaceId']:<22} {item['kind']:<14} {item['id']}\n  {item['summary']}\n  candidates={candidates} resource={item['resourceClass']} outcome={item['outcomeAccess']}")
+                print(f"{item['priority']:<3} {item['spaceId']:<22} {item['kind']:<14} {item['id']}\n  {item['summary']}\n  candidates={candidates} rank={item.get('selectionRank', 100)} resource={item['resourceClass']} outcome={item['outcomeAccess']}")
         return 0
     if args.command == "task":
         try:

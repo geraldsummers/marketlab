@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "marketlab.inspiration.v1",
+  "id": "circle-redemption-backlog",
+  "title": "Circle: banking access and redemption backlog",
+  "stage": "IDEA",
+  "operator": "Circle",
+  "performanceSupport": "NOT_ASSESSED",
+  "historicalSetting": "March 2023 USDC banking disruption",
+  "sources": [
+    {
+      "url": "https://www.circle.com/blog/march-15-update-on-usdc-operations",
+      "published": "2023-03-16",
+      "inspectedOn": "2026-09-10",
+      "sourceRole": "Primary publication; account may be retrospective or interested-party"
+    }
+  ],
+  "documentedClaim": "Circle reports clearing minting/redemption backlogs and establishing replacement banking connections.",
+  "inferredMechanism": "Redemption access and banking hours may condition secondary-market deviations and capital lockup.",
+  "counterevidence": "A restored peg in hindsight does not remove contemporaneous solvency risk; issuer operational reports are interested-party accounts.",
+  "transferRequirements": "Separate solvency from liquidity, preserve announcement times and eligibility, and compare ordinary periods and nonrecovering episodes.",
+  "outcomeBoundary": "Public narrative already inspected; described cases are discovery examples, never untouched confirmation. No experimental market outcome dataset opened."
+}

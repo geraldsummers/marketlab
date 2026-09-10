@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "marketlab.inspiration.v1",
+  "id": "man-trend-controls",
+  "title": "Man AHL: diversified trend as a control",
+  "stage": "IDEA",
+  "operator": "Man Group research",
+  "performanceSupport": "PRACTITIONER_REPORTED",
+  "historicalSetting": "Historical study 1960\u20132015",
+  "sources": [
+    {
+      "url": "https://www.man.com/insights/trend-following-equity-and-bond-crisis-alpha",
+      "published": "2016-09-30",
+      "inspectedOn": "2026-09-10",
+      "sourceRole": "Primary publication; account may be retrospective or interested-party"
+    }
+  ],
+  "documentedClaim": "Research studies diversified trend across equity indices, bonds, currencies and commodities, including cash proxies for early history.",
+  "inferredMechanism": "Broad trend can be a control for directional and crisis-exposure claims.",
+  "counterevidence": "Published backtests and proxy histories are not independently replicated live results; this does not overturn rejected BTC tests.",
+  "transferRequirements": "Use target-appropriate costs and roll treatment; a materially new universe/horizon requires its own candidate and outcome boundary.",
+  "outcomeBoundary": "Public narrative already inspected; described cases are discovery examples, never untouched confirmation. No experimental market outcome dataset opened."
+}

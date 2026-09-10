@@ -42,3 +42,19 @@ gates separately.
 - Original deadline, reporting reserve and remaining time:
 - Trial reservations, failures/retries and resource observations:
 - Supervisor state artifact path/hash and terminal execution reason:
+
+## Inspiration and transfer assessment
+
+- inspirationRefs: repo-relative case JSON paths (shared cases or candidate-owned
+  records using templates/inspiration.json); omit when genuinely not applicable.
+- Source statements versus our inference; practitioner-reported performance
+  versus independent analysis, and verification limitations:
+- Point-in-time information and likely counterparty constraint:
+- Required access, financing, costs, capacity and competitive advantage:
+- Failure/counterexample and rejection condition:
+- Sampling of cancelled/failed/disputed events and ordinary comparison periods:
+- Historical story outcomes already known and excluded from blind claims:
+- Holding/data horizon (may be years) versus original experiment wall-clock budget:
+
+When linking inspirationRefs, put a concise transferAssessment in candidate.json;
+this section supplies its evidence, not a claim that transferability is established.

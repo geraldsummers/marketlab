@@ -87,8 +87,9 @@ class AlphaWorkspaceTest(unittest.TestCase):
             return CompletedProcess([], 0, stdout=f"{'b' * 64}  /remote/report.json\n", stderr="")
         results, exit_code = workspace.verify_artifacts(rows, "host", runner=mismatch_runner)
         self.assertEqual((1, "MISMATCH"), (exit_code, results[0]["status"]))
-    def test_new_agenda_has_four_equal_priority_feasibility_contracts(self):
+    def test_broad_agenda_remains_available_after_focused_audits(self):
         ready = workspace.ready_work()
+        ready = [t for t in ready if t["selectionRank"] == 100]
         self.assertEqual(4, len(ready))
         self.assertEqual({"P1"}, {task["priority"] for task in ready})
         self.assertEqual({"conventional", "onchain", "prediction-markets", "usd-stablecoins"},
@@ -116,6 +117,72 @@ class AlphaWorkspaceTest(unittest.TestCase):
         self.assertEqual(38, len(legacy))
         for path in workspace.REPO_ROOT.glob("research/**/*.lock.json"):
             self.assertIsInstance(workspace.load_json(path), dict)
+
+
+    def test_focused_audits_have_bounded_budgets_and_failure_sampling(self):
+        tasks = workspace.ready_work()[:3]
+        self.assertEqual([10, 20, 30], [t["selectionRank"] for t in tasks])
+        for task in tasks:
+            contract = workspace.validate_contract(workspace.load_json(workspace.REPO_ROOT / task["experimentContract"]))
+            self.assertEqual((7200, 900, 0, "NONE"), tuple(contract[k] for k in ("budgetSeconds", "reportReserveSeconds", "maxTrials", "outcomeAccess")))
+            self.assertTrue(any("ordinary comparison periods" in x and "failed/cancelled" in x for x in task["acceptanceCriteria"]))
+        _, candidates = workspace.discover()
+        new = [c for _, c in candidates if c["id"] in {t["candidateIds"][0] for t in tasks}]
+        self.assertTrue(all("years" in c["horizon"] and c["inspirationRefs"] for c in new))
+        # Horizon does not participate in wall-clock accounting or expand the contract.
+        self.assertTrue(all(c["stage"] == "DATA_FEASIBILITY" for c in new))
+
+    def test_task_inspection_exposes_rank_and_inspiration(self):
+        value = workspace.task_inventory("corporate-event-terms-feasibility")
+        self.assertEqual(10, value["selectionRank"])
+        self.assertIn("research/inspiration/cases/frontera-tender-amendment.json", value["inspirationRefs"])
+        legacy = workspace.task_inventory("conventional-market-feasibility")
+        self.assertEqual((100, []), (legacy["selectionRank"], legacy["inspirationRefs"]))
+
+    def test_invalid_rank_and_provenance_are_rejected(self):
+        from unittest.mock import patch
+        from copy import deepcopy
+        original = workspace.discover()
+        for bad in (-1, True, "10"):
+            spaces, candidates = deepcopy(original)
+            spaces[0][1]["readyWork"][0]["selectionRank"] = bad
+            with patch.object(workspace, "discover", return_value=(spaces, candidates)):
+                self.assertTrue(any("selectionRank" in e for e in workspace.validate()))
+        for bad in ("research/inspiration/cases/missing.json", "../../outside.json", "/outside.json"):
+            spaces, candidates = deepcopy(original)
+            candidates[0][1]["inspirationRefs"] = [bad]
+            candidates[0][1]["transferAssessment"] = "Unverified transfer"
+            with patch.object(workspace, "discover", return_value=(spaces, candidates)):
+                self.assertTrue(any("inspiration" in e for e in workspace.validate()))
+
+    def test_inspiration_is_not_validation_and_requires_counterevidence(self):
+        from unittest.mock import patch
+        original = workspace.load_json
+        def changed(path):
+            value = original(path)
+            if value.get("schemaVersion") == "marketlab.inspiration.v1":
+                value["stage"] = "BLIND_VALIDATED"
+            return value
+        with patch.object(workspace, "load_json", side_effect=changed):
+            self.assertTrue(any("IDEA stage" in e for e in workspace.validate()))
+        def without_counterexample(path):
+            value = original(path)
+            if value.get("schemaVersion") == "marketlab.inspiration.v1":
+                value["counterevidence"] = ""
+            return value
+        with patch.object(workspace, "load_json", side_effect=without_counterexample):
+            self.assertTrue(any("counterevidence" in e for e in workspace.validate()))
+
+    def test_rank_never_overrides_priority_and_old_tasks_default_to_100(self):
+        from unittest.mock import patch
+        from copy import deepcopy
+        spaces, candidates = deepcopy(workspace.discover())
+        target = next(t for _, s in spaces for t in s["readyWork"] if t["id"] == "conventional-market-feasibility")
+        target["priority"] = "P0"
+        with patch.object(workspace, "discover", return_value=(spaces, candidates)):
+            ready = workspace.ready_work()
+            self.assertEqual(["conventional-market-feasibility"], [t["id"] for t in ready])
+            self.assertEqual(100, ready[0]["selectionRank"])
 
 
 if __name__ == "__main__":

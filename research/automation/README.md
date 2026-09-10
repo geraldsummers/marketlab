@@ -6,8 +6,9 @@ runs only while **more than 50% remains in every reported window**. A weekly-onl
 account is valid. There is no morning cutoff. Spark, paid API capacity, credit
 purchases and earned resets never substitute for the main allowance.
 
-Current research stage: `DATA_FEASIBILITY`. Start with balanced conventional,
-onchain, prediction-market and dollar-stablecoin audits. Once the queue is
+Current research stage: `DATA_FEASIBILITY`. Start with ranked corporate-event terms,
+prediction resolution and stablecoin redemption audits, followed by broader
+conventional, onchain, prediction-market and dollar-stablecoin audits. Once the queue is
 exhausted, a bounded metadata discovery task can register distinct hypotheses
 and data-ready successors. Historical exploration is authorized; sealed
 confirmation, prospective activation, paid acquisition and trading are not.
@@ -114,3 +115,13 @@ Tests use a deterministic fake worker and temporary bare Git remotes. They
 exercise allowance boundaries, weekly-only accounts, skips, interruption,
 registration-before-execution, failed-code preservation, rejected pushes and
 history divergence without spending research allowance or opening market data.
+
+## Research ordering
+
+The [practitioner-informed roadmap](../inspiration/README.md) replaces equal-domain
+first admission with three ranked P1 source audits. Priority precedes optional
+selectionRank (default 100), then existing domain balancing breaks ties. There is
+no recurring literature slot. Each new audit has a two-hour total deadline with
+15 minutes reserved for reporting; longer target holding horizons do not extend
+that clock. `workspace.py ready` shows effective ranks and `task TASK_ID --json`
+shows linked inspiration references. Registration is not execution.

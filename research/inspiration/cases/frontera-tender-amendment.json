@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "marketlab.inspiration.v1",
+  "id": "frontera-tender-amendment",
+  "title": "Frontera: odd-lot preference removed",
+  "stage": "IDEA",
+  "operator": "Frontera Energy",
+  "performanceSupport": "NOT_ASSESSED",
+  "historicalSetting": "September 2024 tender amendment",
+  "sources": [
+    {
+      "url": "https://fronteraenergy.mediaroom.com/2024-09-25-Frontera-to-Amend-Substantial-Issuer-Bid-to-Remove-the-Preferential-Acceptance-of-Odd-Lots",
+      "published": "2024-09-25",
+      "inspectedOn": "2026-09-10",
+      "sourceRole": "Primary publication; account may be retrospective or interested-party"
+    }
+  ],
+  "documentedClaim": "The issuer removed preferential odd-lot acceptance and required affected holders to retender.",
+  "inferredMechanism": "Eligibility and amendments are economic state variables for corporate-event analysis.",
+  "counterevidence": "A favorable original term is not a guaranteed realized payoff; tiny capacity and broker friction may dominate.",
+  "transferRequirements": "Preserve original and amended documents and availability clocks; include cancellations and rule removals rather than selecting completed winners.",
+  "outcomeBoundary": "Public narrative already inspected; described cases are discovery examples, never untouched confirmation. No experimental market outcome dataset opened."
+}

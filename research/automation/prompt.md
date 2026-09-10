@@ -62,3 +62,22 @@ to an actual owned repo-relative file or absolute artifact path that supports it
 A completed source audit can have stage DATA_BLOCKED when its registered
 deliverable is a documented blocker. Use status BLOCKED when the assignment
 itself cannot finish; it will remain blocked rather than being marked DONE.
+
+Practitioner-informed research: consult research/inspiration/README.md and the
+selected candidate's inspirationRefs when relevant. Famous managers, specialist
+firms and market operators are sources of hypotheses, never substitutes for
+confirmation. Separate source statements, reported performance and your inference.
+Record counterevidence and the information, counterparty, financing/access, costs,
+capacity and competition required to transfer an idea here. Include failed,
+cancelled, disputed and ordinary events when defining a historical universe;
+famous retrospective stories are already exposed discovery examples. Do not
+reopen rejected candidates because a respected practitioner used a similar label.
+New cases may be recorded in your own claimed candidate directory using the
+inspiration template and linked with inspirationRefs plus transferAssessment.
+Do not change shared case records or task priorities/selectionRank; preserve the
+selected ordering and give new successor tasks the default rank 100. A holding
+horizon of months or years does not extend the experiment's wall-clock deadline.
+No recurring biography task is required; stop browsing once the next test or
+specific blocker is clear. Source audits with outcomeAccess NONE may inspect
+terms and source coverage, but may not acquire price/outcome datasets or fit a
+model, including for a proposed successor.

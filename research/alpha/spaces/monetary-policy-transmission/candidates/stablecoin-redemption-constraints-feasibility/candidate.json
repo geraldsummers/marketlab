@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "stablecoin-redemption-constraints-feasibility",
+  "spaceId": "monetary-policy-transmission",
+  "title": "Stablecoin redemption constraints feasibility",
+  "stage": "DATA_FEASIBILITY",
+  "claim": "Audit whether redemption access, issuer publication clocks, banking interruptions, solvency uncertainty and native-venue quote coverage can be reconstructed from existing public historical sources.",
+  "mechanism": "Source feasibility only; contractual and institutional constraints are IDEA leads, not predictive evidence.",
+  "target": "Historical source readiness and one preregisterable successor or blocker",
+  "horizon": "Successor holding horizons may span days, months or years; this audit has a two-hour wall-clock deadline.",
+  "informationSet": [
+    "Redemption access, issuer publication clocks, banking interruptions, solvency uncertainty and native-venue quote coverage"
+  ],
+  "primaryBaseline": "No outcome evaluation in this source audit",
+  "evidence": [
+    {
+      "evidenceId": "practitioner-roadmap-registration-2026-09-10",
+      "classification": "DATA_FEASIBILITY",
+      "decision": "DATA_FEASIBILITY",
+      "summary": "Registered but unexecuted; literature supplies inspiration only.",
+      "sourcePath": "research/inspiration/README.md"
+    }
+  ],
+  "frozenLocks": [],
+  "touchPoints": [
+    "research/alpha/spaces/monetary-policy-transmission/candidates/stablecoin-redemption-constraints-feasibility",
+    "research/source-policy.md"
+  ],
+  "nextAction": "Start the registered bounded audit before acquisition; inspect source metadata and terms without opening experimental market outcomes.",
+  "researchModes": [
+    "HISTORICAL"
+  ],
+  "domains": [
+    "usd-stablecoins"
+  ],
+  "targetMarket": "USDC secondary markets across banking interruptions and ordinary banking periods",
+  "targetVenue": "Circle dated operational disclosures; target-native secondary venue coverage is an audit deliverable",
+  "experimentContract": "experiment.json",
+  "searchFamilyId": "stablecoin-redemption-constraints-feasibility",
+  "inspirationRefs": [
+    "research/inspiration/cases/circle-redemption-backlog.json",
+    "research/inspiration/cases/ldi-forced-selling.json"
+  ],
+  "transferAssessment": "Audit point-in-time information, counterparty constraints, financing/access, costs, capacity and competition before specifying any economic test."
+}

@@ -23,8 +23,8 @@ tool builds the index from the filesystem.
 
 ## Bounded cross-market exploration
 
-Current expanded agenda: `DATA_FEASIBILITY`, with equal-priority conventional,
-onchain, prediction-market and dollar-stablecoin source audits. Follow
+Current expanded agenda: `DATA_FEASIBILITY`, with ranked mechanism audits ahead of the broader
+conventional, onchain, prediction-market and dollar-stablecoin source audits. Follow
 [experiments.md](experiments.md) for mandatory persistent experiment budgets.
 Domain tags provide coverage; alpha spaces continue to represent mechanisms.
 
@@ -108,3 +108,5 @@ and the exact period is absent from the opened-outcome inventory. This does not
 authorize paper or live trading.
 
 See [midnight research automation](../automation/README.md) for the Hobart schedule, allowance reserve, published research branch and operator controls.
+
+See [the practitioner-informed roadmap](../inspiration/README.md) for ranked source audits and case provenance.

@@ -29,3 +29,6 @@ blocked. Do not wait for future outcomes in historical mode.
 - Original deadline, reporting reserve and remaining time:
 - Trial reservations, failures/retries and resource observations:
 - Supervisor state artifact path/hash and terminal execution reason:
+
+- Effective selectionRank (priority precedes rank; default 100):
+- Candidate inspirationRefs and transferAssessment; known narrative outcomes:

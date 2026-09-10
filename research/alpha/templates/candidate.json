@@ -25,5 +25,7 @@
   "targetMarket": "Exact market and universe",
   "targetVenue": "Exact target venue",
   "experimentContract": "experiment.json",
-  "searchFamilyId": "replace-family-id"
+  "searchFamilyId": "replace-family-id",
+  "inspirationRefs": [],
+  "transferAssessment": "When linking inspiration, explain point-in-time information, counterparty constraints, access, financing, costs, capacity, competition and failure conditions."
 }

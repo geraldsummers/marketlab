@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "marketlab.inspiration.v1",
+  "id": "replace-id",
+  "title": "replace-title",
+  "stage": "IDEA",
+  "operator": "replace-operator",
+  "performanceSupport": "UNVERIFIED",
+  "historicalSetting": "replace-historicalSetting",
+  "sources": [
+    {
+      "url": "https://example.com/replace-primary-source",
+      "published": "Unknown; record uncertainty",
+      "inspectedOn": "YYYY-MM-DD",
+      "sourceRole": "Describe authorship and independence"
+    }
+  ],
+  "documentedClaim": "replace-documentedClaim",
+  "inferredMechanism": "replace-inferredMechanism",
+  "counterevidence": "replace-counterevidence",
+  "transferRequirements": "replace-transferRequirements",
+  "outcomeBoundary": "replace-outcomeBoundary"
+}

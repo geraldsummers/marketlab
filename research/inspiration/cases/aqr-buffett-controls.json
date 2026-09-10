@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "marketlab.inspiration.v1",
+  "id": "aqr-buffett-controls",
+  "title": "AQR: decomposing Buffett performance",
+  "stage": "IDEA",
+  "operator": "Andrea Frazzini, David Kabiller, Lasse Pedersen / AQR",
+  "performanceSupport": "INDEPENDENT_ANALYSIS",
+  "historicalSetting": "Published analysis of historical Berkshire performance",
+  "sources": [
+    {
+      "url": "https://www.aqr.com/insights/research/journal-article/buffetts-alpha",
+      "published": "2013-11-01",
+      "inspectedOn": "2026-09-10",
+      "sourceRole": "Primary publication; account may be retrospective or interested-party"
+    }
+  ],
+  "documentedClaim": "The authors attribute performance to cheap, safe, high-quality stocks with leverage and favorable financing.",
+  "inferredMechanism": "Quality/value and financing are competing explanations and useful controls for a claimed selection edge.",
+  "counterevidence": "This published analysis was not replicated here and does not make insurance float available to the lab.",
+  "transferRequirements": "Use realistic financing and relevant factor controls; do not equate gross historical performance with transferable net alpha.",
+  "outcomeBoundary": "Public narrative already inspected; described cases are discovery examples, never untouched confirmation. No experimental market outcome dataset opened."
+}

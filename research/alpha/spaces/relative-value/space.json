@@ -128,6 +128,55 @@
         "conventional"
       ],
       "experimentContract": "research/alpha/spaces/relative-value/candidates/conventional-market-feasibility/experiment.json"
+    },
+    {
+      "id": "corporate-event-terms-feasibility",
+      "status": "READY",
+      "kind": "data",
+      "summary": "Audit whether eligibility, proration, deadlines, amendments, cancellation and broker processing requirements can be reconstructed from existing public historical sources.",
+      "priority": "P1",
+      "selectionRank": 10,
+      "blockedBy": [],
+      "externalBlockers": [],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "candidateIds": [
+        "corporate-event-terms-feasibility"
+      ],
+      "domains": [
+        "conventional"
+      ],
+      "deliverables": [
+        "Candidate-owned source audit and transfer assessment with citations",
+        "One preregisterable bounded successor or documented blocker"
+      ],
+      "acceptanceCriteria": [
+        "Source coverage and provenance document Eligibility, proration, deadlines, amendments, cancellation and broker processing requirements.",
+        "Define a historical event universe including failed/cancelled or nonrecovering cases and ordinary comparison periods; avoid selecting only famous winners.",
+        "Assess point-in-time prices/quotes, licensing, access, financing, execution costs, capacity and independent sample availability without opening outcome data.",
+        "Separate documented facts, practitioner performance claims and inferred mechanisms; include counterevidence and overlapping failed Marketlab candidates.",
+        "Register one successor with causal sources, sign, target/horizon, baseline, sample/exposure boundary, trial family and economic rejection threshold, or document a specific blocker.",
+        "Remain DATA_FEASIBILITY or DATA_BLOCKED; no sealed outcomes, predictive evaluation or successor acquisition in this audit."
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/relative-value/candidates/corporate-event-terms-feasibility",
+        "research/alpha/spaces/relative-value/space.json",
+        "research/inventory/data-sources/"
+      ],
+      "resourceClass": "DATA_IO",
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": [],
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 2,
+        "maxTrials": 0,
+        "gpu": false,
+        "budgetSeconds": 7200,
+        "reportReserveSeconds": 900,
+        "memoryMiB": 4096
+      },
+      "experimentContract": "research/alpha/spaces/relative-value/candidates/corporate-event-terms-feasibility/experiment.json"
     }
   ]
 }

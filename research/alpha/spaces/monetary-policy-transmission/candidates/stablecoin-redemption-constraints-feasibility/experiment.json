@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "marketlab.experiment.v1",
+  "experimentId": "stablecoin-redemption-constraints-feasibility-v1",
+  "candidateId": "stablecoin-redemption-constraints-feasibility",
+  "searchFamilyId": "stablecoin-redemption-constraints-feasibility",
+  "predecessorExperimentIds": [],
+  "hypothesis": "Audit whether redemption access, issuer publication clocks, banking interruptions, solvency uncertainty and native-venue quote coverage can be reconstructed from existing public historical sources.",
+  "domains": [
+    "usd-stablecoins"
+  ],
+  "targetMarket": "USDC secondary markets across banking interruptions and ordinary banking periods",
+  "targetVenue": "Circle dated operational disclosures; target-native secondary venue coverage is an audit deliverable",
+  "decisionClock": "Existing documents available at audit start; preserve historical publication and amendment clocks separately from present retrieval.",
+  "outcomeAccess": "NONE",
+  "budgetSeconds": 7200,
+  "reportReserveSeconds": 900,
+  "maxTrials": 0,
+  "familyTrialBudget": 16,
+  "resourceClass": "DATA_IO",
+  "blasThreads": 2,
+  "memoryMiB": 4096,
+  "gpu": false,
+  "gpuJustification": ""
+}

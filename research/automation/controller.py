@@ -134,7 +134,7 @@ def choose_task(cfg, state):
     highest=min(workspace.TASK_PRIORITIES[t['priority']] for t in tasks) if tasks else 2
     eligible=[t for t in eligible if workspace.TASK_PRIORITIES[t['priority']]==highest]
     counts=state.get('domainCounts',{})
-    return min(eligible,key=lambda t:(min(counts.get(d,0) for d in t.get('domains',['crypto'])),t['id'])) if eligible else None
+    return min(eligible,key=lambda t:(t.get('selectionRank',100),min(counts.get(d,0) for d in t.get('domains',['crypto'])),t['id'])) if eligible else None
 
 
 def discovery_task(cfg, cycle, state):

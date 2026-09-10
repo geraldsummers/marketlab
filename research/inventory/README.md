@@ -46,3 +46,8 @@ python3 research/alpha/tools/workspace.py verify-artifacts --ssh-host gerald@192
 Local historical execution uses [bounded experiments](../alpha/experiments.md).
 New domain source records are explicitly MISSING until their feasibility audits
 produce evidence; they do not assert available feeds or data entitlements.
+
+Practitioner and operator case records are available through
+`python3 research/alpha/tools/workspace.py inspirations --json` and
+[the cited roadmap](../inspiration/README.md). They supply IDEA provenance;
+research decisions remain in the evidence inventory and candidate manifests.

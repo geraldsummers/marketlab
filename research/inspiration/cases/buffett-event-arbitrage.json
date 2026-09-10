@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "marketlab.inspiration.v1",
+  "id": "buffett-event-arbitrage",
+  "title": "Buffett and Jay Pritzker: contractual event arbitrage",
+  "stage": "IDEA",
+  "operator": "Warren Buffett / Berkshire Hathaway",
+  "performanceSupport": "PRACTITIONER_REPORTED",
+  "historicalSetting": "1988 reporting year",
+  "sources": [
+    {
+      "url": "https://www.berkshirehathaway.com/letters/1988.html",
+      "published": "1988 shareholder letter, issued 1989",
+      "inspectedOn": "2026-09-10",
+      "sourceRole": "Primary publication; account may be retrospective or interested-party"
+    }
+  ],
+  "documentedClaim": "Completion probability, capital lockup and failure losses govern event spreads; the Rockwood example joined securities and warehouse receipts.",
+  "inferredMechanism": "An announced event changes security-holder rights and can create a spread while access, uncertainty or complexity limits participation.",
+  "counterevidence": "Deal financing can fail, consideration can change, and reported wins do not describe the full opportunity universe.",
+  "transferRequirements": "Verify every contract version, broker processing deadline, deliverability, commissions and realistic deployable capacity.",
+  "outcomeBoundary": "Public narrative already inspected; described cases are discovery examples, never untouched confirmation. No experimental market outcome dataset opened."
+}

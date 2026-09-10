@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "marketlab.inspiration.v1",
+  "id": "maker-keeper-operations",
+  "title": "Maker keepers: auction participation economics",
+  "stage": "IDEA",
+  "operator": "Maker / Sky ecosystem maintainers",
+  "performanceSupport": "NOT_ASSESSED",
+  "historicalSetting": "Repository inspected 2026-09-10",
+  "sources": [
+    {
+      "url": "https://github.com/sky-ecosystem/auction-keeper",
+      "published": "Version-dependent repository",
+      "inspectedOn": "2026-09-10",
+      "sourceRole": "Primary publication; account may be retrospective or interested-party"
+    }
+  ],
+  "documentedClaim": "Keeper implementation documents auction types, gas escalation and inventory management.",
+  "inferredMechanism": "Participation costs and operational availability can shape auction competition and realized proceeds.",
+  "counterevidence": "Software documentation is not a profitability record; modern code is not proof of historical auction behavior.",
+  "transferRequirements": "Pin historical contract and code versions; account for reverted transactions, gas, competition and inventory. Do not deploy a keeper.",
+  "outcomeBoundary": "Public narrative already inspected; described cases are discovery examples, never untouched confirmation. No experimental market outcome dataset opened."
+}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "marketlab.inspiration.v1",
+  "id": "polymarket-resolution",
+  "title": "Polymarket: resolution and disputes",
+  "stage": "IDEA",
+  "operator": "Polymarket documentation",
+  "performanceSupport": "NOT_ASSESSED",
+  "historicalSetting": "Current documentation inspected 2026-09-10",
+  "sources": [
+    {
+      "url": "https://docs.polymarket.com/concepts/resolution",
+      "published": "Undated living documentation",
+      "inspectedOn": "2026-09-10",
+      "sourceRole": "Primary publication; account may be retrospective or interested-party"
+    }
+  ],
+  "documentedClaim": "The venue describes rule-based resolution through the UMA optimistic oracle and dispute handling.",
+  "inferredMechanism": "Payout timing and contract interpretation can differ from a generic forecast of the real-world event.",
+  "counterevidence": "Current rules do not establish historical rule versions; publicity-selected disputes are a biased sample.",
+  "transferRequirements": "Require original question/rule versions, dispute history, settlement timestamps, fees and executable quotes. No oracle participation is authorized.",
+  "outcomeBoundary": "Public narrative already inspected; described cases are discovery examples, never untouched confirmation. No experimental market outcome dataset opened."
+}

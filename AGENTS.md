@@ -311,3 +311,20 @@ Unattended authority stops at historical exploration. It does not include sealed
 confirmation or prospective activation, even where general task policy could
 otherwise permit confirmation. Do not revisit consumed outcomes or reset an
 experiment budget. Consult live claims; defer overlapping interactive work.
+
+## Practitioner-informed roadmap
+
+Consult `research/inspiration/README.md` and `workspace.py inspirations` before
+new mechanism selection. The three focused source audits lead the P1 queue:
+corporate-event terms (selectionRank 10), prediction resolution (20), and
+stablecoin redemption constraints (30). Broad domain audits retain rank 100.
+Priority always precedes rank; domain balancing breaks equal-rank ties.
+
+Treat established managers, lesser-known specialists and market operators as
+sources of hypotheses. Separate independently supported analysis, practitioner
+claims and inference; record failure cases and transferable access/cost conditions.
+Link candidate inspirationRefs and transferAssessment; preserve existing failed
+candidates and known outcome boundaries. Historical stories are never blind data.
+There is no recurring literature slot. Longer holding horizons and long-format
+historical datasets are permitted; each experiment still retains its original
+maximum 11h45m wall-clock deadline, including preparation and reporting.
