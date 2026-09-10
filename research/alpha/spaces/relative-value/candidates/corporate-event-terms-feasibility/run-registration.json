@@ -1,0 +1,10 @@
+{
+  "experimentId": "corporate-event-terms-feasibility-v1",
+  "contractSha256": "84710bccb59cebfcc2c029b0726c25df375731906d133d181bef61365032ead9",
+  "startedAt": "2026-09-10T01:50:34.579468+00:00",
+  "deadline": "2026-09-10T03:50:34.579468+00:00",
+  "workDeadline": "2026-09-10T03:35:34.579468+00:00",
+  "scope": "Terms and source coverage only. No price/outcome dataset acquisition, predictive evaluation or successor execution.",
+  "sampling": "Inspect authoritative filing interfaces plus illustrative offer/term documents. Examples are not a representative performance sample; preserve failures and access errors.",
+  "registry": "/home/dev/.local/share/marketlab/experiments/corporate-event-terms-feasibility-v1"
+}
