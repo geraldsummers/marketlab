@@ -258,6 +258,8 @@ def train(args):
         target_trials = []
         for family in families:
             for number in range(args.trials):
+                from budget import record_trial
+                record_trial()
                 config = config_for(family, number)
                 improvements = []
                 for fold, (train_index, test_index) in enumerate(split):
@@ -460,6 +462,10 @@ def main():
     evaluation.add_argument("--frozen-sha256", required=True)
     evaluation.add_argument("--search-lock", required=True); evaluation.add_argument("--output", required=True)
     args = parser.parse_args()
+    if args.command != "score":
+        from budget import require_budget
+        require_budget(model=args.command == "train",
+                       outcome_access="SINGLE_USE_HISTORICAL_CONFIRMATION" if args.command == "evaluate" else "DEVELOPMENT_ONLY")
     if args.command == "train": train(args)
     elif args.command == "score": score(args)
     else: evaluate(args)

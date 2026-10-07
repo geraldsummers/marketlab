@@ -21,3 +21,11 @@ A successor must retrieve the canonical contract with:
 
 Do not infer permission from this handoff when the canonical task remains
 blocked. Do not wait for future outcomes in historical mode.
+
+## Experiment accounting
+
+- Experiment ID, contract hash, search family and predecessors:
+- Target market, venue, domains and causal decision clock:
+- Original deadline, reporting reserve and remaining time:
+- Trial reservations, failures/retries and resource observations:
+- Supervisor state artifact path/hash and terminal execution reason:

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "onchain-settlement-feasibility",
+  "spaceId": "settlement-liquidity",
+  "title": "Onchain settlement and liquidity",
+  "stage": "DATA_FEASIBILITY",
+  "claim": "Audit whether settlement flows and liquidity fragmentation provide causally available information beyond market prices.",
+  "mechanism": "Source feasibility only; predicted sign, target and search family must be specified before a predictive experiment.",
+  "target": "Source readiness and one proposed falsifiable experiment, or documented blocker",
+  "horizon": "Historical data available when the feasibility experiment begins",
+  "informationSet": [
+    "Chain finality, reorgs, archive-node/indexer history, block versus receipt clocks, gas, MEV and bridge risk."
+  ],
+  "primaryBaseline": "No predictive claim in this feasibility task",
+  "evidence": [
+    {
+      "evidenceId": "bounded-cross-market-registration-2026-09-08",
+      "classification": "DATA_FEASIBILITY",
+      "decision": "DATA_FEASIBILITY",
+      "summary": "Bounded source task registered; source coverage and predictive value remain untested.",
+      "sourcePath": "research/decision-log.md"
+    }
+  ],
+  "frozenLocks": [],
+  "touchPoints": [
+    "research/alpha/spaces/settlement-liquidity/candidates/onchain-settlement-feasibility",
+    "research/source-policy.md",
+    "research/alpha/experiments.md"
+  ],
+  "nextAction": "Start the bounded source audit and record evidence before any model execution.",
+  "researchModes": [
+    "HISTORICAL"
+  ],
+  "domains": [
+    "onchain"
+  ],
+  "targetMarket": "Domain source coverage; exact instrument selection is a deliverable",
+  "targetVenue": "Official sources; exact source/venue selection is a deliverable",
+  "experimentContract": "experiment.json",
+  "searchFamilyId": "onchain-settlement-feasibility"
+}

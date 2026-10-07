@@ -121,7 +121,10 @@
         "maxProcesses": 1,
         "blasThreads": 2,
         "maxTrials": 8,
-        "gpu": false
+        "gpu": false,
+        "budgetSeconds": 42300,
+        "reportReserveSeconds": 900,
+        "memoryMiB": 4096
       },
       "outcomeAccess": "DEVELOPMENT_ONLY",
       "completionEvidenceIds": []
@@ -164,7 +167,10 @@
         "maxProcesses": 1,
         "blasThreads": 1,
         "maxTrials": 0,
-        "gpu": false
+        "gpu": false,
+        "budgetSeconds": 42300,
+        "reportReserveSeconds": 900,
+        "memoryMiB": 4096
       },
       "outcomeAccess": "NONE",
       "completionEvidenceIds": []
@@ -205,7 +211,10 @@
         "maxProcesses": 1,
         "blasThreads": 2,
         "maxTrials": 0,
-        "gpu": false
+        "gpu": false,
+        "budgetSeconds": 42300,
+        "reportReserveSeconds": 900,
+        "memoryMiB": 4096
       },
       "outcomeAccess": "SINGLE_USE_HISTORICAL_CONFIRMATION",
       "completionEvidenceIds": []
@@ -328,7 +337,10 @@
         "maxProcesses": 1,
         "blasThreads": 1,
         "maxTrials": 0,
-        "gpu": false
+        "gpu": false,
+        "budgetSeconds": 42300,
+        "reportReserveSeconds": 900,
+        "memoryMiB": 4096
       },
       "outcomeAccess": "NONE",
       "completionEvidenceIds": []

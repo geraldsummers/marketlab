@@ -512,6 +512,19 @@ def parser() -> argparse.ArgumentParser:
 
 def main() -> None:
     args = parser().parse_args()
+    if args.command != "probe-gpu":
+        from marketlab_alpha.budget import require_budget
+        access = ("SINGLE_USE_HISTORICAL_CONFIRMATION" if args.command == "confirm"
+                  else "DEVELOPMENT_ONLY" if args.command in {"search", "search-step"} else None)
+        require_budget(model=args.command in {"search", "search-step"}, outcome_access=access)
+        if args.command in {"search", "search-step"}:
+            import os
+            limit = int(os.environ["MARKETLAB_EXPERIMENT_TRIALS"])
+            if args.command == "search":
+                args.maximum_trials = min(args.maximum_trials or limit, limit)
+            lock_data = json.loads(Path(args.lock).read_text())
+            if lock_data.get("campaignId") in {"archive-directional-gpu-v1", "archive-directional-gpu-v2"}:
+                raise ValueError("legacy campaign requires a separately registered bounded successor")
     if args.command == "universe" and not args.basket_size:
         args.basket_size = [4, 6, 10]
     if args.command == "materialize" and not args.horizon:

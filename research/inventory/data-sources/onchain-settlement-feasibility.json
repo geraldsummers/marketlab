@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "marketlab.data-source-inventory.v1",
+  "id": "onchain-settlement-feasibility",
+  "title": "Onchain settlement and liquidity sources",
+  "category": "onchain",
+  "status": "MISSING",
+  "pointInTimeUse": "Chain finality, reorgs, archive-node/indexer history, block versus receipt clocks, gas, MEV and bridge risk.",
+  "implementations": [],
+  "alphaSpaces": [
+    "settlement-liquidity"
+  ],
+  "limitations": [
+    "No source availability, entitlement or point-in-time coverage has been verified for this new task."
+  ],
+  "nextAction": "Audit whether settlement flows and liquidity fragmentation provide causally available information beyond market prices."
+}

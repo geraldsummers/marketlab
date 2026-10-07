@@ -25,5 +25,8 @@ def run(args):
     print(json.dumps({"stage":report["stage"],"winner":report["winner"],"reportSha256":event.sha256(report_path),"ledgerSha256":event.sha256(ledger)}))
 
 def main():
-    parser=argparse.ArgumentParser(description=__doc__); parser.add_argument("--input-root",required=True); parser.add_argument("--program-lock",required=True); parser.add_argument("--output",required=True); parser.add_argument("--seed",type=int,default=20260827); run(parser.parse_args())
+    parser=argparse.ArgumentParser(description=__doc__); parser.add_argument("--input-root",required=True); parser.add_argument("--program-lock",required=True); parser.add_argument("--output",required=True); parser.add_argument("--seed",type=int,default=20260827); args = parser.parse_args()
+    from budget import require_budget
+    require_budget(model=True, outcome_access="DEVELOPMENT_ONLY")
+    run(args)
 if __name__=="__main__": main()

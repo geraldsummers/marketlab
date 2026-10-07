@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "marketlab.evidence-inventory.v2",
+  "id": "bounded-cross-market-registration-2026-09-08",
+  "candidateIds": [
+    "conventional-market-feasibility",
+    "onchain-settlement-feasibility",
+    "prediction-market-feasibility",
+    "stablecoin-policy-feasibility"
+  ],
+  "classification": "DATA_FEASIBILITY",
+  "decision": "DATA_FEASIBILITY",
+  "summarySource": "research/decision-log.md",
+  "summary": "Registered four equally prioritized source-feasibility tasks and verified bounded-experiment infrastructure. No domain source audit, predictive test, or outcome opening has occurred.",
+  "candidateDecisions": [
+    {
+      "candidateId": "conventional-market-feasibility",
+      "stage": "DATA_FEASIBILITY",
+      "decision": "DATA_FEASIBILITY",
+      "current": true
+    },
+    {
+      "candidateId": "onchain-settlement-feasibility",
+      "stage": "DATA_FEASIBILITY",
+      "decision": "DATA_FEASIBILITY",
+      "current": true
+    },
+    {
+      "candidateId": "prediction-market-feasibility",
+      "stage": "DATA_FEASIBILITY",
+      "decision": "DATA_FEASIBILITY",
+      "current": true
+    },
+    {
+      "candidateId": "stablecoin-policy-feasibility",
+      "stage": "DATA_FEASIBILITY",
+      "decision": "DATA_FEASIBILITY",
+      "current": true
+    }
+  ],
+  "outcomesOpened": false,
+  "openedOutcomes": [],
+  "artifacts": [
+    {
+      "role": "software-validation",
+      "sha256": "2d58781fada28524e080d96b537a7eeccda197ec7ab56ac3d6b1eac6ee64ac15",
+      "location": "/home/dev/artifacts/bounded-suite/2d58781fada28524e080d96b537a7eeccda197ec7ab56ac3d6b1eac6ee64ac15.json",
+      "verification": "LOCAL_FILE"
+    }
+  ]
+}

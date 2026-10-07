@@ -32,3 +32,11 @@ List mechanism, data, execution, regime, asset, and operational boundaries.
 
 State the next action and whether it requires fresh outcomes, new authority, or
 additional point-in-time data.
+
+## Experiment accounting
+
+- Experiment ID, contract hash, search family and predecessors:
+- Target market, venue, domains and causal decision clock:
+- Original deadline, reporting reserve and remaining time:
+- Trial reservations, failures/retries and resource observations:
+- Supervisor state artifact path/hash and terminal execution reason:

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "marketlab.data-source-inventory.v1",
+  "id": "stablecoin-policy-feasibility",
+  "title": "Dollar stablecoin policy transmission sources",
+  "category": "usd-stablecoins",
+  "status": "MISSING",
+  "pointInTimeUse": "Verify the policy premise with dated primary sources; separate private issuance, policy, Treasury backing and tokenized Treasuries; audit redemption and reserve publication clocks.",
+  "implementations": [],
+  "alphaSpaces": [
+    "monetary-policy-transmission"
+  ],
+  "limitations": [
+    "No source availability, entitlement or point-in-time coverage has been verified for this new task."
+  ],
+  "nextAction": "Investigate whether expanding US support for dollar stablecoins creates overlooked effects in issuance, reserves, payments and market liquidity."
+}

@@ -79,3 +79,9 @@ A handoff makes the next safe action obvious. It identifies what was tested,
 what is known, what is merely suspected, which outcomes have been opened, what
 must remain frozen, and which exact task can proceed without overlapping other
 agents.
+
+## Experiment execution
+
+Follow [experiments.md](experiments.md) before acquisition or preparation. Register
+one durable sub-12-hour experiment per candidate, preserve family trial accounting
+and predecessor links, and attach both supervisor and research evidence to the handoff.

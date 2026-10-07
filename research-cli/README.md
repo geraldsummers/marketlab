@@ -16,7 +16,7 @@ be in the past. Both timestamps must be UTC-hour aligned.
 
 ```sh
 export MARKETLAB_SOURCE_REVISION='<40-or-64-character-lowercase-source-hash>'
-./gradlew :research-cli:run --args='
+python3 research/alpha/tools/experiment.py run --trials 1 EXPERIMENT_ID -- ./gradlew --no-daemon :research-cli:run --args='
   --data-root /mnt/media/marketlab/raw
   --artifact-root /mnt/stack/marketlab/active-artifacts
   --coins BTC,ETH
@@ -44,3 +44,8 @@ at $10,000, $100,000, and $1,000,000 using at most 10% of every displayed level.
 It is a point-in-time depth diagnostic, not a historical replay or a fill. This
 suite creates no orders or fills and cannot promote a theory to paper trading
 without separate historical observed-book execution evidence.
+
+Register a CPU_MODEL experiment before this command, including acquisition and
+evaluation in its deadline. Use local writable data/artifact paths. The production
+Podman launcher is a deployment interface and is not part of this local research
+agenda. See [bounded experiments](../research/alpha/experiments.md).

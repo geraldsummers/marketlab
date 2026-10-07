@@ -1,3 +1,13 @@
+# Local research versus deployment
+
+New historical experiments run locally through
+[the bounded supervisor](../research/alpha/experiments.md). Local GPU access does
+not make historical host paths or production services part of the workspace.
+The archive V2 dispatcher/controller refuses new execution; register a bounded
+successor. The deployment procedures below retain their explicit host targets
+and require their existing authorization. Do not invoke them to escape a local
+experiment deadline.
+
 # Gerald deployment
 
 This deployment is rootless, content-pinned, and intentionally private. The

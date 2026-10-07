@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "marketlab.alpha-candidate.v1",
+  "id": "conventional-market-feasibility",
+  "spaceId": "relative-value",
+  "title": "Conventional market information and relative value",
+  "stage": "DATA_FEASIBILITY",
+  "claim": "Audit historical equities, ETFs, rates, FX and futures sources for overlooked cross-market relationships.",
+  "mechanism": "Source feasibility only; predicted sign, target and search family must be specified before a predictive experiment.",
+  "target": "Source readiness and one proposed falsifiable experiment, or documented blocker",
+  "horizon": "Historical data available when the feasibility experiment begins",
+  "informationSet": [
+    "Calendar alignment, delistings, corporate actions, futures rolls, vintage releases, licensing and target-native execution evidence."
+  ],
+  "primaryBaseline": "No predictive claim in this feasibility task",
+  "evidence": [
+    {
+      "evidenceId": "bounded-cross-market-registration-2026-09-08",
+      "classification": "DATA_FEASIBILITY",
+      "decision": "DATA_FEASIBILITY",
+      "summary": "Bounded source task registered; source coverage and predictive value remain untested.",
+      "sourcePath": "research/decision-log.md"
+    }
+  ],
+  "frozenLocks": [],
+  "touchPoints": [
+    "research/alpha/spaces/relative-value/candidates/conventional-market-feasibility",
+    "research/source-policy.md",
+    "research/alpha/experiments.md"
+  ],
+  "nextAction": "Start the bounded source audit and record evidence before any model execution.",
+  "researchModes": [
+    "HISTORICAL"
+  ],
+  "domains": [
+    "conventional"
+  ],
+  "targetMarket": "Domain source coverage; exact instrument selection is a deliverable",
+  "targetVenue": "Official sources; exact source/venue selection is a deliverable",
+  "experimentContract": "experiment.json",
+  "searchFamilyId": "conventional-market-feasibility"
+}

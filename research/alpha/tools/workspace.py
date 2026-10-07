@@ -13,6 +13,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from experiment import MAX_SECONDS, DOMAINS, validate_contract
+
 
 ALPHA_ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -198,6 +200,17 @@ def validate(alpha_root: Path = ALPHA_ROOT, repo_root: Path = REPO_ROOT) -> list
             if confirmation.get(key) is not True:
                 errors.append(f"research/alpha/workspace-policy.json: historicalConfirmation.{key} must be true")
 
+    experiment_policy = policy.get("experimentPolicy", {})
+    if (experiment_policy.get("maximumBudgetSeconds") != MAX_SECONDS
+            or experiment_policy.get("defaultBudgetSeconds") != MAX_SECONDS
+            or experiment_policy.get("defaultReportReserveSeconds") != 900
+            or experiment_policy.get("clockStartsBeforeAcquisition") is not True
+            or experiment_policy.get("restartResetsDeadline") is not False):
+        errors.append("workspace policy must enforce the persistent 42300-second experiment budget")
+    agenda = policy.get("researchAgenda", {})
+    if set(agenda.get("initialDomains", [])) != DOMAINS - {"crypto"} or agenda.get("coverage") != "BALANCED":
+        errors.append("research agenda must include balanced coverage of all four new domains")
+
     space_ids: set[str] = set()
     task_ids: set[str] = set()
     task_records: list[tuple[dict[str, Any], str]] = []
@@ -268,6 +281,27 @@ def validate(alpha_root: Path = ALPHA_ROOT, repo_root: Path = REPO_ROOT) -> list
                     errors.append(f"{task_location}: maxTrials exceeds workspace policy")
                 if not isinstance(compute_limits.get("gpu"), bool):
                     errors.append(f"{task_location}: computeLimits.gpu must be boolean")
+            if task.get("status") != "DONE" and "HISTORICAL" in task.get("researchModes", []):
+                limits = task.get("computeLimits", {})
+                budget, reserve = limits.get("budgetSeconds"), limits.get("reportReserveSeconds")
+                if type(budget) is not int or not 0 < budget <= MAX_SECONDS:
+                    errors.append(f"{task_location}: invalid historical experiment budgetSeconds")
+                if type(reserve) is not int or type(budget) is not int or not 0 < reserve < budget:
+                    errors.append(f"{task_location}: invalid reportReserveSeconds")
+                if type(limits.get("memoryMiB")) is not int or not 64 <= limits["memoryMiB"] <= 32768:
+                    errors.append(f"{task_location}: invalid memoryMiB")
+            if task.get("experimentContract"):
+                try:
+                    contract = validate_contract(load_json(repo_root / task["experimentContract"]))
+                    if contract["candidateId"] not in task.get("candidateIds", []):
+                        errors.append(f"{task_location}: experiment candidate mismatch")
+                    if contract["outcomeAccess"] != task.get("outcomeAccess") or contract["domains"] != task.get("domains"):
+                        errors.append(f"{task_location}: experiment access/domain mismatch")
+                    for key in ("budgetSeconds", "reportReserveSeconds", "maxTrials", "blasThreads", "gpu", "memoryMiB"):
+                        if contract[key] != task.get("computeLimits", {}).get(key):
+                            errors.append(f"{task_location}: experiment {key} differs from task")
+                except (OSError, ValueError, KeyError, TypeError) as error:
+                    errors.append(f"{task_location}: invalid experiment contract: {error}")
             blockers = task.get("blockedBy")
             external_blockers = task.get("externalBlockers")
             if task.get("status") == "READY" and (blockers or external_blockers):
@@ -355,6 +389,16 @@ def validate(alpha_root: Path = ALPHA_ROOT, repo_root: Path = REPO_ROOT) -> list
         if candidate.get("stage") not in CANDIDATE_STAGES:
             errors.append(f"{location}: invalid stage {candidate.get('stage')!r}")
         validate_modes(candidate, location, errors)
+        if candidate.get("experimentContract"):
+            try:
+                contract = validate_contract(load_json(path.parent / candidate["experimentContract"]))
+                if contract["candidateId"] != candidate.get("id") or contract["searchFamilyId"] != candidate.get("searchFamilyId"):
+                    errors.append(f"{location}: experiment identity mismatch")
+                for key in ("domains", "targetMarket", "targetVenue"):
+                    if candidate.get(key) != contract[key]:
+                        errors.append(f"{location}: experiment {key} mismatch")
+            except (OSError, ValueError, KeyError, TypeError) as error:
+                errors.append(f"{location}: invalid experiment contract: {error}")
         data_biases = candidate.get("dataBiases")
         if data_biases is not None:
             if not isinstance(data_biases, list) or not data_biases or any(item not in DISCOVERY_BIASES for item in data_biases):

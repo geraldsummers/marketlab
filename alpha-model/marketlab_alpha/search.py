@@ -141,6 +141,8 @@ def _adaptive_trial_workers(
 ) -> int:
     """Bound exact-trial concurrency by family policy and cgroup headroom."""
 
+    if os.environ.get("MARKETLAB_EXPERIMENT_ID"):
+        return 1
     if task_count < 2 or worker_ceiling < 2 or model_id not in _PARALLEL_CPU_MODELS:
         return 1
     usage = _cgroup_memory_usage() if memory_usage is None else memory_usage
@@ -1356,6 +1358,11 @@ def _checkpointed_trial(
             raise _SearchStepBoundary(trial_id)
         _SEARCH_STEP_REMAINING -= 1
 
+    if os.environ.get("MARKETLAB_EXPERIMENT_ID"):
+        from .budget import require_budget
+        require_budget(model=True)
+        from experiment import record_trial
+        record_trial()
     started = _utc_now()
     selection = {
         "assets": "dynamic-basket",
@@ -1391,6 +1398,13 @@ def _checkpointed_trial(
     bundle = None
     try:
         timeout_seconds = int(manifest.get("trialTimeoutSeconds", 86400))
+        deadline = os.environ.get("MARKETLAB_EXPERIMENT_WORK_DEADLINE")
+        if deadline is not None:
+            import time
+            remaining_seconds = int(float(deadline) - time.time())
+            if remaining_seconds <= 0:
+                raise TimeoutError("experiment work deadline expired")
+            timeout_seconds = min(timeout_seconds, remaining_seconds)
         prior_handler = signal.getsignal(signal.SIGALRM)
 
         def timed_out(_signum: int, _frame: Any) -> None:

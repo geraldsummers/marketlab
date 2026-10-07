@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "marketlab.alpha-space.v2",
+  "id": "settlement-liquidity",
+  "title": "Onchain settlement and liquidity",
+  "purpose": "Audit whether settlement flows and liquidity fragmentation provide causally available information beyond market prices.",
+  "state": "OPEN",
+  "dependencies": [
+    "execution-portfolio"
+  ],
+  "readyWork": [
+    {
+      "id": "onchain-settlement-feasibility",
+      "status": "READY",
+      "kind": "data",
+      "summary": "Audit whether settlement flows and liquidity fragmentation provide causally available information beyond market prices.",
+      "blockedBy": [],
+      "externalBlockers": [],
+      "researchModes": [
+        "HISTORICAL"
+      ],
+      "priority": "P1",
+      "candidateIds": [
+        "onchain-settlement-feasibility"
+      ],
+      "deliverables": [
+        "Source readiness inventory with provenance, availability, cost and gaps",
+        "At most three distinct mechanisms and one preregisterable experiment or blocker",
+        "Evidence-linked candidate result and handoff within the experiment budget"
+      ],
+      "acceptanceCriteria": [
+        "Chain finality, reorgs, archive-node/indexer history, block versus receipt clocks, gas, MEV and bridge risk.",
+        "Use existing data only; do not open sealed outcomes",
+        "Record biases and remain DATA_FEASIBILITY or DATA_BLOCKED; no predictive promotion",
+        "Compare overlapping prior candidates and preserve their locked outcomes"
+      ],
+      "claimSurfaces": [
+        "research/alpha/spaces/settlement-liquidity/candidates/onchain-settlement-feasibility",
+        "research/alpha/spaces/settlement-liquidity/space.json",
+        "research/inventory/data-sources/"
+      ],
+      "resourceClass": "DATA_IO",
+      "computeLimits": {
+        "maxProcesses": 1,
+        "blasThreads": 2,
+        "maxTrials": 0,
+        "gpu": false,
+        "budgetSeconds": 42300,
+        "reportReserveSeconds": 900,
+        "memoryMiB": 4096
+      },
+      "outcomeAccess": "NONE",
+      "completionEvidenceIds": [],
+      "domains": [
+        "onchain"
+      ],
+      "experimentContract": "research/alpha/spaces/settlement-liquidity/candidates/onchain-settlement-feasibility/experiment.json"
+    }
+  ]
+}

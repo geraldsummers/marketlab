@@ -148,3 +148,10 @@ Binance market acquisition, two deterministic Bluesky shards, and a
 network-isolated analyzer. Their single source of study configuration is
 [`research/social-backfill-program.lock.json`](research/social-backfill-program.lock.json);
 the v2 program explicitly contains no Farcaster source.
+
+## Bounded cross-market exploration
+
+The research workspace now registers balanced feasibility coverage for conventional
+markets, onchain mechanisms, prediction markets and dollar stablecoins. Current
+stage: `DATA_FEASIBILITY`. Follow the [experiment workflow](research/alpha/experiments.md)
+for persistent sub-12-hour limits; existing crypto evidence and locks remain authoritative.

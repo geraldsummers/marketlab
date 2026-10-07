@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Historical implementation retained for provenance; new execution is disabled.
+printf '%s\n' 'Legacy archive campaign disabled: register a bounded successor and use research/alpha/tools/experiment.py.' >&2
+exit 75
+
 die() {
     printf 'archive-alpha controller: %s\n' "$*" >&2
     exit 1

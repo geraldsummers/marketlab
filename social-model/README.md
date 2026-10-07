@@ -1,3 +1,12 @@
+# Bounded local historical execution
+
+Run new historical commands through the [experiment supervisor](../research/alpha/experiments.md).
+Model commands require trial reservations; evaluate requires the exact historical
+confirmation access contract plus the existing frozen guards. A legacy search
+that cannot fit the new trial or time limit needs a separately registered bounded
+successor, preserving its original locks. Production prospective scoring remains
+a separate deployment contract and is not activated by this agenda.
+
 # Social functional model trainer
 
 The Kotlin backfill application materializes immutable causal feature rows. This

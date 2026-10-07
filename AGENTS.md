@@ -5,7 +5,9 @@ coordination instructions supplied by the agent environment.
 
 ## Prime directive
 
-Agents may autonomously pursue evidence of crypto or market alpha, but may not
+Agents may autonomously investigate underexplored economic mechanisms across
+crypto, conventional markets, onchain activity, prediction markets, and dollar
+stablecoins. They may not
 autonomously redefine success, erase failures, consume a sealed outcome more
 than once, or expose capital.
 
@@ -289,3 +291,70 @@ python3 -m unittest research/alpha/tools/test_workspace.py
 Also run any narrower data, model, deployment, or live-contract validation
 required by the touched surface. Do not push while a required local check
 fails.
+
+## Lab environment and local GPU
+
+Verified 2026-09-08: this Herdr session exposes an NVIDIA GeForce RTX 3060 with
+12,288 MiB VRAM and driver 550.163.01. CUDA driver initialization, context
+creation, and device allocation succeeded. The advertised driver CUDA level is
+12.4; it is not an installed toolkit inventory. Re-probe before model work.
+The session remains in a container with a read-only operating-system root.
+Keep user-space installs and temporary files under the lane's writable paths;
+GPU access does not grant host administration or production-service authority.
+
+Use local GPU execution through the bounded supervisor. Do not infer available
+RAM from physical RAM: this host is shared. Inspect current memory, GPU processes
+and claims before work; reduce a task's registered resources before starting if
+necessary. One model command may run at once. GPU use still requires a mechanism
+and compute justification. Use the pinned requirements and user-space setup in
+`alpha-model/README.md`; record actual runtime and GPU versions with evidence.
+Do not assume historical `/mnt/stack` or `/mnt/media` paths are mounted locally.
+
+## Cross-market exploration agenda
+
+The initial agenda has equal-priority source feasibility tasks for conventional
+markets, onchain settlement/liquidity, prediction-market event resolution, and
+USD stablecoin policy transmission. Its current stage is `DATA_FEASIBILITY`.
+Long tail means underexplored mechanisms, not a mandate to trade thin assets.
+Source readiness, real costs, capacity and independent sample size govern which
+hypotheses advance. Domains are tags; spaces remain organized by mechanisms.
+
+The proposed expansion of US support for dollar stablecoins is a thesis to
+verify with dated primary-source evidence. Separate private issuance, government
+policy, Treasury reserves and tokenized Treasuries. Government support must not
+be treated as evidence of predictive value or as government issuance.
+Each new candidate declares target market, target venue and source availability.
+Existing frozen targets, decisions, failures and exposed periods remain binding.
+
+## Mandatory bounded experiments
+
+Follow `research/alpha/experiments.md`. Every new historical experiment starts
+its durable budget before experiment-specific acquisition or preparation through
+`research/alpha/tools/experiment.py`. The total maximum and default is 42,300
+seconds (11h45m), including interruptions, variants, retries and reporting.
+Reserve 900 seconds for termination and handoff; smaller contracts may use a
+smaller explicit reserve. There is no deadline reset on restart or new run ID.
+A candidate has one experiment identity. Distinct follow-ups link predecessors
+and share a fixed family trial budget; do not split one test to evade its limit.
+
+New execution of legacy unbounded campaigns is disabled. Preserve their locks
+and results, and register a bounded successor with explicit outcome boundaries.
+Budget authority never substitutes for confirmation, paper or live authority.
+Prospective observation durations remain separately gated; the historical budget
+must not truncate and relabel a frozen prospective validation period.
+
+Use foreground commands only: no detached jobs, remote service dispatch, or
+containers that escape the supervisor process group. Register all model trials
+before launch, including batches and retries. Use the single durable registry
+at `$HOME/.local/share/marketlab/experiments`; alternate roots are for isolated
+software tests only. Never delete registry records to recover budget.
+Budget exhaustion yields `INCONCLUSIVE` with reason `BUDGET_EXHAUSTED`; missing
+data and operational failures keep their distinct classifications. Every
+attempt remains recorded. Link the supervisor result and underlying evidence in
+the candidate and inventory before completing a workspace task.
+
+Observed existing environment: `/home/dev/.venv-social-model` has Torch
+`2.7.1+cpu` (CUDA unavailable), NumPy 2.3.2, scikit-learn 1.7.1,
+XGBoost 3.4.0 and DuckDB 1.5.5. It is suitable for the local CPU regression
+checks, but differs from the alpha-model XGBoost pin and is not a reproducible
+GPU research environment. Do not silently reuse it for a frozen model run.

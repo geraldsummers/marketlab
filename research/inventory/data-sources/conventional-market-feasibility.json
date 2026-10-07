@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "marketlab.data-source-inventory.v1",
+  "id": "conventional-market-feasibility",
+  "title": "Conventional market information and relative value sources",
+  "category": "conventional",
+  "status": "MISSING",
+  "pointInTimeUse": "Calendar alignment, delistings, corporate actions, futures rolls, vintage releases, licensing and target-native execution evidence.",
+  "implementations": [],
+  "alphaSpaces": [
+    "relative-value"
+  ],
+  "limitations": [
+    "No source availability, entitlement or point-in-time coverage has been verified for this new task."
+  ],
+  "nextAction": "Audit historical equities, ETFs, rates, FX and futures sources for overlooked cross-market relationships."
+}

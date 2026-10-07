@@ -42,3 +42,7 @@ from recommendations. Remote verification is explicit and read-only:
 ```sh
 python3 research/alpha/tools/workspace.py verify-artifacts --ssh-host gerald@192.168.0.11
 ```
+
+Local historical execution uses [bounded experiments](../alpha/experiments.md).
+New domain source records are explicitly MISSING until their feasibility audits
+produce evidence; they do not assert available feeds or data entitlements.
